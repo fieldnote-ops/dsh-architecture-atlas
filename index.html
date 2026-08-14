@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#101c19">
-    <meta name="description" content="DeepSeek Harness（DSH）架构的中文可视化解读：从 Profile、Loader、Cordis Context 到 Fiber 与领域插件。">
+    <meta name="description" content="独立、非官方的 DeepSeek Harness（DSH）中文架构观察与可视化解读：从 Profile、Loader、Cordis Context 到 Fiber 与领域插件。">
     <meta property="og:type" content="website">
     <meta property="og:title" content="DSH Architecture Atlas｜一张图看懂 Everything is a Plugin">
     <meta property="og:description" content="可交互、有源码依据、可按 DSH 版本切换的中文架构解读。">
@@ -12,9 +12,9 @@
     <meta name="twitter:card" content="summary_large_image">
     <title>DSH Architecture Atlas｜可视化架构解读</title>
     <link rel="icon" href="assets/favicon.png" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=20260814.6">
-    <script src="data/versions.js?v=20260814.6" defer></script>
-    <script src="app.js?v=20260814.6" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260814.7">
+    <script src="data/versions.js?v=20260814.7" defer></script>
+    <script src="app.js?v=20260814.7" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">跳到正文</a>
@@ -29,7 +29,7 @@
         <a href="docs/">文档</a>
         <a href="#mechanisms">机制</a>
         <a href="#evidence">证据</a>
-        <a href="#feedback">社区反馈</a>
+        <a href="#community">社区观察</a>
       </nav>
       <div class="header-actions">
         <label class="version-control">
@@ -55,6 +55,7 @@
             <em>只是插件暂时达成了共识。</em>
           </h1>
           <p class="hero-lede" data-bind="lede"></p>
+          <p class="independence-note"><strong>独立社区项目 · 非官方</strong> 本站观察并解读 DeepSeek Harness，不代表 DeepSeek 或 DeepSeek Harness 项目方。</p>
           <div class="hero-cta">
             <a class="button button-primary" href="#atlas">进入架构图 <span aria-hidden="true">↓</span></a>
             <a class="button button-quiet" href="docs/">阅读文档 <span aria-hidden="true">→</span></a>
@@ -166,7 +167,7 @@
           <a href="docs/dsh-0.1.0-rc.5/fiber.html" data-docs-layer="fiber"><small>04 / 生命周期</small><strong>插件生命周期</strong><span>插件如何等待、运行和退出 →</span></a>
           <a href="docs/dsh-0.1.0-rc.5/plugins.html" data-docs-layer="plugins"><small>05 / 领域层</small><strong>Agent 能力</strong><span>会话、工具与模型如何协作 →</span></a>
           <a class="docs-gateway-all" href="docs/"><small>完整阅读路径</small><strong>打开文档</strong><span>从入门、架构到运行指南 →</span></a>
-          <a class="docs-gateway-feedback" href="docs/dsh-0.1.0-rc.5/feedback.html" data-feedback-link><small>当前版本</small><strong>社区反馈</strong><span>按版本查看来源与核查时间 →</span></a>
+          <a class="docs-gateway-community" href="docs/dsh-0.1.0-rc.5/community.html" data-community-link><small>当前版本</small><strong>社区观察</strong><span>按版本查看来源与核查时间 →</span></a>
         </div>
       </section>
 
@@ -334,31 +335,32 @@
         </div>
       </section>
 
-      <section class="feedback-pulse" id="feedback" aria-labelledby="feedback-title">
-        <div class="feedback-pulse-copy reveal">
+      <section class="community-pulse" id="community" aria-labelledby="observation-title">
+        <div class="community-pulse-copy reveal">
           <p class="section-index">COMMUNITY / CURRENT VERSION</p>
-          <h2 id="feedback-title">社区讨论，必须先归到正确版本</h2>
-          <p>这里汇总 GitHub、知乎、X、Reddit 等公开社区中能核验的讨论。每条记录都保留来源链接、社区、原帖日期和收录时间；当前页面只显示 <strong data-bind="versionLabel"></strong> 的反馈。</p>
-          <div class="feedback-actions">
-            <a class="button button-primary" href="docs/dsh-0.1.0-rc.5/feedback.html" data-feedback-link>查看当前版本反馈 →</a>
-            <a class="button button-outline" id="feedback-submit-link" href="https://github.com/fieldnote-ops/dsh-architecture-atlas/issues/new?template=community-feedback.yml" rel="noreferrer">提交公开反馈 ↗</a>
+          <h2 id="observation-title">观察社区讨论，先辨认时间线与来源</h2>
+          <p>本站是独立观察者，不是 DeepSeek Harness 官方。这里整理 GitHub、知乎、X、Reddit 等公开社区中能核验的讨论；每条记录保留来源链接、原帖日期、收录时间和版本关联状态。</p>
+          <div class="community-actions">
+            <a class="button button-primary" href="docs/dsh-0.1.0-rc.5/community.html" data-community-link>查看当前版本观察 →</a>
+            <a class="button button-outline" id="community-submit-link" href="https://github.com/fieldnote-ops/dsh-architecture-atlas/issues/new?template=community-observation.yml" rel="noreferrer">向本站提供公开线索 ↗</a>
           </div>
         </div>
-        <aside class="feedback-snapshot reveal" aria-label="当前版本社区反馈快照">
-          <div class="feedback-counts">
-            <div><strong id="feedback-archived-count">0</strong><span>已归档信号</span></div>
-            <div><strong id="feedback-incorporated-count">0</strong><span>已改变文档结论</span></div>
+        <aside class="community-snapshot reveal" aria-label="当前版本社区观察快照">
+          <div class="community-counts">
+            <div><strong id="community-archived-count">0</strong><span>已归档信号</span></div>
+            <div><strong id="community-incorporated-count">0</strong><span>已改变文档结论</span></div>
           </div>
-          <ul class="feedback-channels" aria-label="覆盖社区"><li>GitHub</li><li>知乎</li><li>X</li><li>Reddit</li><li>其他公开来源</li></ul>
-          <p>最近扫描：<time id="feedback-scan-time" datetime="2026-08-14T05:23:45Z">2026-08-14 13:23:45 UTC+8</time></p>
-          <a id="feedback-browse-link" href="https://github.com/fieldnote-ops/dsh-architecture-atlas/issues?q=is%3Aissue%20label%3Acommunity-feedback%20label%3Adsh-0.1.0-rc.5" rel="noreferrer">查看公开反馈队列 ↗</a>
+          <p class="community-keyword"><span>主检索词</span><code id="community-keyword">DeepSeek Harness</code></p>
+          <ul class="community-channels" aria-label="覆盖社区"><li>GitHub</li><li>知乎</li><li>X</li><li>Reddit</li><li>其他公开来源</li></ul>
+          <p>最近扫描：<time id="community-scan-time" datetime="2026-08-14T05:48:32Z">2026-08-14 13:48:32 UTC+8</time></p>
+          <a id="community-browse-link" href="https://github.com/fieldnote-ops/dsh-architecture-atlas/issues?q=is%3Aissue%20label%3Acommunity-observation%20label%3Adsh-0.1.0-rc.5" rel="noreferrer">查看本站公开线索队列 ↗</a>
         </aside>
       </section>
 
-      <section class="community-strip" aria-labelledby="community-title">
+      <section class="community-strip" aria-labelledby="community-share-title">
         <div>
           <p class="section-index">SHARE THE MAP</p>
-          <h2 id="community-title">如果一句话转发</h2>
+          <h2 id="community-share-title">如果一句话转发</h2>
           <blockquote>DSH 不是“一个 Agent 核心 + 一堆插件”，而是 Profile 描述目标、Loader 协调差异、Cordis Context 承载服务、Fiber 保证可逆生命周期，最后由一组可替换插件临时组成 agent。</blockquote>
         </div>
         <button class="button button-primary" id="copy-summary" type="button">复制社区摘要</button>
@@ -367,7 +369,7 @@
 
     <footer class="site-footer">
       <p><strong>DSH ARCHITECTURE ATLAS</strong> · 独立中文架构解读</p>
-      <p>MIT · 无统计脚本 · 无 Cookie · <a href="docs/">阅读文档</a> · <a href="docs/dsh-0.1.0-rc.5/feedback.html" data-feedback-link>社区反馈</a> · <a href="https://github.com/deepseek-ai/deepseek-harness">查看官方源码</a></p>
+      <p>MIT · 无统计脚本 · 无 Cookie · <a href="docs/">阅读文档</a> · <a href="docs/dsh-0.1.0-rc.5/community.html" data-community-link>社区观察</a> · <a href="https://github.com/deepseek-ai/deepseek-harness">查看官方源码</a></p>
       <a href="#top" class="back-top">回到顶部 ↑</a>
     </footer>
 

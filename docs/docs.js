@@ -13,7 +13,7 @@
     { group: "运行指南", slug: "conversation", title: "一次对话如何运行", description: "沿一条消息追踪 Session、Loop、LLM 与工具调用。", keywords: "conversation turn step message tool" },
     { group: "运行指南", slug: "updates", title: "更新与恢复", description: "配置更新、热重载、汇合与失败恢复。", keywords: "reload rollback settlement update 热更新 hmr" },
     { group: "参考", slug: "boundaries", title: "能力边界与版本", description: "哪些是框架保证，哪些仍取决于实现与版本。", keywords: "boundary version developer preview 限制" },
-    { group: "参考", slug: "feedback", title: "社区反馈", description: "按当前 DSH 版本查看 GitHub、知乎、X、Reddit 等公开反馈。", keywords: "community feedback github 知乎 x reddit 时间戳 版本" }
+    { group: "参考", slug: "community", title: "社区观察", description: "按当前 DSH 版本查看 GitHub、知乎、X、Reddit 等公开讨论观察。", keywords: "community observation github 知乎 x reddit 时间戳 版本" }
   ];
 
   const currentFile = window.location.pathname.split("/").pop() || "index.html";
@@ -21,14 +21,14 @@
   const insideVersion = window.location.pathname.includes(`/${versionPath}/`);
   const hrefFor = (slug) => `${insideVersion ? "" : `${versionPath}/`}${slug}.html`;
 
-  function setupHeaderFeedbackLink() {
+  function setupHeaderCommunityLink() {
     const nav = document.querySelector(".docs-header .header-nav");
-    if (!nav || nav.querySelector('[data-header-feedback]')) return;
+    if (!nav || nav.querySelector('[data-header-community]')) return;
     const link = document.createElement("a");
-    link.dataset.headerFeedback = "";
-    link.href = hrefFor("feedback");
-    link.textContent = "社区反馈";
-    if (currentSlug === "feedback") {
+    link.dataset.headerCommunity = "";
+    link.href = hrefFor("community");
+    link.textContent = "社区观察";
+    if (currentSlug === "community") {
       nav.querySelector('a[aria-current="page"]')?.removeAttribute("aria-current");
       link.setAttribute("aria-current", "page");
     }
@@ -227,7 +227,7 @@
     });
   }
 
-  setupHeaderFeedbackLink();
+  setupHeaderCommunityLink();
   buildSidebar();
   buildTableOfContents();
   setupSearch();

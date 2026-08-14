@@ -50,9 +50,10 @@ test("every release includes the required architecture evidence", () => {
     assert.ok(version.mechanisms.length >= 3);
     assert.ok(version.matrix.length >= 6);
     assert.ok(version.gaps.length >= 3);
-    assert.equal(typeof version.feedback?.docsUrl, "string");
-    assert.match(version.feedback?.scanTime || "", /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
-    assert.equal(typeof version.feedback?.submitUrl, "string");
+    assert.equal(typeof version.community?.docsUrl, "string");
+    assert.equal(version.community?.keyword, "DeepSeek Harness");
+    assert.match(version.community?.scanTime || "", /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
+    assert.equal(typeof version.community?.submitUrl, "string");
   }
 });
 
@@ -73,7 +74,7 @@ test("all local links and assets resolve from every HTML page", () => {
 });
 
 test("versioned documentation covers onboarding, architecture, operations, and reference", () => {
-  const expected = ["introduction", "mental-model", "profile", "loader", "context", "fiber", "plugins", "conversation", "updates", "boundaries", "feedback"];
+  const expected = ["introduction", "mental-model", "profile", "loader", "context", "fiber", "plugins", "conversation", "updates", "boundaries", "community"];
   assert.ok(existsSync(resolve(root, "docs/index.html")));
   for (const name of expected) {
     const page = read(`docs/dsh-0.1.0-rc.5/${name}.html`);
@@ -105,19 +106,34 @@ test("documentation shell provides grouped navigation, local search, and page ou
   assert.ok(!script.includes("<form"), "local documentation search must not create a submission surface");
 });
 
-test("community feedback is version-scoped, timestamped, multi-community, and privacy-aware", () => {
-  const page = read("docs/dsh-0.1.0-rc.5/feedback.html");
+test("community observations are version-scoped, timestamped, multi-community, and privacy-aware", () => {
+  const page = read("docs/dsh-0.1.0-rc.5/community.html");
   for (const community of ["GitHub", "知乎", "X", "Reddit"]) assert.ok(page.includes(community));
+  assert.match(page, /主检索词为精确短语 “DeepSeek Harness”/);
+  assert.match(page, /本站不是 DeepSeek 或 DeepSeek Harness 官方/);
+  assert.ok(!page.includes("社区反馈"));
+  assert.match(page, /独立观察 · 非官方/);
+  assert.match(page, /按观察时间线归档/);
+  assert.match(page, /当前观察窗口讨论已归档/);
+  assert.equal((page.match(/class="community-record"/g) || []).length, 3);
   assert.match(page, /仅限 DSH v0\.1\.0-rc\.5/);
-  assert.match(page, /datetime="2026-08-14T05:23:45Z"/);
+  assert.match(page, /datetime="2026-08-14T05:48:32Z"/);
   assert.match(page, /原帖时间/);
   assert.match(page, /收录时间/);
   assert.match(page, /纳入时间/);
   assert.match(page, /0 条改变当前架构结论/);
   assert.match(page, /请勿提交私密信息/);
+  assert.match(page, /github\.com\/search\?q=%22DeepSeek\+Harness%22/);
+  assert.match(page, /zhihu\.com\/search\?type=content&amp;q=%22DeepSeek%20Harness%22/);
+  assert.match(page, /x\.com\/search\?q=%22DeepSeek%20Harness%22/);
+  assert.match(page, /reddit\.com\/search\/\?q=%22DeepSeek%20Harness%22/);
 
-  const issueForm = read(".github/ISSUE_TEMPLATE/community-feedback.yml");
+  const issueForm = read(".github/ISSUE_TEMPLATE/community-observation.yml");
   assert.match(issueForm, /v0\.1\.0-rc\.5 \(commit 47f9438\)/);
+  assert.match(issueForm, /独立的社区观察与解读项目/);
+  assert.ok(!issueForm.includes("社区反馈"));
+  assert.match(issueForm, /并非官方支持渠道/);
+  assert.match(issueForm, /主检索词为精确短语 “DeepSeek Harness”/);
   assert.match(issueForm, /来源社区/);
   assert.match(issueForm, /原帖时间/);
   assert.match(issueForm, /Token/);

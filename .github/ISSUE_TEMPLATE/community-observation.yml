@@ -1,17 +1,17 @@
-name: DSH 当前版本社区反馈
-description: 提交与 DSH v0.1.0-rc.5 相关的公开社区讨论或文档反馈
-title: "[DSH v0.1.0-rc.5 社区反馈] "
-labels: ["community-feedback", "dsh-0.1.0-rc.5"]
+name: DSH 当前版本社区观察线索
+description: 向独立解读站提供与 DSH v0.1.0-rc.5 相关的公开讨论线索
+title: "[DSH v0.1.0-rc.5 社区观察线索] "
+labels: ["community-observation", "dsh-0.1.0-rc.5"]
 body:
   - type: markdown
     attributes:
       value: |
-        感谢补充社区反馈。本 Issue 公开可见，请勿提交账号、Token、内部链接、个人信息、客户数据、未公开材料或安全漏洞细节。
+        本站是独立的社区观察与解读项目，不代表 DeepSeek 或 DeepSeek Harness 官方。主检索词为精确短语 “DeepSeek Harness”。本 Issue 只用于向本站提供公开讨论线索，并非官方支持渠道。请勿提交账号、Token、内部链接、个人信息、客户数据、未公开材料或安全漏洞细节。产品问题请优先前往 [DeepSeek Harness 官方仓库](https://github.com/deepseek-ai/deepseek-harness)。
   - type: dropdown
     id: dsh-version
     attributes:
       label: DSH 版本
-      description: 当前文档只接收能归属到此版本的反馈。
+      description: 这里表示讨论进入哪个版本的观察时间线；原帖不必写出补丁号。
       options:
         - v0.1.0-rc.5 (commit 47f9438)
     validations:
@@ -47,7 +47,7 @@ body:
   - type: dropdown
     id: category
     attributes:
-      label: 反馈类型
+      label: 观察主题
       options:
         - 架构理解
         - 文档清晰度

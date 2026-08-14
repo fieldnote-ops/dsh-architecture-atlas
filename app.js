@@ -427,19 +427,20 @@
       const layer = version.layers.find((item) => item.id === link.dataset.docsLayer);
       if (layer?.docsUrl) link.href = layer.docsUrl;
     });
-    $$('[data-feedback-link]').forEach((link) => {
-      if (version.feedback?.docsUrl) link.href = version.feedback.docsUrl;
+    $$('[data-community-link]').forEach((link) => {
+      if (version.community?.docsUrl) link.href = version.community.docsUrl;
     });
   }
 
-  function updateFeedbackSnapshot(version) {
-    if (!version.feedback) return;
-    byId("feedback-archived-count").textContent = String(version.feedback.archivedCount ?? 0);
-    byId("feedback-incorporated-count").textContent = String(version.feedback.incorporatedCount ?? 0);
-    byId("feedback-scan-time").dateTime = version.feedback.scanTime;
-    byId("feedback-scan-time").textContent = version.feedback.scanTimeLabel;
-    byId("feedback-submit-link").href = version.feedback.submitUrl;
-    byId("feedback-browse-link").href = version.feedback.browseUrl;
+  function updateCommunitySnapshot(version) {
+    if (!version.community) return;
+    byId("community-keyword").textContent = version.community.keyword;
+    byId("community-archived-count").textContent = String(version.community.archivedCount ?? 0);
+    byId("community-incorporated-count").textContent = String(version.community.incorporatedCount ?? 0);
+    byId("community-scan-time").dateTime = version.community.scanTime;
+    byId("community-scan-time").textContent = version.community.scanTimeLabel;
+    byId("community-submit-link").href = version.community.submitUrl;
+    byId("community-browse-link").href = version.community.browseUrl;
   }
 
   function renderVersion(version) {
@@ -457,7 +458,7 @@
     renderGaps(version);
     renderChangelog(version);
     updateDocsLinks(version);
-    updateFeedbackSnapshot(version);
+    updateCommunitySnapshot(version);
   }
 
   function handleChoiceKeys(event, selector, dataKey, select) {
