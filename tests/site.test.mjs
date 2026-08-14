@@ -219,12 +219,15 @@ test("page contains accessibility and sharing essentials", () => {
 test("homepage keeps the Atlas mental model ahead of the DSH case study", () => {
   const html = read("index.html");
   const header = html.match(/<header[\s\S]*?<\/header>/)?.[0] || "";
+  const preCase = html.slice(0, html.indexOf('<section class="dsh-intro"'));
   assert.match(html, /class="atlas-scope"/);
   assert.match(html, /id="dsh-case"/);
   assert.match(html, /<details class="dsh-deep-dive" id="dsh-deep-dive">/);
   assert.ok(!header.includes('id="version-select"'), "DSH version control must stay inside its case study");
   assert.match(html, /10 个观察对象/);
-  assert.match(html, /DSH 是第一份完整深度档案/);
+  assert.match(html, /DSH 精选案例另行提供版本化深读/);
+  assert.match(preCase, /各对象的详细档案/);
+  assert.ok(!preCase.includes("核心 + 挂件"), "the Atlas introduction must not inherit DSH-only framing");
 });
 
 test("repository introduction presents the Atlas before the DSH case", () => {
