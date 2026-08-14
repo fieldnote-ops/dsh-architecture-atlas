@@ -4,16 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#101c19">
-    <meta name="description" content="AI Harness Atlas 文档入口：从 Harness 共同语言进入对象档案、版本记录与 DSH 深度架构解读。">
+    <meta name="description" content="AI Harness Atlas 文档入口：先理解 Harness 的共同语言与对象分类，再进入对象档案和版本化深度文档。">
     <meta property="og:type" content="website">
     <meta property="og:title" content="AI Harness Atlas Docs｜观察图谱文档">
-    <meta property="og:description" content="从 Harness 共同语言进入对象档案、版本记录与 DSH 深度架构解读。">
+    <meta property="og:description" content="先理解 Harness 的共同语言与对象分类，再进入对象档案和版本化深度文档。">
     <meta property="og:image" content="../assets/social-card.png">
     <title>Docs｜AI Harness Atlas</title>
     <link rel="icon" href="../assets/favicon.png" type="image/png">
-    <link rel="stylesheet" href="../styles.css?v=20260814.8">
-    <link rel="stylesheet" href="docs.css?v=20260814.8">
-    <script src="docs.js?v=20260814.8" defer></script>
+    <link rel="stylesheet" href="../styles.css?v=20260814.14">
+    <link rel="stylesheet" href="docs.css?v=20260814.14">
+    <script src="docs.js?v=20260814.14" defer></script>
   </head>
   <body class="docs-body">
     <a class="skip-link" href="#main">跳到正文</a>
@@ -24,32 +24,33 @@
       </a>
       <nav class="header-nav" aria-label="主导航">
         <a href="../#atlas-overview">观察图谱</a>
-        <a href="./" aria-current="page">文档</a>
-        <a href="../#atlas">DSH 架构</a>
+        <a href="./" aria-current="page">Atlas 文档</a>
         <a href="atlas.html">对象档案</a>
+        <a href="dsh-0.1.0-rc.5/introduction.html">DSH 深度档案</a>
       </nav>
       <div class="header-actions">
-        <a class="docs-version" href="#versions">DSH v0.1.0-rc.5</a>
+        <a class="docs-version" href="#versions">10 对象 · 6 维度</a>
       </div>
     </header>
 
     <main id="main">
       <section class="docs-home-hero" aria-labelledby="docs-title">
         <div class="docs-home-copy">
-          <p class="section-index">DEEPSEEK HARNESS / 中文文档</p>
-          <h1 id="docs-title">DSH 文档</h1>
-          <p>先建立 Harness 的共同语言，再进入对象档案、版本观察与 DSH 的完整架构解读。</p>
-          <div class="hero-cta docs-home-cta"><a class="button button-primary" href="atlas.html">进入观察图谱 →</a><a class="button button-quiet" href="dsh-0.1.0-rc.5/introduction.html">阅读 DSH 专题</a></div>
+          <p class="section-index">AI HARNESS ATLAS / 文档入口</p>
+          <h1 id="docs-title">Atlas 文档</h1>
+          <p>先理解 Harness 的共同语言和对象分类，再进入对象档案。DSH 版本文档作为一个独立深度分支，不代表全站只有一个对象或一条版本线。</p>
+          <div class="hero-cta docs-home-cta"><a class="button button-primary" href="atlas.html">进入对象档案 →</a><a class="button button-quiet" href="dsh-0.1.0-rc.5/introduction.html">进入 DSH 深度档案</a></div>
         </div>
-        <aside class="docs-home-aside" id="versions" aria-label="文档版本">
-          <span>当前深度专题 / DSH VERSION</span>
-          <h2>DSH v0.1.0-rc.5</h2>
+        <aside class="docs-home-aside" id="versions" aria-label="文档范围">
+          <span>当前文档范围 / ATLAS</span>
+          <h2>多 Harness 文档</h2>
           <dl>
-            <div><dt>状态</dt><dd>Developer Preview</dd></div>
-            <div><dt>对应提交</dt><dd><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438">47f9438 ↗</a></dd></div>
-            <div><dt>运行时</dt><dd>Cordis 4.0.1</dd></div>
-            <div><dt>文档日期</dt><dd>2026-08-14</dd></div>
+            <div><dt>观察对象</dt><dd>10</dd></div>
+            <div><dt>共同维度</dt><dd>06</dd></div>
+            <div><dt>深度分支</dt><dd>DSH 1</dd></div>
+            <div><dt>版本机制</dt><dd>按对象独立归档</dd></div>
           </dl>
+          <p>DSH 是目前第一份完整深度档案；版本选择只影响 DSH 文档树，不改变 Atlas 的对象范围。</p>
         </aside>
       </section>
 
@@ -62,25 +63,25 @@
           <p>不需要先读源码。选择一个入口，文档会在页尾带你进入下一篇。</p>
         </div>
         <div class="path-grid">
-          <a class="path-card" href="atlas.html">
+          <a class="path-card" href="atlas.html#mental-model">
             <small>第一次接触 Harness</small>
-            <h3>观察图谱</h3>
-            <p>先区分运行时、SDK、编排层和 Coding Agent，再选择对象深入阅读。</p>
+            <h3>共同语言</h3>
+            <p>先区分运行时、SDK、编排层和 Coding Agent，建立阅读坐标。</p>
+          </a>
+          <a class="path-card" href="atlas.html#dimensions">
+            <small>想知道怎么比较</small>
+            <h3>共同观察维度</h3>
+            <p>沿运行循环、上下文、工具、权限、恢复和观测六个问题阅读不同对象。</p>
+          </a>
+          <a class="path-card" href="atlas.html#objects">
+            <small>想查某个对象</small>
+            <h3>对象档案</h3>
+            <p>查看首期十个观察对象的类型、边界和公开资料入口。</p>
           </a>
           <a class="path-card" href="dsh-0.1.0-rc.5/introduction.html">
-            <small>第一次接触 DSH</small>
-            <h3>DSH 是什么</h3>
-            <p>了解 Harness 负责什么、系统有哪些部分，以及当前项目状态。</p>
-          </a>
-          <a class="path-card" href="dsh-0.1.0-rc.5/mental-model.html">
-            <small>想先理解架构</small>
-            <h3>核心心智模型</h3>
-            <p>用服务拓扑和三条方向理解 Everything is a Plugin。</p>
-          </a>
-          <a class="path-card" href="dsh-0.1.0-rc.5/conversation.html">
-            <small>想看真实运行过程</small>
-            <h3>一次对话如何运行</h3>
-            <p>沿用户消息追踪 Session、Agent Loop、LLM 和工具调用。</p>
+            <small>想读一份完整案例</small>
+            <h3>DSH 深度档案</h3>
+            <p>从 DSH 是什么开始，进入其独立版本、架构、运行流程与公开讨论。</p>
           </a>
         </div>
       </section>
@@ -89,23 +90,23 @@
         <div class="docs-section-head">
           <div>
             <p class="section-index">DOCUMENTATION</p>
-            <h2 id="directory-title">所有文档</h2>
+            <h2 id="directory-title">对象档案与深度分支</h2>
           </div>
-          <p>对象档案帮助建立比较坐标；DSH 版本文档继续保留深度架构、运行流程与公开讨论观察。</p>
+          <p>Atlas 入口负责共同语言与对象比较；每个深度分支独立保留自己的版本、证据和讨论时间线。</p>
         </div>
         <div class="docs-directory-grid">
-          <section><h3>开始</h3><a href="atlas.html"><strong>观察图谱</strong><span>对象类型与共同观察维度</span></a><a href="dsh-0.1.0-rc.5/introduction.html"><strong>DSH 是什么</strong><span>职责、组成与项目状态</span></a><a href="dsh-0.1.0-rc.5/mental-model.html"><strong>核心心智模型</strong><span>服务拓扑与三条方向</span></a></section>
-          <section><h3>架构</h3><a href="dsh-0.1.0-rc.5/profile.html"><strong>声明与配置</strong><span>Profile、Bundle、Patch</span></a><a href="dsh-0.1.0-rc.5/loader.html"><strong>运行时协调</strong><span>Loader、Include、HMR</span></a><a href="dsh-0.1.0-rc.5/context.html"><strong>统一上下文</strong><span>服务、隔离、事件与效应</span></a><a href="dsh-0.1.0-rc.5/fiber.html"><strong>插件生命周期</strong><span>六态、依赖和撤销</span></a><a href="dsh-0.1.0-rc.5/plugins.html"><strong>Agent 能力</strong><span>Session、Tools、Loop、LLM</span></a></section>
-          <section><h3>运行指南</h3><a href="dsh-0.1.0-rc.5/conversation.html"><strong>一次对话如何运行</strong><span>从用户输入到工具结果</span></a><a href="dsh-0.1.0-rc.5/updates.html"><strong>更新与恢复</strong><span>差异、汇合与回滚边界</span></a></section>
-          <section><h3>参考</h3><a href="dsh-0.1.0-rc.5/boundaries.html"><strong>能力边界与版本</strong><span>框架保证、实现责任与资料</span></a><a href="dsh-0.1.0-rc.5/community.html"><strong>公开讨论观察</strong><span>GitHub、知乎、X、Reddit 与时间戳</span></a></section>
+          <section><h3>Atlas 入口</h3><a href="atlas.html"><strong>对象档案</strong><span>对象类型与共同观察维度</span></a><a href="atlas.html#dimensions"><strong>共同观察维度</strong><span>六个跨对象比较问题</span></a><a href="atlas.html#versions"><strong>版本与公开讨论</strong><span>版本边界与证据规则</span></a></section>
+          <section><h3>DSH / 开始</h3><a href="dsh-0.1.0-rc.5/introduction.html"><strong>DSH 是什么</strong><span>职责、组成与项目状态</span></a><a href="dsh-0.1.0-rc.5/mental-model.html"><strong>核心心智模型</strong><span>服务拓扑与三条方向</span></a></section>
+          <section><h3>DSH / 架构与运行</h3><a href="dsh-0.1.0-rc.5/profile.html"><strong>声明与配置</strong><span>Profile、Bundle、Patch</span></a><a href="dsh-0.1.0-rc.5/loader.html"><strong>运行时协调</strong><span>Loader、Include、HMR</span></a><a href="dsh-0.1.0-rc.5/context.html"><strong>统一上下文</strong><span>服务、隔离、事件与效应</span></a><a href="dsh-0.1.0-rc.5/fiber.html"><strong>插件生命周期</strong><span>六态、依赖和撤销</span></a><a href="dsh-0.1.0-rc.5/plugins.html"><strong>Agent 能力</strong><span>Session、Tools、Loop、LLM</span></a><a href="dsh-0.1.0-rc.5/conversation.html"><strong>一次对话如何运行</strong><span>从用户输入到工具结果</span></a><a href="dsh-0.1.0-rc.5/updates.html"><strong>更新与恢复</strong><span>差异、汇合与回滚边界</span></a></section>
+          <section><h3>DSH / 参考</h3><a href="dsh-0.1.0-rc.5/boundaries.html"><strong>能力边界与版本</strong><span>框架保证、实现责任与资料</span></a><a href="dsh-0.1.0-rc.5/community.html"><strong>公开讨论观察</strong><span>GitHub、知乎、X、Reddit 与时间戳</span></a></section>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
       <p><strong>AI HARNESS ATLAS DOCS</strong> · 独立中文观察图谱</p>
-      <p>MIT · 无统计脚本 · 无 Cookie · <a href="atlas.html">对象档案</a> · <a href="dsh-0.1.0-rc.5/community.html">公开讨论观察</a> · <a href="https://github.com/deepseek-ai/deepseek-harness">DSH 官方源码</a></p>
-      <a href="../" class="back-top">返回架构图 →</a>
+      <p>MIT · 无统计脚本 · 无 Cookie · <a href="atlas.html">对象档案</a> · <a href="dsh-0.1.0-rc.5/introduction.html">DSH 深度档案</a> · <a href="dsh-0.1.0-rc.5/community.html">公开讨论观察</a> · <a href="https://github.com/deepseek-ai/deepseek-harness">DSH 官方源码</a></p>
+      <a href="../" class="back-top">返回观察图谱 →</a>
     </footer>
   </body>
 </html>

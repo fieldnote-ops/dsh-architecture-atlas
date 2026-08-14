@@ -3,24 +3,29 @@
 
   const versionPath = "dsh-0.1.0-rc.5";
   const pages = [
-    { group: "开始", slug: "atlas", title: "观察图谱", description: "先区分 Harness 运行时、Agent SDK、编排层和 Coding Agent。", keywords: "harness atlas runtime sdk orchestration coding agent 比较" },
-    { group: "开始", slug: "introduction", title: "DSH 是什么", description: "认识 Harness 的职责、项目状态与阅读入口。", keywords: "入门 harness agent deepseek" },
-    { group: "开始", slug: "mental-model", title: "核心心智模型", description: "用目标拓扑、服务可用性和可逆生命周期理解 DSH。", keywords: "架构 everything plugin 拓扑" },
-    { group: "架构", slug: "profile", title: "声明与配置", description: "Profile、Bundle 与 Patch 如何描述目标系统。", keywords: "profile bundle patch 配置" },
-    { group: "架构", slug: "loader", title: "运行时协调", description: "Loader 如何把配置变化协调成运行态。", keywords: "loader include hmr 更新 热更新" },
-    { group: "架构", slug: "context", title: "统一上下文", description: "Context 如何承载服务、隔离、事件与效应。", keywords: "context service isolate event" },
-    { group: "架构", slug: "fiber", title: "插件生命周期", description: "Fiber 六态、依赖等待和逆序撤销。", keywords: "fiber effect inject disposer" },
-    { group: "架构", slug: "plugins", title: "Agent 能力", description: "Session、Prompt、Tools、Agent Loop 与 LLM。", keywords: "session prompt tools agent llm" },
-    { group: "运行指南", slug: "conversation", title: "一次对话如何运行", description: "沿一条消息追踪 Session、Loop、LLM 与工具调用。", keywords: "conversation turn step message tool" },
-    { group: "运行指南", slug: "updates", title: "更新与恢复", description: "配置更新、热重载、汇合与失败恢复。", keywords: "reload rollback settlement update 热更新 hmr" },
-    { group: "参考", slug: "boundaries", title: "能力边界与版本", description: "哪些是框架保证，哪些仍取决于实现与版本。", keywords: "boundary version developer preview 限制" },
-    { group: "参考", slug: "community", title: "公开讨论观察", description: "按当前 DSH 版本查看 GitHub、知乎、X、Reddit 等公开讨论观察。", keywords: "community observation github 知乎 x reddit 时间戳 版本" }
+    { group: "Atlas", slug: "atlas", path: "atlas.html", title: "观察图谱", description: "先区分 Harness 运行时、Agent SDK、编排层和 Coding Agent。", keywords: "harness atlas runtime sdk orchestration coding agent 比较" },
+    { group: "DSH / 开始", slug: "introduction", path: `${versionPath}/introduction.html`, title: "DSH 是什么", description: "认识 DSH 这份深度档案的对象范围、职责与版本入口。", keywords: "入门 harness agent deepseek" },
+    { group: "DSH / 开始", slug: "mental-model", path: `${versionPath}/mental-model.html`, title: "核心心智模型", description: "用目标拓扑、服务可用性和可逆生命周期理解 DSH。", keywords: "架构 everything plugin 拓扑" },
+    { group: "DSH / 架构", slug: "profile", path: `${versionPath}/profile.html`, title: "声明与配置", description: "Profile、Bundle 与 Patch 如何描述目标系统。", keywords: "profile bundle patch 配置" },
+    { group: "DSH / 架构", slug: "loader", path: `${versionPath}/loader.html`, title: "运行时协调", description: "Loader 如何把配置变化协调成运行态。", keywords: "loader include hmr 更新 热更新" },
+    { group: "DSH / 架构", slug: "context", path: `${versionPath}/context.html`, title: "统一上下文", description: "Context 如何承载服务、隔离、事件与效应。", keywords: "context service isolate event" },
+    { group: "DSH / 架构", slug: "fiber", path: `${versionPath}/fiber.html`, title: "插件生命周期", description: "Fiber 六态、依赖等待和逆序撤销。", keywords: "fiber effect inject disposer" },
+    { group: "DSH / 架构", slug: "plugins", path: `${versionPath}/plugins.html`, title: "Agent 能力", description: "Session、Prompt、Tools、Agent Loop 与 LLM。", keywords: "session prompt tools agent llm" },
+    { group: "DSH / 运行指南", slug: "conversation", path: `${versionPath}/conversation.html`, title: "一次对话如何运行", description: "沿一条消息追踪 Session、Loop、LLM 与工具调用。", keywords: "conversation turn step message tool" },
+    { group: "DSH / 运行指南", slug: "updates", path: `${versionPath}/updates.html`, title: "更新与恢复", description: "配置更新、热重载、汇合与失败恢复。", keywords: "reload rollback settlement update 热更新 hmr" },
+    { group: "DSH / 参考", slug: "boundaries", path: `${versionPath}/boundaries.html`, title: "能力边界与版本", description: "哪些是框架保证，哪些仍取决于实现与版本。", keywords: "boundary version developer preview 限制" },
+    { group: "DSH / 参考", slug: "community", path: `${versionPath}/community.html`, title: "公开讨论观察", description: "按 DSH 当前版本的观察窗口查看 GitHub、知乎、X、Reddit 等公开讨论。", keywords: "community observation github 知乎 x reddit 时间戳 版本" }
   ];
 
   const currentFile = window.location.pathname.split("/").pop() || "index.html";
   const currentSlug = currentFile.replace(/\.html$/, "");
   const insideVersion = window.location.pathname.includes(`/${versionPath}/`);
-  const hrefFor = (slug) => `${insideVersion ? "" : `${versionPath}/`}${slug}.html`;
+  const hrefFor = (slug) => {
+    const page = pages.find((item) => item.slug === slug);
+    if (!page) return "#";
+    if (!insideVersion) return page.path;
+    return page.path.startsWith(`${versionPath}/`) ? page.path.slice(versionPath.length + 1) : `../${page.path}`;
+  };
 
   function setupHeaderCommunityLink() {
     const nav = document.querySelector(".docs-header .header-nav");
@@ -67,8 +72,8 @@
 
     const overview = document.createElement("a");
     overview.className = "docs-overview-link";
-    overview.href = insideVersion ? "../../#atlas" : "../#atlas-overview";
-    overview.textContent = "查看交互架构图 ↗";
+    overview.href = insideVersion ? "../../#dsh-case" : "../#atlas-overview";
+    overview.textContent = insideVersion ? "返回 DSH 案例图 ↗" : "返回观察图谱 ↗";
     body.append(overview);
     sidebar.replaceChildren(toggle, body);
 

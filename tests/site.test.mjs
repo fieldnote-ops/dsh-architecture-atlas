@@ -130,13 +130,29 @@ test("implementation paths are optional references, not the documentation model"
 
 test("documentation shell provides grouped navigation, local search, and page outline", () => {
   const script = read("docs/docs.js");
-  for (const group of ["开始", "架构", "运行指南", "参考"]) assert.ok(script.includes(`group: "${group}"`));
+  for (const group of ["Atlas", "DSH / 开始", "DSH / 架构", "DSH / 运行指南", "DSH / 参考"]) assert.ok(script.includes(`group: "${group}"`));
   assert.match(script, /docs-search-dialog/);
   assert.match(script, /buildTableOfContents/);
   assert.match(script, /setupReadingProgress/);
   assert.match(script, /setupActiveTableOfContents/);
-  assert.match(read("docs/index.html"), /所有文档/);
+  assert.match(read("docs/index.html"), /对象档案与深度分支/);
   assert.ok(!script.includes("<form"), "local documentation search must not create a submission surface");
+});
+
+test("docs root is an Atlas entry, with DSH kept as a named deep branch", () => {
+  const page = read("docs/index.html");
+  assert.match(page, /<h1 id="docs-title">Atlas 文档<\/h1>/);
+  assert.match(page, /多 Harness 文档/);
+  assert.match(page, /DSH 深度档案/);
+  assert.match(page, /dsh-0\.1\.0-rc\.5\/introduction\.html/);
+  assert.ok(!page.includes('<h1 id="docs-title">DSH 文档</h1>'));
+});
+
+test("versioned docs navigation can return to the Atlas archive", () => {
+  const script = read("docs/docs.js");
+  assert.match(script, /path: "atlas\.html"/);
+  assert.match(script, /page\.path\.startsWith\(`\$\{versionPath\}\/`\)/);
+  assert.match(script, /:\s*`\.\.\/\$\{page\.path\}`/);
 });
 
 test("community observations are version-scoped, timestamped, multi-community, and privacy-aware", () => {
