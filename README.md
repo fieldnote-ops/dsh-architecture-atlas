@@ -1,10 +1,18 @@
-# DSH Architecture Atlas
+# AI Harness Atlas｜观察图谱
 
-一份面向中文开发者社区的 DeepSeek Harness（DSH）架构可视化解读。
+一份面向中文开发者社区的独立 AI Harness 观察图谱：记录多类 Harness 的架构、版本与公开讨论；DSH 是第一份深度专题。
+
+本站不是任何 Harness 项目的官方文档，也不代表 DeepSeek、OpenAI、Anthropic、Google、Cline 或其他项目方。
 
 它试图回答一个具体问题：`Everything is a plugin` 在运行时究竟意味着什么？站点从 Profile / Bundle / Patch 开始，穿过 Loader、Cordis Context、Fiber 生命周期与领域服务，最后还原一次对话如何由一组可替换插件临时组成。
 
 DSH（DeepSeek Harness）是 DeepSeek AI 开源的 Agent Harness。简单说，模型负责判断下一步，而 Harness 负责把模型接到会话、上下文、工具、权限、沙箱、文件系统和界面，让这一步可执行、可追踪。官方仓库：[deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)。
+
+## 观察图谱
+
+首页先按对象类型区分 Harness runtime、Agent SDK、编排运行时和 Coding Agent，再沿“运行循环、上下文、工具、权限、恢复、观测”六个问题比较。当前首期对象包括 DSH、Pi、OpenAI Agents SDK、OpenHands、LangGraph / Deep Agents、Codex CLI、Gemini CLI、Cline、Claude Code 与 OpenCode。
+
+对象档案入口：[AI Harness Atlas Docs](docs/atlas.html)。比较内容只使用公开资料；缺少版本或证据时明确显示未知，不做质量排名。
 
 ## 站点内容
 

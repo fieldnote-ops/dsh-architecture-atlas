@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c19">
+    <meta name="description" content="AI Harness Atlas 观察图谱：按对象类型理解 Harness runtime、Agent SDK、编排层和 Coding Agent。">
+    <meta property="og:title" content="观察图谱｜AI Harness Atlas Docs">
+    <meta property="og:description" content="先区分对象所处的运行层，再比较循环、上下文、工具、权限、恢复与观测。">
+    <meta property="og:image" content="../assets/social-card.png">
+    <title>观察图谱｜AI Harness Atlas Docs</title>
+    <link rel="icon" href="../assets/favicon.png" type="image/png">
+    <link rel="stylesheet" href="../styles.css?v=20260814.9">
+    <link rel="stylesheet" href="docs.css?v=20260814.9">
+    <script src="docs.js?v=20260814.9" defer></script>
+  </head>
+  <body class="docs-body atlas-doc-body">
+    <a class="skip-link" href="#article">跳到正文</a>
+    <header class="site-header docs-header">
+      <a class="wordmark" href="../" aria-label="AI Harness Atlas 首页"><span class="wordmark-mark" aria-hidden="true">AH/</span><span>AI HARNESS ATLAS</span></a>
+      <nav class="header-nav" aria-label="主导航"><a href="../#atlas-overview">观察图谱</a><a href="./" aria-current="page">文档</a><a href="../#atlas">DSH 架构</a><a href="atlas.html" aria-current="page">对象档案</a></nav>
+      <div class="header-actions"><a class="docs-version" href="../#atlas-overview">多对象观察</a></div>
+    </header>
+    <main class="docs-shell">
+      <aside class="docs-sidebar" id="docs-sidebar" aria-label="文档导航"><nav><a href="atlas.html" aria-current="page">观察图谱</a></nav></aside>
+      <article class="doc-article atlas-doc-article" id="article">
+        <p class="doc-breadcrumb">文档 / 开始 / 观察图谱</p>
+        <h1>先分层，<br>再比较 Harness。</h1>
+        <p class="doc-lede">AI Harness Atlas 是一份独立观察图谱：记录多类 Harness 的架构边界、版本变化和公开讨论。它不是任何项目的官方文档，也不替项目方做质量排名。</p>
+        <div class="doc-baseline"><span>独立观察 · 非官方</span><span>多对象 · 多版本</span><span>公开资料优先</span><span>未知项保留未知</span></div>
+
+        <div class="doc-callout"><p><strong>为什么要先分层？</strong> “Harness”在不同项目里可能指运行时、SDK、编排框架或完整 Coding Agent。把它们放在同一张榜单，会让读者误以为它们在解决同一个问题。本图谱先标出对象所在的运行层，再沿同一组问题阅读差异。</p></div>
+
+        <section class="doc-section" id="mental-model">
+          <h2>读者先带走三句话</h2>
+          <div class="atlas-principle-grid">
+            <article><span>01</span><h3>模型不是 Harness</h3><p>模型负责生成判断；Harness 负责把判断接到上下文、工具、权限、状态和真实环境。</p></article>
+            <article><span>02</span><h3>对象不在同一层</h3><p>SDK、编排运行时、Harness runtime 和 Coding Agent 产品可以互相组合，但职责并不相同。</p></article>
+            <article><span>03</span><h3>版本决定结论</h3><p>每个对象的版本档案独立保存；公开讨论没有写版本时，只归入时间观察窗口，不强行推断补丁号。</p></article>
+          </div>
+        </section>
+
+        <section class="doc-section" id="taxonomy">
+          <h2>对象类型</h2>
+          <div class="atlas-taxonomy-list">
+            <article><span>HARNESS RUNTIME</span><h3>把 Agent 运行起来</h3><p>关注循环、服务、状态、工具和生命周期如何组成可替换的运行时。</p><strong>DSH · Pi Agent Runtime</strong></article>
+            <article><span>AGENT SDK</span><h3>把构件交给开发者</h3><p>提供 Agent、Runner、工具、交接、护栏、会话或工作区等可组合接口。</p><strong>OpenAI Agents SDK · OpenHands SDK</strong></article>
+            <article><span>ORCHESTRATION</span><h3>把长任务和状态接住</h3><p>处理持久执行、检查点、暂停恢复、人机协同和多 Agent 状态图。</p><strong>LangGraph · Deep Agents</strong></article>
+            <article><span>CODING AGENT</span><h3>把能力做成产品</h3><p>将运行时、工具、权限、工作区和界面组合成可直接使用的编码代理。</p><strong>Pi · Codex CLI · Gemini CLI · Cline · Claude Code · OpenCode</strong></article>
+          </div>
+        </section>
+
+        <section class="doc-section" id="dimensions">
+          <h2>共同观察维度</h2>
+          <div class="service-table-wrap"><table class="service-table atlas-dimension-table"><thead><tr><th>问题</th><th>读者要理解什么</th><th>不应该误读成什么</th></tr></thead><tbody>
+            <tr><td>运行循环</td><td>一次请求如何进入模型、工具和下一步</td><td>模型本身的能力排名</td></tr>
+            <tr><td>上下文与记忆</td><td>哪些内容会保留、压缩、交接或丢失</td><td>“上下文越大就一定越好”</td></tr>
+            <tr><td>工具与扩展</td><td>工具如何注册、发现、验证与替换</td><td>插件数量等于产品能力</td></tr>
+            <tr><td>权限与恢复</td><td>什么动作需要批准、如何暂停、回滚和继续</td><td>有确认弹窗就代表安全</td></tr>
+            <tr><td>编排与交接</td><td>子 Agent、工作区和长任务如何传递状态</td><td>多 Agent 数量越多越先进</td></tr>
+            <tr><td>观测与验证</td><td>能否看到轨迹、错误、来源和验证结果</td><td>日志越多就越可靠</td></tr>
+          </tbody></table></div>
+        </section>
+
+        <section class="doc-section" id="objects">
+          <h2>首期观察对象</h2>
+          <div class="atlas-doc-object-grid">
+            <a href="dsh-0.1.0-rc.5/introduction.html"><span>HARNESS RUNTIME</span><strong>DeepSeek Harness</strong><small>完整 DSH 专题 · v0.1.0-rc.5</small></a>
+            <a href="https://github.com/earendil-works/pi" rel="noreferrer"><span>RUNTIME + CODING AGENT</span><strong>Pi</strong><small>runtime、coding agent、统一模型接口 ↗</small></a>
+            <a href="https://openai.github.io/openai-agents-python/" rel="noreferrer"><span>AGENT SDK</span><strong>OpenAI Agents SDK</strong><small>Runner、handoff、guardrails、tracing ↗</small></a>
+            <a href="https://docs.openhands.dev/sdk" rel="noreferrer"><span>SDK + RUNTIME</span><strong>OpenHands</strong><small>agents、tools、workspaces ↗</small></a>
+            <a href="https://langchain-ai.github.io/langgraph/" rel="noreferrer"><span>ORCHESTRATION</span><strong>LangGraph / Deep Agents</strong><small>持久执行、检查点、上下文管理 ↗</small></a>
+            <a href="https://github.com/openai/codex" rel="noreferrer"><span>CODING AGENT</span><strong>Codex CLI</strong><small>本地终端、审批和代码工作区 ↗</small></a>
+            <a href="https://github.com/google-gemini/gemini-cli" rel="noreferrer"><span>CODING AGENT</span><strong>Gemini CLI</strong><small>终端、工具、项目记忆 ↗</small></a>
+            <a href="https://github.com/cline/cline" rel="noreferrer"><span>CODING AGENT + SDK</span><strong>Cline</strong><small>Plan / Act、checkpoint、MCP ↗</small></a>
+            <a href="https://docs.anthropic.com/en/docs/claude-code/overview" rel="noreferrer"><span>CODING AGENT</span><strong>Claude Code</strong><small>权限模式、MCP、会话恢复 ↗</small></a>
+            <a href="https://opencode.ai/docs/" rel="noreferrer"><span>CODING AGENT</span><strong>OpenCode</strong><small>模型可替换、上下文、终端体验 ↗</small></a>
+          </div>
+        </section>
+
+        <section class="doc-section" id="versions">
+          <h2>版本与公开讨论</h2>
+          <p>版本档案回答“这个对象在什么时候是什么状态”；公开讨论观察回答“当时公开社区正在谈什么”。两者不互相冒充。</p>
+          <ol>
+            <li><strong>明确版本：</strong>原始资料写出 release、tag 或 commit 时，绑定到该版本。</li>
+            <li><strong>观察窗口：</strong>帖子没有精确版本号时，保留原帖日期与本站记录日期，归入相应时间窗口。</li>
+            <li><strong>证据边界：</strong>官方资料、社区原文和本站解释分栏展示；缺少资料时显示“未说明”。</li>
+            <li><strong>独立立场：</strong>本站不代表任何项目方，也不提供官方支持、漏洞报告或产品承诺。</li>
+          </ol>
+        </section>
+
+        <nav class="doc-pagination" aria-label="文档前后篇"><a href="../"><small>← 返回</small><strong>首页观察图谱</strong></a><a href="dsh-0.1.0-rc.5/introduction.html"><small>继续 →</small><strong>DSH 是什么</strong></a></nav>
+      </article>
+    </main>
+    <footer class="site-footer"><p><strong>AI HARNESS ATLAS DOCS</strong> · 独立观察图谱，非官方</p><p>MIT · 无统计脚本 · 无 Cookie · <a href="../">返回首页</a></p><a href="#article" class="back-top">回到顶部 ↑</a></footer>
+  </body>
+</html>

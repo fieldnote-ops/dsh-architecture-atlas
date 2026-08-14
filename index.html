@@ -4,32 +4,34 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#101c19">
-    <meta name="description" content="独立、非官方的 DeepSeek Harness（DSH）中文架构观察与可视化解读：从 Profile、Loader、Cordis Context 到 Fiber 与领域插件。">
+    <meta name="description" content="AI Harness Atlas｜独立观察多类 Harness 的架构、版本与公开讨论；从 DSH 开始，逐步建立可比较的阅读图谱。">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="DSH Architecture Atlas｜一张图看懂 Everything is a Plugin">
-    <meta property="og:description" content="可交互、有源码依据、可按 DSH 版本切换的中文架构解读。">
+    <meta property="og:title" content="AI Harness Atlas｜AI Harness 观察图谱">
+    <meta property="og:description" content="独立观察多类 Harness 的架构、版本与公开讨论；不代表任何项目方。">
     <meta property="og:image" content="assets/social-card.png">
     <meta name="twitter:card" content="summary_large_image">
-    <title>DSH Architecture Atlas｜可视化架构解读</title>
+    <title>AI Harness Atlas｜AI Harness 观察图谱</title>
     <link rel="icon" href="assets/favicon.png" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=20260814.8">
-    <script src="data/versions.js?v=20260814.8" defer></script>
-    <script src="app.js?v=20260814.8" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260814.9">
+    <script src="data/versions.js?v=20260814.9" defer></script>
+    <script src="data/atlas.js?v=20260814.9" defer></script>
+    <script src="atlas.js?v=20260814.9" defer></script>
+    <script src="app.js?v=20260814.9" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">跳到正文</a>
 
     <header class="site-header" id="top">
-      <a class="wordmark" href="#top" aria-label="DSH Architecture Atlas 首页">
-        <span class="wordmark-mark" aria-hidden="true">D/</span>
-        <span>ARCHITECTURE ATLAS</span>
+      <a class="wordmark" href="#top" aria-label="AI Harness Atlas 首页">
+        <span class="wordmark-mark" aria-hidden="true">AH/</span>
+        <span>AI HARNESS ATLAS</span>
       </a>
       <nav class="header-nav" aria-label="主导航">
-        <a href="#atlas">架构图</a>
+        <a href="#atlas-overview">观察图谱</a>
         <a href="docs/">文档</a>
-        <a href="#mechanisms">机制</a>
-        <a href="#evidence">证据</a>
-        <a href="#community">社区观察</a>
+        <a href="#atlas">DSH 架构</a>
+        <a href="docs/atlas.html">对象档案</a>
+        <a href="#community">公开讨论观察</a>
       </nav>
       <div class="header-actions">
         <label class="version-control">
@@ -39,7 +41,7 @@
         </label>
         <button class="icon-button" id="share-button" type="button" aria-label="复制当前版本链接">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15l6-6M11 6l1.4-1.4a4.2 4.2 0 016 6L17 12M13 18l-1.4 1.4a4.2 4.2 0 01-6-6L7 12"/></svg>
-          <span>复制链接</span>
+            <span>复制链接</span>
         </button>
       </div>
     </header>
@@ -49,24 +51,24 @@
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-grid" aria-hidden="true"></div>
         <div class="hero-copy reveal">
-          <p class="kicker"><span>COMMUNITY FIELD GUIDE</span><span>中文独立解读</span></p>
+          <p class="kicker"><span>AI HARNESS ATLAS</span><span>中文独立观察</span></p>
           <h1 id="hero-title">
-            一个 Agent，<br>
-            <em>只是插件暂时达成了共识。</em>
+            先看清 Harness，<br>
+            <em>再看懂 Agent 如何运行。</em>
           </h1>
-          <p class="hero-lede" data-bind="lede"></p>
-          <p class="independence-note"><strong>独立社区项目 · 非官方</strong> 本站观察并解读 DeepSeek Harness，不代表 DeepSeek 或 DeepSeek Harness 项目方。</p>
+          <p class="hero-lede">独立观察多类 AI Harness 的运行边界、架构取舍、版本演进与公开讨论。先用一张图建立共同语言，再进入 DSH 等对象的详细档案。</p>
+          <p class="independence-note"><strong>独立观察项目 · 非官方</strong> 本站不代表 DeepSeek、OpenAI、Anthropic、Google、Cline 或任何被观察项目方。</p>
           <div class="hero-cta">
-            <a class="button button-primary" href="#atlas">进入架构图 <span aria-hidden="true">↓</span></a>
+            <a class="button button-primary" href="#atlas-overview">进入观察图谱 <span aria-hidden="true">↓</span></a>
             <a class="button button-quiet" href="docs/">阅读文档 <span aria-hidden="true">→</span></a>
-            <a class="button button-quiet" href="#journey">跟一次对话走完全程</a>
-            <a class="button button-quiet" href="https://github.com/deepseek-ai/deepseek-harness" rel="noreferrer">DSH 官方仓库 <span aria-hidden="true">↗</span></a>
+            <a class="button button-quiet" href="#atlas">先看 DSH 架构</a>
+            <a class="button button-quiet" href="docs/atlas.html">打开对象档案 <span aria-hidden="true">→</span></a>
           </div>
         </div>
 
         <aside class="hero-aside reveal" aria-label="当前内容对应的 DSH 源码版本">
           <div class="status-stamp">
-            <span class="status-stamp-label">当前查看</span>
+            <span class="status-stamp-label">当前专题</span>
             <strong data-bind="versionLabel"></strong>
             <span data-bind="status"></span>
           </div>
@@ -76,7 +78,7 @@
             <div><dt>Cordis</dt><dd data-bind="cordisVersion"></dd></div>
             <div><dt>核对日期</dt><dd data-bind="date"></dd></div>
           </dl>
-          <p class="baseline-note">DSH 仍处于 Developer Preview。这里的说明只对应上方标出的源码版本；其他版本请从页顶切换。</p>
+          <p class="baseline-note">首页先建立跨项目共同语言。右侧版本只控制 DSH 专题内容；其他对象从观察图谱进入各自档案。</p>
         </aside>
 
         <div class="hero-principle reveal">
@@ -86,17 +88,47 @@
       </section>
 
       <section class="thesis-band" aria-label="核心结论">
-        <p data-bind="summary"></p>
+        <p>Harness 不是模型的另一个名字，而是把模型接入上下文、工具、权限、状态和真实环境的运行边界。</p>
         <div class="thesis-key" aria-label="架构阅读方向">
-          <span>CONFIG <i>↓</i></span>
-          <span>AVAILABILITY <i>↑</i></span>
-          <span>RECOVERY <i>↺</i></span>
+          <span>WHAT <i>→</i></span>
+          <span>HOW <i>→</i></span>
+          <span>CHANGES <i>→</i></span>
+        </div>
+      </section>
+
+      <section class="atlas-overview" id="atlas-overview" aria-labelledby="atlas-overview-title">
+        <div class="atlas-overview-head reveal">
+          <div>
+            <p class="section-index">01 / OBSERVATION ATLAS</p>
+            <h2 id="atlas-overview-title">同一个词，落在不同运行层</h2>
+          </div>
+          <p>这里不做“谁最好”的榜单。先标出对象类型，再比较它们如何处理循环、上下文、工具、权限、恢复和观测。</p>
+        </div>
+        <div class="atlas-filter-row reveal">
+          <div class="atlas-filters" id="atlas-filters" role="tablist" aria-label="按对象类型筛选"></div>
+          <span class="atlas-result-count" id="atlas-result-count" aria-live="polite"></span>
+        </div>
+        <div class="atlas-object-grid reveal" id="atlas-object-grid"></div>
+        <div class="atlas-compare reveal" id="atlas-compare">
+          <div class="atlas-compare-head">
+            <div>
+              <p class="section-index">COMPARE / 读差异</p>
+              <h3>选两个对象，沿同一组问题阅读</h3>
+            </div>
+            <p>比较只显示公开资料中的当前描述；未知项会明确保留，不把缺少证据当成能力结论。</p>
+          </div>
+          <div class="atlas-compare-controls">
+            <label><span>对象 A</span><select id="compare-a" aria-label="选择对象 A"></select></label>
+            <span class="compare-vs" aria-hidden="true">VS</span>
+            <label><span>对象 B</span><select id="compare-b" aria-label="选择对象 B"></select></label>
+          </div>
+          <div class="atlas-compare-table-wrap"><table class="atlas-compare-table"><thead><tr><th>观察维度</th><th id="compare-a-name">对象 A</th><th id="compare-b-name">对象 B</th></tr></thead><tbody id="compare-body"></tbody></table></div>
         </div>
       </section>
 
       <section class="dsh-intro" aria-labelledby="dsh-intro-title">
         <div class="dsh-intro-copy reveal">
-          <p class="section-index">BEFORE THE MAP / DSH 是什么</p>
+          <p class="section-index">DSH / 一个完整专题</p>
           <h2 id="dsh-intro-title">DeepSeek Harness：<br>把模型接到真实环境的 Agent 运行壳</h2>
           <p><strong>模型负责判断下一步；Harness 负责让这一步安全、可追踪地发生。</strong>DSH（DeepSeek Harness）是 DeepSeek AI 开源的 Agent Harness。它组织会话与上下文，把模型接到工具、权限、沙箱、文件系统和界面，并记录运行过程。在 DSH 里，这些能力连同 Agent Loop 本身都是插件；Cordis 根据配置和服务依赖安排它们的激活与卸载。</p>
           <div class="dsh-facts" aria-label="DSH 项目状态">
@@ -124,7 +156,7 @@
       <section class="section architecture-section" id="atlas" aria-labelledby="atlas-title">
         <div class="section-heading reveal">
           <div>
-            <p class="section-index">01 / SYSTEM MAP</p>
+            <p class="section-index">02 / DSH SYSTEM MAP</p>
             <h2 id="atlas-title">五层架构，不是五层调用栈</h2>
           </div>
           <p>从上往下是声明如何变成运行态；从下往上是服务可用性如何反过来决定插件能否激活。点选任一层查看证据。</p>
@@ -155,7 +187,7 @@
       <section class="docs-gateway" aria-labelledby="docs-gateway-title">
         <div class="docs-gateway-head reveal">
           <div>
-            <p class="section-index">DOCS / LAYER BY LAYER</p>
+            <p class="section-index">03 / DOCS / LAYER BY LAYER</p>
             <h2 id="docs-gateway-title">从架构总览，进入完整文档</h2>
           </div>
           <p>架构图适合建立全局认识；文档继续解释 DSH 的概念、运行流程和更新机制。每个版本独立保存，正文不要求先读源码。</p>
@@ -167,14 +199,14 @@
           <a href="docs/dsh-0.1.0-rc.5/fiber.html" data-docs-layer="fiber"><small>04 / 生命周期</small><strong>插件生命周期</strong><span>插件如何等待、运行和退出 →</span></a>
           <a href="docs/dsh-0.1.0-rc.5/plugins.html" data-docs-layer="plugins"><small>05 / 领域层</small><strong>Agent 能力</strong><span>会话、工具与模型如何协作 →</span></a>
           <a class="docs-gateway-all" href="docs/"><small>完整阅读路径</small><strong>打开文档</strong><span>从入门、架构到运行指南 →</span></a>
-          <a class="docs-gateway-community" href="docs/dsh-0.1.0-rc.5/community.html" data-community-link><small>当前版本</small><strong>社区观察</strong><span>按版本查看来源与核查时间 →</span></a>
+          <a class="docs-gateway-community" href="docs/dsh-0.1.0-rc.5/community.html" data-community-link><small>当前版本</small><strong>公开讨论观察</strong><span>按版本查看来源与核查时间 →</span></a>
         </div>
       </section>
 
       <section class="section topology-section" aria-labelledby="topology-title">
         <div class="section-heading reveal">
           <div>
-            <p class="section-index">02 / LIVE CONTEXT</p>
+            <p class="section-index">04 / LIVE CONTEXT</p>
             <h2 id="topology-title">运行中的 agent，是 ctx 上的一组活键</h2>
           </div>
           <p>Session、Tools、LLM 和 Agent Loop 等服务都挂在同一个 Context 上。Agent Loop 也能替换。</p>
@@ -201,7 +233,7 @@
       <section class="section journey-section" id="journey" aria-labelledby="journey-title">
         <div class="section-heading light reveal">
           <div>
-            <p class="section-index">03 / ONE CONVERSATION</p>
+            <p class="section-index">05 / ONE CONVERSATION</p>
             <h2 id="journey-title">一次对话，穿过六个架构时刻</h2>
           </div>
           <p>从左到右读完六步，看一次消息怎样穿过配置、服务、对话与撤销。</p>
@@ -212,7 +244,7 @@
       <section class="section mechanism-section" id="mechanisms" aria-labelledby="mechanism-title">
         <div class="section-heading reveal">
           <div>
-            <p class="section-index">04 / MECHANISM LAB</p>
+            <p class="section-index">06 / MECHANISM LAB</p>
             <h2 id="mechanism-title">三件事，让插件真的可以被替换</h2>
           </div>
           <p>可替换的插件需要三项保证：效果可撤销、依赖变化能响应、更新失败能恢复旧状态。</p>
@@ -242,7 +274,7 @@
       <section class="section fiber-section" aria-labelledby="fiber-title">
         <div class="section-heading reveal">
           <div>
-            <p class="section-index">05 / FIBER STATE MACHINE</p>
+            <p class="section-index">07 / FIBER STATE MACHINE</p>
             <h2 id="fiber-title">论文四态，落地成工程六态</h2>
           </div>
           <p>DSH 把“等待依赖、失败、已离开”物化为独立状态，让异步生命周期更可观测。</p>
@@ -261,7 +293,7 @@
       <section class="section evidence-section" id="evidence" aria-labelledby="evidence-title">
         <div class="section-heading reveal">
           <div>
-            <p class="section-index">06 / THEORY → SOURCE</p>
+            <p class="section-index">08 / THEORY → SOURCE</p>
             <h2 id="evidence-title">这些判断，可以回到代码里核对</h2>
           </div>
           <p>论文给出机制，DSH 和 Cordis 给出实现。表格列出两者的对应关系，并标明哪些部分是工程细化或额外扩展。</p>
@@ -278,7 +310,7 @@
       <section class="section gap-section" aria-labelledby="gap-title">
         <div class="section-heading light reveal">
           <div>
-            <p class="section-index">07 / HONEST BOUNDARIES</p>
+            <p class="section-index">09 / HONEST BOUNDARIES</p>
             <h2 id="gap-title">运行时仍有四个边界</h2>
           </div>
           <p>设计目标和运行时保证之间还有距离。下面四项分别依靠组件作者、测试或后续版本处理。</p>
@@ -289,7 +321,7 @@
       <section class="section source-section" aria-labelledby="source-title">
         <div class="section-heading reveal">
           <div>
-            <p class="section-index">08 / VERSION & SOURCES</p>
+            <p class="section-index">10 / VERSION & SOURCES</p>
             <h2 id="source-title">先确认版本，再带走结论</h2>
           </div>
           <p>DSH 迭代很快。同一个结论在不同源码版本里可能不成立，因此每页都标出 DSH 提交、Cordis 版本和论文日期。</p>
@@ -332,11 +364,11 @@
 
       <section class="community-pulse" id="community" aria-labelledby="observation-title">
         <div class="community-pulse-copy reveal">
-          <p class="section-index">COMMUNITY / CURRENT VERSION</p>
-          <h2 id="observation-title">观察社区讨论，先辨认时间线与来源</h2>
-          <p>本站是独立观察者，不是 DeepSeek Harness 官方。这里整理 GitHub、知乎、X、Reddit 等公开社区中能核验的讨论；每条记录保留来源链接、原帖日期、收录时间和版本关联状态。</p>
+          <p class="section-index">11 / PUBLIC DISCUSSION OBSERVATIONS</p>
+          <h2 id="observation-title">公开讨论，放回时间线与来源</h2>
+          <p>本站是独立观察者，不是任何 Harness 项目官方。这里整理 GitHub、知乎、X、Reddit 等公开社区中能核验的讨论；每条记录保留来源链接、原帖日期、收录时间和版本关联状态。</p>
           <div class="community-actions">
-            <a class="button button-primary" href="docs/dsh-0.1.0-rc.5/community.html" data-community-link>查看当前版本观察 →</a>
+            <a class="button button-primary" href="docs/dsh-0.1.0-rc.5/community.html" data-community-link>查看公开讨论观察 →</a>
             <a class="button button-outline" id="community-submit-link" href="https://github.com/fieldnote-ops/dsh-architecture-atlas/issues/new?template=community-observation.yml" rel="noreferrer">向本站提供公开线索 ↗</a>
           </div>
         </div>
@@ -362,8 +394,8 @@
     </main>
 
     <footer class="site-footer">
-      <p><strong>DSH ARCHITECTURE ATLAS</strong> · 独立中文架构解读</p>
-      <p>MIT · 无统计脚本 · 无 Cookie · <a href="docs/">阅读文档</a> · <a href="docs/dsh-0.1.0-rc.5/community.html" data-community-link>社区观察</a> · <a href="https://github.com/deepseek-ai/deepseek-harness">查看官方源码</a></p>
+      <p><strong>AI HARNESS ATLAS</strong> · 独立中文观察图谱</p>
+      <p>MIT · 无统计脚本 · 无 Cookie · <a href="docs/">阅读文档</a> · <a href="docs/atlas.html">对象档案</a> · <a href="docs/dsh-0.1.0-rc.5/community.html" data-community-link>公开讨论观察</a> · <a href="https://github.com/deepseek-ai/deepseek-harness">DSH 官方源码</a></p>
       <a href="#top" class="back-top">回到顶部 ↑</a>
     </footer>
 

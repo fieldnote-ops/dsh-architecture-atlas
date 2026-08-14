@@ -26,6 +26,12 @@ function loadRegistry() {
   return sandbox.window.DSH_ATLAS;
 }
 
+function loadAtlas() {
+  const sandbox = { window: {} };
+  vm.runInNewContext(read("data/atlas.js"), sandbox);
+  return sandbox.window.AI_HARNESS_ATLAS;
+}
+
 test("version registry has a valid latest release", () => {
   const registry = loadRegistry();
   assert.ok(registry);
@@ -35,6 +41,21 @@ test("version registry has a valid latest release", () => {
 
   const ids = registry.versions.map((version) => version.id);
   assert.equal(new Set(ids).size, ids.length, "version ids must be unique");
+});
+
+test("AI Harness catalogue is typed, comparable, and reader-facing", () => {
+  const atlas = loadAtlas();
+  assert.ok(atlas);
+  assert.deepEqual(Array.from(atlas.dimensions), ["运行循环", "上下文与记忆", "工具与扩展", "权限与恢复", "编排与交接", "观测与验证"]);
+  assert.ok(atlas.objects.length >= 8);
+  assert.ok(atlas.objects.some((item) => item.id === "dsh"));
+  assert.ok(atlas.objects.some((item) => item.id === "pi"));
+  for (const item of atlas.objects) {
+    for (const field of ["id", "name", "type", "typeLabel", "version", "description", "officialUrl", "docsUrl"]) {
+      assert.equal(typeof item[field], "string", `${item.id}.${field} must be a string`);
+    }
+    assert.equal(Object.keys(item.dimensions).length, atlas.dimensions.length, `${item.id} must cover every comparison dimension`);
+  }
 });
 
 test("every release includes the required architecture evidence", () => {
@@ -83,6 +104,18 @@ test("versioned documentation covers onboarding, architecture, operations, and r
     assert.match(page, /class="doc-pagination"/, `${name} document needs continuous navigation`);
     assert.match(page, /docs\.js/, `${name} document needs documentation interactions`);
   }
+});
+
+test("AI Harness Atlas docs provide a public object taxonomy and evidence boundary", () => {
+  const page = read("docs/atlas.html");
+  assert.match(page, /AI Harness Atlas/);
+  assert.match(page, /Harness runtime/);
+  assert.match(page, /Agent SDK/);
+  assert.match(page, /Coding Agent/);
+  assert.match(page, /版本档案/);
+  assert.match(page, /公开讨论观察/);
+  assert.match(page, /未知项保留未知/);
+  assert.match(read("docs/docs.js"), /slug: "atlas"/);
 });
 
 test("implementation paths are optional references, not the documentation model", () => {

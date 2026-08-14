@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#101c19">
-    <meta name="description" content="DeepSeek Harness（DSH）中文文档：介绍核心概念、系统架构、对话流程、更新机制与能力边界。">
+    <meta name="description" content="AI Harness Atlas 文档入口：从 Harness 共同语言进入对象档案、版本记录与 DSH 深度架构解读。">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="DSH Architecture Docs｜DeepSeek Harness 中文文档">
-    <meta property="og:description" content="按版本保存的 DSH 中文架构与运行机制文档。">
+    <meta property="og:title" content="AI Harness Atlas Docs｜观察图谱文档">
+    <meta property="og:description" content="从 Harness 共同语言进入对象档案、版本记录与 DSH 深度架构解读。">
     <meta property="og:image" content="../assets/social-card.png">
-    <title>Docs｜DSH Architecture Atlas</title>
+    <title>Docs｜AI Harness Atlas</title>
     <link rel="icon" href="../assets/favicon.png" type="image/png">
     <link rel="stylesheet" href="../styles.css?v=20260814.8">
     <link rel="stylesheet" href="docs.css?v=20260814.8">
@@ -18,15 +18,15 @@
   <body class="docs-body">
     <a class="skip-link" href="#main">跳到正文</a>
     <header class="site-header docs-header">
-      <a class="wordmark" href="../" aria-label="DSH Architecture Atlas 首页">
-        <span class="wordmark-mark" aria-hidden="true">D/</span>
-        <span>ARCHITECTURE ATLAS</span>
+      <a class="wordmark" href="../" aria-label="AI Harness Atlas 首页">
+        <span class="wordmark-mark" aria-hidden="true">AH/</span>
+        <span>AI HARNESS ATLAS</span>
       </a>
       <nav class="header-nav" aria-label="主导航">
-        <a href="../#atlas">架构图</a>
+        <a href="../#atlas-overview">观察图谱</a>
         <a href="./" aria-current="page">文档</a>
-        <a href="../#mechanisms">机制</a>
-        <a href="../#evidence">证据</a>
+        <a href="../#atlas">DSH 架构</a>
+        <a href="atlas.html">对象档案</a>
       </nav>
       <div class="header-actions">
         <a class="docs-version" href="#versions">DSH v0.1.0-rc.5</a>
@@ -38,11 +38,11 @@
         <div class="docs-home-copy">
           <p class="section-index">DEEPSEEK HARNESS / 中文文档</p>
           <h1 id="docs-title">DSH 文档</h1>
-          <p>理解 DSH 如何由插件组成、一次对话怎样运行，以及配置变化时系统如何更新和恢复。</p>
-          <div class="hero-cta docs-home-cta"><a class="button button-primary" href="dsh-0.1.0-rc.5/introduction.html">开始阅读 →</a><a class="button button-quiet" href="../#atlas">查看架构图</a></div>
+          <p>先建立 Harness 的共同语言，再进入对象档案、版本观察与 DSH 的完整架构解读。</p>
+          <div class="hero-cta docs-home-cta"><a class="button button-primary" href="atlas.html">进入观察图谱 →</a><a class="button button-quiet" href="dsh-0.1.0-rc.5/introduction.html">阅读 DSH 专题</a></div>
         </div>
         <aside class="docs-home-aside" id="versions" aria-label="文档版本">
-          <span>DOCUMENT VERSION / 文档版本</span>
+          <span>当前深度专题 / DSH VERSION</span>
           <h2>DSH v0.1.0-rc.5</h2>
           <dl>
             <div><dt>状态</dt><dd>Developer Preview</dd></div>
@@ -62,6 +62,11 @@
           <p>不需要先读源码。选择一个入口，文档会在页尾带你进入下一篇。</p>
         </div>
         <div class="path-grid">
+          <a class="path-card" href="atlas.html">
+            <small>第一次接触 Harness</small>
+            <h3>观察图谱</h3>
+            <p>先区分运行时、SDK、编排层和 Coding Agent，再选择对象深入阅读。</p>
+          </a>
           <a class="path-card" href="dsh-0.1.0-rc.5/introduction.html">
             <small>第一次接触 DSH</small>
             <h3>DSH 是什么</h3>
@@ -86,20 +91,20 @@
             <p class="section-index">DOCUMENTATION</p>
             <h2 id="directory-title">所有文档</h2>
           </div>
-          <p>左侧导航会在文章页持续显示。社区观察按 DSH 版本独立归档，源码链接只放在实现参考中。</p>
+          <p>对象档案帮助建立比较坐标；DSH 版本文档继续保留深度架构、运行流程与公开讨论观察。</p>
         </div>
         <div class="docs-directory-grid">
-          <section><h3>开始</h3><a href="dsh-0.1.0-rc.5/introduction.html"><strong>DSH 是什么</strong><span>职责、组成与项目状态</span></a><a href="dsh-0.1.0-rc.5/mental-model.html"><strong>核心心智模型</strong><span>服务拓扑与三条方向</span></a></section>
+          <section><h3>开始</h3><a href="atlas.html"><strong>观察图谱</strong><span>对象类型与共同观察维度</span></a><a href="dsh-0.1.0-rc.5/introduction.html"><strong>DSH 是什么</strong><span>职责、组成与项目状态</span></a><a href="dsh-0.1.0-rc.5/mental-model.html"><strong>核心心智模型</strong><span>服务拓扑与三条方向</span></a></section>
           <section><h3>架构</h3><a href="dsh-0.1.0-rc.5/profile.html"><strong>声明与配置</strong><span>Profile、Bundle、Patch</span></a><a href="dsh-0.1.0-rc.5/loader.html"><strong>运行时协调</strong><span>Loader、Include、HMR</span></a><a href="dsh-0.1.0-rc.5/context.html"><strong>统一上下文</strong><span>服务、隔离、事件与效应</span></a><a href="dsh-0.1.0-rc.5/fiber.html"><strong>插件生命周期</strong><span>六态、依赖和撤销</span></a><a href="dsh-0.1.0-rc.5/plugins.html"><strong>Agent 能力</strong><span>Session、Tools、Loop、LLM</span></a></section>
           <section><h3>运行指南</h3><a href="dsh-0.1.0-rc.5/conversation.html"><strong>一次对话如何运行</strong><span>从用户输入到工具结果</span></a><a href="dsh-0.1.0-rc.5/updates.html"><strong>更新与恢复</strong><span>差异、汇合与回滚边界</span></a></section>
-          <section><h3>参考</h3><a href="dsh-0.1.0-rc.5/boundaries.html"><strong>能力边界与版本</strong><span>框架保证、实现责任与资料</span></a><a href="dsh-0.1.0-rc.5/community.html"><strong>社区观察</strong><span>GitHub、知乎、X、Reddit 与时间戳</span></a></section>
+          <section><h3>参考</h3><a href="dsh-0.1.0-rc.5/boundaries.html"><strong>能力边界与版本</strong><span>框架保证、实现责任与资料</span></a><a href="dsh-0.1.0-rc.5/community.html"><strong>公开讨论观察</strong><span>GitHub、知乎、X、Reddit 与时间戳</span></a></section>
         </div>
       </section>
     </main>
 
     <footer class="site-footer">
-      <p><strong>DSH ARCHITECTURE DOCS</strong> · 独立中文架构解读</p>
-      <p>MIT · 无统计脚本 · 无 Cookie · <a href="dsh-0.1.0-rc.5/community.html">社区观察</a> · <a href="https://github.com/deepseek-ai/deepseek-harness">DSH 官方源码</a></p>
+      <p><strong>AI HARNESS ATLAS DOCS</strong> · 独立中文观察图谱</p>
+      <p>MIT · 无统计脚本 · 无 Cookie · <a href="atlas.html">对象档案</a> · <a href="dsh-0.1.0-rc.5/community.html">公开讨论观察</a> · <a href="https://github.com/deepseek-ai/deepseek-harness">DSH 官方源码</a></p>
       <a href="../" class="back-top">返回架构图 →</a>
     </footer>
   </body>

@@ -367,7 +367,7 @@
   function renderVersion(version) {
     state.version = version;
     document.documentElement.dataset.version = version.id;
-    document.title = `DSH Architecture Atlas｜${versionLabel(version)} 中文架构解读`;
+    document.title = `AI Harness Atlas｜DSH ${versionLabel(version)} 中文架构解读`;
     byId("version-select").value = version.id;
     bindVersionText(version);
     renderArchitecture(version);

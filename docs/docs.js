@@ -3,6 +3,7 @@
 
   const versionPath = "dsh-0.1.0-rc.5";
   const pages = [
+    { group: "开始", slug: "atlas", title: "观察图谱", description: "先区分 Harness 运行时、Agent SDK、编排层和 Coding Agent。", keywords: "harness atlas runtime sdk orchestration coding agent 比较" },
     { group: "开始", slug: "introduction", title: "DSH 是什么", description: "认识 Harness 的职责、项目状态与阅读入口。", keywords: "入门 harness agent deepseek" },
     { group: "开始", slug: "mental-model", title: "核心心智模型", description: "用目标拓扑、服务可用性和可逆生命周期理解 DSH。", keywords: "架构 everything plugin 拓扑" },
     { group: "架构", slug: "profile", title: "声明与配置", description: "Profile、Bundle 与 Patch 如何描述目标系统。", keywords: "profile bundle patch 配置" },
@@ -13,7 +14,7 @@
     { group: "运行指南", slug: "conversation", title: "一次对话如何运行", description: "沿一条消息追踪 Session、Loop、LLM 与工具调用。", keywords: "conversation turn step message tool" },
     { group: "运行指南", slug: "updates", title: "更新与恢复", description: "配置更新、热重载、汇合与失败恢复。", keywords: "reload rollback settlement update 热更新 hmr" },
     { group: "参考", slug: "boundaries", title: "能力边界与版本", description: "哪些是框架保证，哪些仍取决于实现与版本。", keywords: "boundary version developer preview 限制" },
-    { group: "参考", slug: "community", title: "社区观察", description: "按当前 DSH 版本查看 GitHub、知乎、X、Reddit 等公开讨论观察。", keywords: "community observation github 知乎 x reddit 时间戳 版本" }
+    { group: "参考", slug: "community", title: "公开讨论观察", description: "按当前 DSH 版本查看 GitHub、知乎、X、Reddit 等公开讨论观察。", keywords: "community observation github 知乎 x reddit 时间戳 版本" }
   ];
 
   const currentFile = window.location.pathname.split("/").pop() || "index.html";
@@ -27,7 +28,7 @@
     const link = document.createElement("a");
     link.dataset.headerCommunity = "";
     link.href = hrefFor("community");
-    link.textContent = "社区观察";
+    link.textContent = "公开讨论观察";
     if (currentSlug === "community") {
       nav.querySelector('a[aria-current="page"]')?.removeAttribute("aria-current");
       link.setAttribute("aria-current", "page");
@@ -66,7 +67,7 @@
 
     const overview = document.createElement("a");
     overview.className = "docs-overview-link";
-    overview.href = insideVersion ? "../../#atlas" : "../#atlas";
+    overview.href = insideVersion ? "../../#atlas" : "../#atlas-overview";
     overview.textContent = "查看交互架构图 ↗";
     body.append(overview);
     sidebar.replaceChildren(toggle, body);
