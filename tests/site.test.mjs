@@ -227,6 +227,17 @@ test("homepage keeps the Atlas mental model ahead of the DSH case study", () => 
   assert.match(html, /DSH 是第一份完整深度档案/);
 });
 
+test("repository introduction presents the Atlas before the DSH case", () => {
+  const readme = read("README.md");
+  const dshPosition = readme.indexOf("## DSH 在图谱中的位置");
+  const atlasPosition = readme.indexOf("## 这张图谱观察什么");
+  assert.ok(atlasPosition >= 0 && dshPosition > atlasPosition);
+  assert.match(readme, /多类 AI Harness、Agent SDK、编排运行时和 Coding Agent/);
+  assert.match(readme, /当前对象包括 Harness runtime/);
+  assert.match(readme, /DSH（DeepSeek Harness）是本图谱目前第一份完整深度档案/);
+  assert.ok(!readme.startsWith("# DSH"));
+});
+
 test("reader-facing copy does not expose production language", () => {
   const publicCopy = `${htmlFiles.map(read).join("\n")}\n${read("data/versions.js")}`;
   const producerPhrases = [
