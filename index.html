@@ -7,14 +7,14 @@
     <meta name="description" content="DeepSeek Harness（DSH）架构的中文可视化解读：从 Profile、Loader、Cordis Context 到 Fiber 与领域插件。">
     <meta property="og:type" content="website">
     <meta property="og:title" content="DSH Architecture Atlas｜一张图看懂 Everything is a Plugin">
-    <meta property="og:description" content="可交互、可追溯、按版本维护的 DeepSeek Harness 中文架构解读。">
+    <meta property="og:description" content="可交互、有源码依据、可按 DSH 版本切换的中文架构解读。">
     <meta property="og:image" content="assets/social-card.png">
     <meta name="twitter:card" content="summary_large_image">
     <title>DSH Architecture Atlas｜可视化架构解读</title>
     <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="styles.css">
-    <script src="data/versions.js" defer></script>
-    <script src="app.js" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260814.3">
+    <script src="data/versions.js?v=20260814.3" defer></script>
+    <script src="app.js?v=20260814.3" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">跳到正文</a>
@@ -31,9 +31,9 @@
       </nav>
       <div class="header-actions">
         <label class="version-control">
-          <span class="sr-only">选择解读版本</span>
+          <span class="sr-only">选择 DSH 版本</span>
           <span class="version-dot" aria-hidden="true"></span>
-          <select id="version-select" aria-label="选择解读版本"></select>
+          <select id="version-select" aria-label="选择 DSH 版本"></select>
         </label>
         <button class="icon-button" id="share-button" type="button" aria-label="复制当前版本链接">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15l6-6M11 6l1.4-1.4a4.2 4.2 0 016 6L17 12M13 18l-1.4 1.4a4.2 4.2 0 01-6-6L7 12"/></svg>
@@ -59,19 +59,19 @@
           </div>
         </div>
 
-        <aside class="hero-aside reveal" aria-label="版本研究基线">
+        <aside class="hero-aside reveal" aria-label="当前内容对应的 DSH 源码版本">
           <div class="status-stamp">
-            <span class="status-stamp-label">SNAPSHOT</span>
+            <span class="status-stamp-label">当前查看</span>
             <strong data-bind="versionLabel"></strong>
             <span data-bind="status"></span>
           </div>
           <dl class="baseline-list">
-            <div><dt>DSH</dt><dd data-bind="dshVersion"></dd></div>
-            <div><dt>Source</dt><dd data-bind="sourceCommit"></dd></div>
+            <div><dt>上游状态</dt><dd>Developer Preview</dd></div>
+            <div><dt>源码提交</dt><dd data-bind="sourceCommit"></dd></div>
             <div><dt>Cordis</dt><dd data-bind="cordisVersion"></dd></div>
-            <div><dt>Reviewed</dt><dd data-bind="date"></dd></div>
+            <div><dt>核对日期</dt><dd data-bind="date"></dd></div>
           </dl>
-          <p class="baseline-note">这是一份带版本锚点的研究快照，不把快速变化的 Developer Preview 写成永恒结论。</p>
+          <p class="baseline-note">DSH 仍处于 Developer Preview。这里的说明只对应上方标出的源码版本；其他版本请从页顶切换。</p>
         </aside>
 
         <div class="hero-principle reveal">
@@ -93,7 +93,7 @@
         <div class="dsh-intro-copy reveal">
           <p class="section-index">BEFORE THE MAP / DSH 是什么</p>
           <h2 id="dsh-intro-title">DeepSeek Harness：<br>把模型接到真实环境的 Agent 运行壳</h2>
-          <p><strong>模型负责判断下一步；Harness 负责让这一步安全、可追踪地发生。</strong>DSH（DeepSeek Harness）是 DeepSeek AI 开源的 Agent Harness：它组织会话与上下文，把模型接到工具、权限、沙箱、文件系统和界面，并记录运行过程。它最特别的设计是——这些能力连同 Agent Loop 本身，全部由插件组成，由 Cordis 负责动态组合与生命周期。</p>
+          <p><strong>模型负责判断下一步；Harness 负责让这一步安全、可追踪地发生。</strong>DSH（DeepSeek Harness）是 DeepSeek AI 开源的 Agent Harness。它组织会话与上下文，把模型接到工具、权限、沙箱、文件系统和界面，并记录运行过程。在 DSH 里，这些能力连同 Agent Loop 本身都是插件；Cordis 根据配置和服务依赖安排它们的激活与卸载。</p>
           <div class="dsh-facts" aria-label="DSH 项目状态">
             <span>OPEN SOURCE</span>
             <span>MIT</span>
@@ -112,7 +112,7 @@
             <a href="https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/architecture.md" rel="noreferrer"><span><small>03</small>官方架构文档</span><b>↗</b></a>
             <a href="https://github.com/cordiverse/paper" rel="noreferrer"><span><small>04</small>时空可组合性论文</span><b>↗</b></a>
           </nav>
-          <p class="preview-warning">上游明确标注为 Developer Preview，兼容性可能发生破坏性变化；本站因此按源码版本保留历史解读。</p>
+          <p class="preview-warning">DSH 目前仍处于 Developer Preview，后续版本可能不兼容。本页按源码版本区分内容，避免把不同版本的行为混在一起。</p>
         </aside>
       </section>
 
@@ -152,7 +152,7 @@
             <p class="section-index">02 / LIVE CONTEXT</p>
             <h2 id="topology-title">运行中的 agent，是 ctx 上的一组活键</h2>
           </div>
-          <p>每个核心包贡献一段领域词汇。没有哪一个节点天然拥有“核心”地位，连循环驱动也能被替换。</p>
+          <p>Session、Tools、LLM 和 Agent Loop 等服务都挂在同一个 Context 上。Agent Loop 也能替换。</p>
         </div>
 
         <div class="topology-layout reveal">
@@ -167,7 +167,7 @@
             <svg class="topology-lines" id="topology-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
           </div>
           <div class="topology-copy">
-            <p class="pull-quote">“模型、工具、会话、循环，不是住在框架里；它们在 Context 上彼此成为条件。”</p>
+            <p class="pull-quote">模型、工具、会话和循环通过 Context 互相发现。它们不依附于一个固定核心。</p>
             <ul class="topology-legend" id="topology-legend"></ul>
           </div>
         </div>
@@ -190,7 +190,7 @@
             <p class="section-index">04 / MECHANISM LAB</p>
             <h2 id="mechanism-title">三件事，让插件真的可以被替换</h2>
           </div>
-          <p>插件化不是“能 import”。关键是撤销、依赖响应和失败时的事务恢复。</p>
+          <p>可替换的插件需要三项保证：效果可撤销、依赖变化能响应、更新失败能恢复旧状态。</p>
         </div>
 
         <div class="mechanism-lab reveal">
@@ -237,9 +237,9 @@
         <div class="section-heading reveal">
           <div>
             <p class="section-index">06 / THEORY → SOURCE</p>
-            <h2 id="evidence-title">每个判断，尽量落到可检查的代码</h2>
+            <h2 id="evidence-title">这些判断，可以回到代码里核对</h2>
           </div>
-          <p>“论文里这样说”与“工程里这样做”是两列不同证据；表格同时标出直接对应、工程精化和理论之外的扩展。</p>
+          <p>论文给出机制，DSH 和 Cordis 给出实现。表格列出两者的对应关系，并标明哪些部分是工程细化或额外扩展。</p>
         </div>
 
         <div class="evidence-table-wrap reveal" tabindex="0">
@@ -254,9 +254,9 @@
         <div class="section-heading light reveal">
           <div>
             <p class="section-index">07 / HONEST BOUNDARIES</p>
-            <h2 id="gap-title">这套架构没有解决什么</h2>
+            <h2 id="gap-title">运行时仍有四个边界</h2>
           </div>
-          <p>好的架构解读不把设计目标冒充运行时保证。</p>
+          <p>设计目标和运行时保证之间还有距离。下面四项分别依靠组件作者、测试或后续版本处理。</p>
         </div>
         <div class="gap-grid" id="gap-grid"></div>
       </section>
@@ -264,19 +264,19 @@
       <section class="section source-section" aria-labelledby="source-title">
         <div class="section-heading reveal">
           <div>
-            <p class="section-index">08 / SOURCE & VERSIONING</p>
-            <h2 id="source-title">一份可以继续生长的公共笔记</h2>
+            <p class="section-index">08 / VERSION & SOURCES</p>
+            <h2 id="source-title">先确认版本，再带走结论</h2>
           </div>
-          <p>版本号同时记录“解读站发布版”和它所依据的 DSH / Cordis / 论文基线。旧链接保持可复查。</p>
+          <p>DSH 迭代很快。同一个结论在不同源码版本里可能不成立，因此每页都标出 DSH 提交、Cordis 版本和论文日期。</p>
         </div>
 
         <div class="source-grid reveal">
           <article class="source-card source-card-primary">
-            <p class="card-label">CURRENT RELEASE</p>
+            <p class="card-label">当前查看</p>
             <h3 data-bind="versionLabel"></h3>
             <dl>
-              <div><dt>解读日期</dt><dd data-bind="date"></dd></div>
-              <div><dt>DSH</dt><dd data-bind="dshVersion"></dd></div>
+              <div><dt>核对日期</dt><dd data-bind="date"></dd></div>
+              <div><dt>上游状态</dt><dd>Developer Preview</dd></div>
               <div><dt>Commit</dt><dd><a id="source-commit-link" href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438" rel="noreferrer"><code data-bind="sourceCommit"></code> ↗</a></dd></div>
               <div><dt>Cordis</dt><dd data-bind="cordisVersion"></dd></div>
               <div><dt>论文草稿</dt><dd data-bind="paperDraft"></dd></div>
@@ -285,21 +285,21 @@
           </article>
 
           <article class="source-card">
-            <p class="card-label">CHANGELOG</p>
-            <h3>本版包含</h3>
+            <p class="card-label">阅读范围</p>
+            <h3>这一页能读到什么</h3>
             <ul class="changelog" id="changelog"></ul>
           </article>
 
           <article class="source-card">
-            <p class="card-label">PRIMARY SOURCES</p>
-            <h3>继续核对原始材料</h3>
+            <p class="card-label">原始资料</p>
+            <h3>继续往源码里看</h3>
             <ul class="source-links">
               <li><a href="https://github.com/deepseek-ai/deepseek-harness" rel="noreferrer">DeepSeek Harness <span>↗</span></a></li>
               <li><a href="https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/architecture.md" rel="noreferrer">官方架构文档 <span>↗</span></a></li>
               <li><a href="https://github.com/cordiverse/paper" rel="noreferrer">时空可组合性论文 <span>↗</span></a></li>
               <li><a href="https://github.com/cordiverse/cordis" rel="noreferrer">Cordis 上游 <span>↗</span></a></li>
             </ul>
-            <p class="source-disclaimer">本站为独立、非官方、AI 辅助且经人工式证据核对的中文解读，与 DeepSeek、Cordis 或 GitHub 无隶属、赞助或背书关系。</p>
+            <p class="source-disclaimer">内容根据公开源码和论文逐项核对。这是一份独立的中文社区解读，不代表 DeepSeek、Cordis 或 GitHub，也未获得这些项目的赞助或背书。</p>
           </article>
         </div>
       </section>
@@ -315,8 +315,8 @@
     </main>
 
     <footer class="site-footer">
-      <p><strong>DSH ARCHITECTURE ATLAS</strong> · Independent community field guide</p>
-      <p>MIT · No analytics · No cookies · <a href="https://github.com/deepseek-ai/deepseek-harness">Source first</a></p>
+      <p><strong>DSH ARCHITECTURE ATLAS</strong> · 独立中文架构解读</p>
+      <p>MIT · 无统计脚本 · 无 Cookie · <a href="https://github.com/deepseek-ai/deepseek-harness">查看官方源码</a></p>
       <a href="#top" class="back-top">回到顶部 ↑</a>
     </footer>
 

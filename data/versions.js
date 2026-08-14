@@ -6,18 +6,18 @@
  * newest reviewed entry. The UI and permalink switcher update automatically.
  */
 window.DSH_ATLAS = {
-  latest: "0.1.0",
+  latest: "dsh-0.1.0-rc.5",
   versions: [
     {
-      id: "0.1.0",
-      label: "v0.1.0 · 首发基线",
+      id: "dsh-0.1.0-rc.5",
+      label: "DSH v0.1.0-rc.5",
       date: "2026-08-14",
       dshVersion: "v0.1.0-rc.5",
       sourceCommit: "47f9438",
       sourceUrl: "https://github.com/deepseek-ai/deepseek-harness/tree/47f9438",
       cordisVersion: "4.0.1",
       paperDraft: "2026-08-13",
-      status: "研究快照",
+      status: "源码基线",
       lede: "把 DSH 看成一个可替换的插件拓扑，而不是一个不断长大的 Agent 单体。",
       summary: "Profile 决定要什么，Loader 负责把声明协调成运行态，Cordis Context 承载服务与效应，Fiber 让每个插件可激活、可失败、可卸载，领域插件最终拼成一次可追踪的对话。",
       layers: [
@@ -26,10 +26,10 @@ window.DSH_ATLAS = {
           index: "01",
           eyebrow: "声明层",
           title: "Profile · Bundle · Patch",
-          short: "描述想要的系统，而不是写死启动顺序。",
-          detail: "Bundle 提供基础行，Profile 组合 bundle，用户 patch 做最后覆盖。同一 id 后写胜出；覆盖的是整行配置，不是深合并。行顺序不承担加载语义。",
+          short: "用声明描述目标系统，加载时序交给依赖解析。",
+          detail: "Bundle 提供基础行，Profile 组合 bundle，用户 patch 做最后覆盖。同一 id 后写胜出；覆盖以整行替换进行，不做深合并。插件根据服务可用性激活，配置行的先后顺序不决定加载顺序。",
           evidence: "packages/bundle/{base,web-app,headless}/cordis.patch.yml",
-          principle: "声明是目标态，不是命令序列",
+          principle: "声明定义目标态，服务可用性决定激活顺序",
           tone: "yellow"
         },
         {
@@ -71,7 +71,7 @@ window.DSH_ATLAS = {
           eyebrow: "领域词汇",
           title: "Session · Prompt · Tools · Agent · LLM",
           short: "连 Agent Loop 都只是可替换插件。",
-          detail: "核心包分别贡献 ctx.sessions、ctx.systemPrompt、ctx.tools、ctx.agents、ctx.agentLoop 与 ctx.llm。它们不是围绕特权核心的挂件，而是共同临时组成一个 agent。",
+          detail: "核心包分别贡献 ctx.sessions、ctx.systemPrompt、ctx.tools、ctx.agents、ctx.agentLoop 与 ctx.llm。这些服务在 Context 上形成当前 agent，任何一项都可以换成另一种实现。",
           evidence: "packages/core/* · packages/llm/*",
           principle: "Everything is a plugin",
           tone: "blue"
@@ -98,7 +98,7 @@ window.DSH_ATLAS = {
           id: "effects",
           label: "可逆效应",
           title: "时间维度：每一次写入，都带着回去的路",
-          intro: "ctx.effect 不只是执行一个副作用。它同时把对应 disposer 收入 Fiber 的逆栈。多个效应按 LIFO 组合，拆卸因此从装载逻辑自动推导。",
+          intro: "ctx.effect 执行副作用时，会把对应 disposer 收入 Fiber 的逆栈。多个效应按 LIFO 组合，拆卸顺序因此可以从装载逻辑推导。",
           code: [
             "ctx.effect(() => {",
             "  registry.set(key, service)",
@@ -110,7 +110,7 @@ window.DSH_ATLAS = {
             { n: "B", title: "Accumulate", text: "Fiber 把逆前置进 disposer 链。" },
             { n: "C", title: "Recover", text: "卸载时后注册先释放，恢复到观察等价状态。" }
           ],
-          caveat: "逆的诚实性依赖组件作者与测试；运行时不会证明恢复真的等价。"
+          caveat: "运行时负责按顺序调用 disposer；恢复结果是否等价，仍由组件作者和测试确认。"
         },
         {
           id: "coeffects",
@@ -168,17 +168,17 @@ window.DSH_ATLAS = {
         { theory: "键上的操作集", runtime: "emit / waterfall / parallel / serial", evidence: "events.ts", verdict: "工程扩展" }
       ],
       gaps: [
-        { id: "01", title: "恢复靠可信的逆", body: "框架能保证按正确顺序调用 disposer，却不能证明 disposer 把外部世界恢复到观察等价状态。" },
+        { id: "01", title: "恢复靠可信的逆", body: "框架保证 disposer 的调用顺序。外部世界是否恢复到观察等价状态，仍取决于 disposer 的实现。" },
         { id: "02", title: "组件内存态不跨重载", body: "HMR 是撤销旧组件并重放新组件。要保留缓存或连接，状态必须放到被替换组件之外。" },
         { id: "03", title: "事件与流式控制在演算之外", body: "waterfall、异步工具调用和流式 LLM 输出是必要工程扩展，但没有被十条转移规则完整形式化。" },
         { id: "04", title: "Web HMR 仍是边界", body: "该基线中 web-app 明确禁用共享 HMR，等待浏览器侧重载生命周期被验证。" }
       ],
       changelog: [
-        "新增 DSH 是什么、官方资料入口与一行启动命令",
-        "建立五层架构交互图与服务拓扑",
-        "补全六态 Fiber 状态机、三类核心机制和一次对话旅程",
-        "加入理论—源码证据矩阵、局限说明和版本永久链接",
-        "站点零第三方脚本、零追踪、零网络请求"
+        "DSH 是什么，以及官方资料和启动方式",
+        "Profile、Loader、Context、Fiber 与领域插件之间的关系",
+        "一次对话如何穿过六个架构时刻",
+        "可逆效应、响应式依赖和事务协调如何工作",
+        "源码证据与运行时边界"
       ]
     }
   ]

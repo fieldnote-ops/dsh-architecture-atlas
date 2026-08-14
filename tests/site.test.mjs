@@ -45,7 +45,8 @@ test("all local page assets exist and scripts/styles are same-origin", () => {
   const references = [...html.matchAll(/(?:src|href)="([^"]+)"/g)].map((match) => match[1]);
   const localReferences = references.filter((ref) => !/^(?:https?:|#|mailto:)/.test(ref));
   for (const reference of localReferences) {
-    assert.ok(existsSync(resolve(root, reference)), `missing local asset: ${reference}`);
+    const localPath = reference.split(/[?#]/, 1)[0];
+    assert.ok(existsSync(resolve(root, localPath)), `missing local asset: ${reference}`);
   }
 
   const executableReferences = [...html.matchAll(/<(?:script|link)[^>]+(?:src|href)="([^"]+)"/g)]
@@ -57,7 +58,27 @@ test("page contains accessibility and sharing essentials", () => {
   const html = read("index.html");
   assert.match(html, /<html lang="zh-CN">/);
   assert.match(html, /class="skip-link"/);
-  assert.match(html, /aria-label="选择解读版本"/);
+  assert.match(html, /aria-label="选择 DSH 版本"/);
   assert.match(html, /property="og:image" content="assets\/social-card\.png"/);
   assert.ok(existsSync(resolve(root, "assets/social-card.png")));
+});
+
+test("reader-facing copy does not expose production language", () => {
+  const publicCopy = `${read("index.html")}\n${read("data/versions.js")}`;
+  const producerPhrases = [
+    "首发基线",
+    "CURRENT RELEASE",
+    "CHANGELOG",
+    "本版包含",
+    "解读站发布版",
+    "公共笔记",
+    "新增 DSH",
+    "站点零",
+    "AI 辅助",
+    "人工式证据核对",
+    "生成产物"
+  ];
+  for (const phrase of producerPhrases) {
+    assert.ok(!publicCopy.includes(phrase), `producer-facing phrase leaked into public copy: ${phrase}`);
+  }
 });
