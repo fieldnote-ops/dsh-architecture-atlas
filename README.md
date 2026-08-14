@@ -9,6 +9,7 @@ DSH（DeepSeek Harness）是 DeepSeek AI 开源的 Agent Harness。简单说，�
 ## 站点内容
 
 - 五层交互架构图：声明层、协调层、Context、Fiber、领域插件；
+- 可连续阅读的分层 Docs：每层包含问题背景、运行流程、关键规则、源码顺序与常见误解；
 - DSH 简介、官方资料链接和一行启动命令；
 - `ctx.*` 服务拓扑与一次对话的六个架构时刻；
 - 可逆效应、响应式依赖、事务协调三个机制实验台；
@@ -35,15 +36,16 @@ npm test
 
 ## 新增解读版本
 
-版本内容集中在 `data/versions.js`：
+可视化版本内容集中在 `data/versions.js`，分层文档放在对应的 `docs/dsh-<version>/` 目录：
 
 1. 复制现有版本对象并赋予新的 `id`；
 2. 更新 `dshVersion`、`sourceCommit`、`cordisVersion`、`paperDraft` 与日期；
 3. 只写入能由公开源码或论文核对的变化；
-4. 把 `latest` 指向新版本；
-5. 运行 `npm test`，提交后 GitHub Pages 会自动部署。
+4. 复制五层 Docs 到新版本目录，更新内容、源码链接和前后篇导航；
+5. 把 `latest` 指向新版本，并让主站各层的 `docsUrl` 指向新目录；
+6. 运行 `npm test`，提交后 GitHub Pages 会自动部署。
 
-旧版本对象应保持不变，以确保 `?version=dsh-0.1.0-rc.5` 这类链接仍可复查当时的判断。
+旧版本对象和 Docs 目录都应保持不变，以确保 `?version=dsh-0.1.0-rc.5` 与 `docs/dsh-0.1.0-rc.5/` 这类链接仍可复查当时的判断。
 
 ## 主要资料
 

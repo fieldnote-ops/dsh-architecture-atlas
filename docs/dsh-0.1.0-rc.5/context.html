@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c19">
+    <meta name="description" content="DSH Cordis Context 分层解读：服务键、隔离、拦截、事件与可逆效应如何组成统一运行时。">
+    <meta property="og:title" content="Cordis Context Γ∞｜DSH Architecture Docs">
+    <meta property="og:description" content="读懂 DSH 的统一上下文：能力如何进入 ctx，又如何被依赖者发现。">
+    <meta property="og:image" content="../../assets/social-card.png">
+    <title>Cordis Context Γ∞｜DSH Architecture Docs</title>
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260814.4">
+    <link rel="stylesheet" href="../docs.css?v=20260814.4">
+  </head>
+  <body class="docs-body">
+    <a class="skip-link" href="#article">跳到正文</a>
+    <header class="site-header docs-header">
+      <a class="wordmark" href="../../" aria-label="DSH Architecture Atlas 首页"><span class="wordmark-mark" aria-hidden="true">D/</span><span>ARCHITECTURE ATLAS</span></a>
+      <nav class="header-nav" aria-label="主导航"><a href="../../#atlas">架构图</a><a href="../" aria-current="page">Docs</a><a href="../../#mechanisms">机制</a><a href="../../#evidence">证据</a></nav>
+      <div class="header-actions"><a class="docs-version" href="../#version">DSH v0.1.0-rc.5</a></div>
+    </header>
+    <main class="docs-shell">
+      <aside class="docs-sidebar" aria-label="五层文档导航">
+        <p>DSH v0.1.0-rc.5 / 五层阅读</p>
+        <nav><a href="profile.html"><span>01</span>Profile / Bundle / Patch</a><a href="loader.html"><span>02</span>Loader / Include / HMR</a><a href="context.html" aria-current="page"><span>03</span>Cordis Context Γ∞</a><a href="fiber.html"><span>04</span>Fiber / Effect / Inject</a><a href="plugins.html"><span>05</span>Domain Plugins</a></nav>
+        <a class="back-atlas" href="../../#atlas">← 返回交互架构图</a>
+      </aside>
+
+      <article class="doc-article" id="article">
+        <p class="doc-breadcrumb">DOCS / 03 / UNIFIED RUNTIME</p>
+        <h1>Cordis<br>Context · Γ∞</h1>
+        <p class="doc-lede">Context 不是传参方便用的容器。它同时承载服务解析、隔离边界、拦截信息、事件与效果归属，是插件彼此发现的统一运行时。</p>
+        <div class="doc-baseline"><span>DSH v0.1.0-rc.5</span><span>Cordis 4.0.1</span><span>运行时底座</span></div>
+        <div class="doc-summary"><strong>一句话模型</strong><p>插件不直接抓取另一个插件实例，而是通过 <code>ctx.&lt;service&gt;</code> 读取能力；Context 在访问点解析当前隔离范围内可用的服务，并把访问纳入依赖与生命周期约束。</p></div>
+
+        <section class="doc-section" id="problem">
+          <h2>它解决什么问题</h2>
+          <p>“Everything is a plugin” 只有在插件之间没有隐藏的特权通道时才成立。如果 Agent Loop 直接 import 某个 LLM 实现，或者工具系统把注册表放进全局变量，替换插件就会断开一条看不见的依赖。</p>
+          <p>Context 把共享能力实体化为服务键：<code>sessions</code>、<code>systemPrompt</code>、<code>tools</code>、<code>agents</code>、<code>agentLoop</code>、<code>llm</code>。提供者把能力写入上下文，使用者声明需要哪些键；运行时据此判断插件何时可以激活。</p>
+          <div class="doc-callout"><p><strong>读 Context 时要同时看“值”和“关系”。</strong>一个服务键不只是对象存储位置，也是提供者、使用者、隔离范围与生命周期之间的连接点。</p></div>
+        </section>
+
+        <section class="doc-section" id="flow">
+          <h2>这一层如何工作</h2>
+          <div class="doc-flow">
+            <div><small>01 / PROVIDE</small><strong>服务进入 Context</strong><p>插件在自己的 Fiber 生命周期内提供服务，并让注册动作带上可撤销效果。</p></div>
+            <div><small>02 / RESOLVE</small><strong>代理在访问点解析</strong><p><code>ctx.llm</code> 等读取会考虑当前 Context、隔离和拦截条件。</p></div>
+            <div><small>03 / REACT</small><strong>可用性驱动生命周期</strong><p>服务出现或消失后，依赖者被重新判断：激活、保持、等待或卸载。</p></div>
+          </div>
+          <h3>统一，但不等于所有东西全局共享</h3>
+          <p>Γ∞ 表达一套可统一推理的上下文模型，并不意味着所有插件都读写同一个全局对象。Context 可以派生，isolate 让同一服务键在不同范围解析到不同实例，intercept 则附带横切信息。统一的是机制，不是值域。</p>
+          <h3>事件是另一种扩展接缝</h3>
+          <p>除了直接服务调用，Cordis 还提供 <code>emit</code>、<code>waterfall</code>、<code>parallel</code>、<code>serial</code> 等事件操作。它们让多个插件围绕同一事件扩展行为；但复杂异步流与流式模型输出并没有被论文中的转移规则完整形式化。</p>
+        </section>
+
+        <section class="doc-section" id="rules">
+          <h2>关键规则</h2>
+          <ul>
+            <li><strong>共享能力先成为服务键。</strong>跨插件访问不应依赖具体实现的内部对象。</li>
+            <li><strong>读取发生在 Context 代理上。</strong>运行时可以在访问点解析隔离范围并检查依赖。</li>
+            <li><strong>提供服务属于某个 Fiber。</strong>当 Fiber 卸载，服务供给和相关效应应一起撤销。</li>
+            <li><strong>隔离改变解析结果。</strong>同名服务可以在不同派生 Context 中指向不同提供者。</li>
+            <li><strong>直接 import 会绕开图。</strong>框架无法自动协调未被服务键和效应表达的隐藏关系。</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="source">
+          <h2>源码阅读顺序</h2>
+          <ol class="source-order">
+            <li><span>01</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/blob/47f9438/vendor/cordis/src/context.ts"><code>vendor/cordis/src/context.ts ↗</code></a><small>先看 Context 代理、派生与 effect 接口怎样汇合。</small></div></li>
+            <li><span>02</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/blob/47f9438/vendor/cordis/src/service.ts"><code>vendor/cordis/src/service.ts ↗</code></a><small>理解服务声明、依赖和 apply 之间的约定。</small></div></li>
+            <li><span>03</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/blob/47f9438/vendor/cordis/src/registry.ts"><code>vendor/cordis/src/registry.ts ↗</code></a><small>追踪服务提供者怎样进入注册表并被当前上下文解析。</small></div></li>
+            <li><span>04</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/blob/47f9438/vendor/cordis/src/events.ts"><code>vendor/cordis/src/events.ts ↗</code></a><small>最后看事件操作如何扩展跨插件协作方式。</small></div></li>
+            <li><span>05</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/packages/core/scope"><code>packages/core/scope ↗</code></a><small>回到 DSH，观察运行范围怎样进入领域服务。</small></div></li>
+          </ol>
+        </section>
+
+        <section class="doc-section" id="misconception">
+          <h2>常见误解</h2>
+          <div class="misconception">
+            <div><small>误解</small><p>Context 就是依赖注入容器，负责从名字拿到对象。</p></div>
+            <div><small>更准确的理解</small><p>它还承载隔离、拦截、事件、效应归属和生命周期反应，是运行时语义的一部分。</p></div>
+            <div><small>误解</small><p>所有插件都使用 Context，就不会再出现耦合。</p></div>
+            <div><small>更准确的理解</small><p>直接 import、全局写入和未返回 disposer 的外部副作用，仍然可以绕开边界。</p></div>
+          </div>
+        </section>
+
+        <nav class="doc-pagination" aria-label="文档前后篇"><a href="loader.html"><small>← 上一层</small><strong>Loader · Include · HMR</strong></a><a href="fiber.html"><small>下一层 →</small><strong>Fiber · Effect · Inject</strong></a></nav>
+      </article>
+    </main>
+    <footer class="site-footer"><p><strong>DSH ARCHITECTURE DOCS</strong> · 03 / 05</p><p>源码基线：DSH v0.1.0-rc.5 · Cordis 4.0.1</p><a href="#article" class="back-top">回到顶部 ↑</a></footer>
+  </body>
+</html>

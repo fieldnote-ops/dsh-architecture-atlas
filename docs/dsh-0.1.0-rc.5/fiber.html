@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c19">
+    <meta name="description" content="DSH Cordis Fiber 深度解读：六态生命周期、target 与 committed、可逆效应、依赖排空与汇合。">
+    <meta property="og:title" content="Fiber · Effect · Inject｜DSH Architecture Docs">
+    <meta property="og:description" content="读懂 DSH 的生命周期引擎：插件如何激活、失败、排空和逆序撤销。">
+    <meta property="og:image" content="../../assets/social-card.png">
+    <title>Fiber · Effect · Inject｜DSH Architecture Docs</title>
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260814.4">
+    <link rel="stylesheet" href="../docs.css?v=20260814.4">
+  </head>
+  <body class="docs-body">
+    <a class="skip-link" href="#article">跳到正文</a>
+    <header class="site-header docs-header">
+      <a class="wordmark" href="../../" aria-label="DSH Architecture Atlas 首页"><span class="wordmark-mark" aria-hidden="true">D/</span><span>ARCHITECTURE ATLAS</span></a>
+      <nav class="header-nav" aria-label="主导航"><a href="../../#atlas">架构图</a><a href="../" aria-current="page">Docs</a><a href="../../#mechanisms">机制</a><a href="../../#evidence">证据</a></nav>
+      <div class="header-actions"><a class="docs-version" href="../#version">DSH v0.1.0-rc.5</a></div>
+    </header>
+    <main class="docs-shell">
+      <aside class="docs-sidebar" aria-label="五层文档导航">
+        <p>DSH v0.1.0-rc.5 / 五层阅读</p>
+        <nav><a href="profile.html"><span>01</span>Profile / Bundle / Patch</a><a href="loader.html"><span>02</span>Loader / Include / HMR</a><a href="context.html"><span>03</span>Cordis Context Γ∞</a><a href="fiber.html" aria-current="page"><span>04</span>Fiber / Effect / Inject</a><a href="plugins.html"><span>05</span>Domain Plugins</a></nav>
+        <a class="back-atlas" href="../../#atlas">← 返回交互架构图</a>
+      </aside>
+
+      <article class="doc-article" id="article">
+        <p class="doc-breadcrumb">DOCS / 04 / LIFECYCLE ENGINE</p>
+        <h1>Fiber ·<br>Effect · Inject</h1>
+        <p class="doc-lede">Fiber 把一个插件实例从“对象”变成“可协调的生命周期”：它知道插件想去哪、现在确认到哪、依赖是否满足，以及卸载时要逆序撤销什么。</p>
+        <div class="doc-baseline"><span>DSH v0.1.0-rc.5</span><span>Cordis 4.0.1</span><span>生命周期引擎</span></div>
+        <div class="doc-summary"><strong>一句话模型</strong><p><code>inject</code> 说明插件何时可运行，<code>effect</code> 记录运行造成的变化和返回路径，Fiber 则把两者放进一个有目标态、已提交态和异步汇合点的六态机器。</p></div>
+
+        <section class="doc-section" id="problem">
+          <h2>它解决什么问题</h2>
+          <p>插件并不是“调用一次 apply 就永远存在”。它可能在依赖尚未就绪时等待，在异步初始化中失败，在服务消失时先让依赖者退出，也可能被新配置替换。若这些过程只靠布尔值 <code>loaded</code> 表达，更新很容易撞上正在进行的装载或卸载。</p>
+          <p>Fiber 把中间过程物化成状态，并把插件产生的效应归到具体运行 epoch。Loader 因此可以等待一个可观察的稳定结果，而不是猜测异步回调何时真正结束。</p>
+          <div class="doc-callout"><p><strong>最重要的心智转换：</strong>卸载不是“调用 dispose 的一个瞬间”，而是一段需要停止供给、排空依赖者、再执行逆操作的状态转移。</p></div>
+        </section>
+
+        <section class="doc-section" id="states">
+          <h2>六个工程状态</h2>
+          <div class="doc-flow state-flow">
+            <div><small>00 / PENDING</small><strong>等待依赖</strong><p>插件仍在注册表中，但 inject 条件未满足，runner 尚未激活。</p></div>
+            <div><small>01 / LOADING</small><strong>执行回调</strong><p>setup / apply 正在产生效应，生命周期尚未提交为 ACTIVE。</p></div>
+            <div><small>02 / ACTIVE</small><strong>服务可用</strong><p>当前 runner epoch 活跃，提供项可被依赖者解析。</p></div>
+            <div><small>03 / UNLOADING</small><strong>排空与撤销</strong><p>停止新的供给和效应，等待依赖者退出，再运行 disposer。</p></div>
+            <div><small>04 / FAILED</small><strong>失败被记录</strong><p>同步或异步错误成为可观察结果，已经收集的效应需要回滚。</p></div>
+            <div><small>05 / DISPOSED</small><strong>离开注册表</strong><p>uid 被清除，此 Fiber 不再参加后续协调。</p></div>
+          </div>
+          <p>这六个状态不是严格的单向流水线。例如依赖暂时消失，ACTIVE 可以经过 UNLOADING 回到 PENDING；新配置到来，旧运行 epoch 会退出，新 epoch 再进入 LOADING。FAILED 也不是进程级崩溃，它让失败停留在相关 Fiber 上，供 Loader 判断更新结果。</p>
+        </section>
+
+        <section class="doc-section" id="flow">
+          <h2>这一层如何工作</h2>
+          <h3>1. target 与 committed 分开</h3>
+          <p><code>target</code> 表达协调器希望 Fiber 到达的视图，<code>committed</code> 表达已经被生命周期确认的视图。二者存在差异时，Fiber 才知道需要 reload、unload 或继续等待。这样，新配置即使已经出现，也不会在候选尚未稳定时冒充运行事实。</p>
+          <h3>2. inject 把读取边界写进图</h3>
+          <p>插件声明自己依赖哪些服务键。所需服务全部可用时，它可以从 PENDING 进入 LOADING；服务消失时，运行时能沿依赖关系要求使用者先退出。这也是为什么配置行顺序不等于加载顺序。</p>
+          <h3>3. effect 同时写下动作与逆</h3>
+          <p><code>ctx.effect(callback)</code> 执行副作用，并收集 callback 返回的 disposer。注册服务、订阅事件、打开资源时都应留下对应的撤销动作。多个 disposer 按 LIFO 组合：后建立的关系先拆除，避免先移走底层资源后，上层清理还在访问它。</p>
+          <div class="doc-flow">
+            <div><small>APPLY</small><strong>产生效果</strong><p>写注册表、订阅事件或取得外部资源，同时返回逆操作。</p></div>
+            <div><small>ACCUMULATE</small><strong>归入 Fiber</strong><p>disposer 进入当前 runner epoch 的逆序链。</p></div>
+            <div><small>REVERSE</small><strong>逐项撤销</strong><p>卸载时从最后一项开始执行，直到本轮效果被排空。</p></div>
+          </div>
+          <h3>4. 卸载先断供，再排空依赖者</h3>
+          <p>如果提供者一边卸载，使用者还可以继续取得它的服务，就会产生新的悬空依赖。因此 Fiber 进入 UNLOADING 后先停止对外供给，拒绝创建新的效应；依赖者感知服务不可用并开始退出；等下游沉淀后，提供者才继续逆序清理。</p>
+          <h3>5. inertia 与 settlement 给协调器一个等待点</h3>
+          <p>生命周期转移可能触发更多转移：一个服务激活会唤醒依赖者，一个服务退出又会让多个插件回到等待。运行时需要等这一连串反应平静下来，才能向 Loader 报告候选拓扑的稳定结果。这里的“稳定”是当前变更下没有待处理转移，不代表系统以后不会再变化。</p>
+        </section>
+
+        <section class="doc-section" id="rules">
+          <h2>关键规则</h2>
+          <ul>
+            <li><strong>一个插件实例对应一个 Fiber。</strong>配置身份、runner epoch、依赖和效应都围绕它协调。</li>
+            <li><strong>PENDING 是正常状态。</strong>缺少依赖时等待，不应在插件内部反复轮询服务。</li>
+            <li><strong>ACTIVE 只描述当前已提交运行态。</strong>候选配置存在不代表它已经生效。</li>
+            <li><strong>UNLOADING 拒绝新效应。</strong>否则清理过程会不断产生新的待清理项。</li>
+            <li><strong>disposer 使用 LIFO。</strong>后产生的依赖通常建立在先产生的资源之上，应该先拆。</li>
+            <li><strong>依赖者先于提供者完成退出。</strong>这让下游清理仍能在必要时观察到一致的旧视图。</li>
+            <li><strong>框架保证调用顺序，不保证外部世界一定可逆。</strong>如果 disposer 写错、遗漏，或外部 API 本身不可逆，恢复仍不等价。</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="source">
+          <h2>源码阅读顺序</h2>
+          <p>这一层建议把代码和状态机来回对照。第一次阅读先抓状态字段与主要转移，再追异步细节。</p>
+          <ol class="source-order">
+            <li><span>01</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/blob/47f9438/vendor/cordis/src/fiber.ts"><code>vendor/cordis/src/fiber.ts ↗</code></a><small>主文件：六态、target / committed、runner 与生命周期协调。</small></div></li>
+            <li><span>02</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/blob/47f9438/vendor/cordis/src/context.ts"><code>vendor/cordis/src/context.ts ↗</code></a><small>追踪 ctx.effect 如何把 disposer 归到当前 Fiber。</small></div></li>
+            <li><span>03</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/blob/47f9438/vendor/cordis/README.md"><code>vendor/cordis/README.md ↗</code></a><small>查看 DSH vendored 版本相对上游 Cordis 的工程调整说明。</small></div></li>
+            <li><span>04</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/vendor/loader"><code>vendor/loader ↗</code></a><small>看 Loader 如何等待 settlement，并据此提交或恢复。</small></div></li>
+            <li><span>05</span><div><a href="https://github.com/cordiverse/paper"><code>A Programming Paradigm for Spatiotemporal Composability ↗</code></a><small>最后回到论文，对照统一上下文、可逆效应和生命周期转移。</small></div></li>
+          </ol>
+        </section>
+
+        <section class="doc-section" id="misconception">
+          <h2>常见误解</h2>
+          <div class="misconception">
+            <div><small>误解</small><p>Fiber 就是轻量线程，负责并发执行插件代码。</p></div>
+            <div><small>更准确的理解</small><p>这里的 Fiber 是插件生命周期与依赖协调单元，不是操作系统线程或通用任务调度器。</p></div>
+            <div><small>误解</small><p>调用 unload 后，插件已经立即消失。</p></div>
+            <div><small>更准确的理解</small><p>它先进入 UNLOADING：停止供给、等待依赖者，再逐项执行 disposer。</p></div>
+            <div><small>误解</small><p>使用 effect 就能自动保证所有副作用完全恢复。</p></div>
+            <div><small>更准确的理解</small><p>框架能保证逆操作的归属与顺序；逆是否正确、外部系统是否可逆，仍取决于实现。</p></div>
+            <div><small>误解</small><p>FAILED 意味着整个 DSH 进程都必须退出。</p></div>
+            <div><small>更准确的理解</small><p>失败被物化在相关 Fiber 上，协调器可以限制影响范围并决定恢复策略。</p></div>
+          </div>
+        </section>
+
+        <nav class="doc-pagination" aria-label="文档前后篇"><a href="context.html"><small>← 上一层</small><strong>Cordis Context · Γ∞</strong></a><a href="plugins.html"><small>下一层 →</small><strong>Session · Tools · Agent · LLM</strong></a></nav>
+      </article>
+    </main>
+    <footer class="site-footer"><p><strong>DSH ARCHITECTURE DOCS</strong> · 04 / 05</p><p>源码基线：DSH v0.1.0-rc.5 · Cordis 4.0.1</p><a href="#article" class="back-top">回到顶部 ↑</a></footer>
+  </body>
+</html>

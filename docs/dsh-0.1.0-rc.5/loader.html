@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c19">
+    <meta name="description" content="DSH Loader、Include 与 HMR 分层解读：配置差异如何被协调为安全的运行态变化。">
+    <meta property="og:title" content="Loader · Include · HMR｜DSH Architecture Docs">
+    <meta property="og:description" content="读懂 DSH 的协调层：准备候选、等待汇合，再提交或恢复。">
+    <meta property="og:image" content="../../assets/social-card.png">
+    <title>Loader · Include · HMR｜DSH Architecture Docs</title>
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260814.4">
+    <link rel="stylesheet" href="../docs.css?v=20260814.4">
+  </head>
+  <body class="docs-body">
+    <a class="skip-link" href="#article">跳到正文</a>
+    <header class="site-header docs-header">
+      <a class="wordmark" href="../../" aria-label="DSH Architecture Atlas 首页"><span class="wordmark-mark" aria-hidden="true">D/</span><span>ARCHITECTURE ATLAS</span></a>
+      <nav class="header-nav" aria-label="主导航"><a href="../../#atlas">架构图</a><a href="../" aria-current="page">Docs</a><a href="../../#mechanisms">机制</a><a href="../../#evidence">证据</a></nav>
+      <div class="header-actions"><a class="docs-version" href="../#version">DSH v0.1.0-rc.5</a></div>
+    </header>
+    <main class="docs-shell">
+      <aside class="docs-sidebar" aria-label="五层文档导航">
+        <p>DSH v0.1.0-rc.5 / 五层阅读</p>
+        <nav><a href="profile.html"><span>01</span>Profile / Bundle / Patch</a><a href="loader.html" aria-current="page"><span>02</span>Loader / Include / HMR</a><a href="context.html"><span>03</span>Cordis Context Γ∞</a><a href="fiber.html"><span>04</span>Fiber / Effect / Inject</a><a href="plugins.html"><span>05</span>Domain Plugins</a></nav>
+        <a class="back-atlas" href="../../#atlas">← 返回交互架构图</a>
+      </aside>
+
+      <article class="doc-article" id="article">
+        <p class="doc-breadcrumb">DOCS / 02 / RECONCILIATION LAYER</p>
+        <h1>Loader ·<br>Include · HMR</h1>
+        <p class="doc-lede">协调层比较“现在有什么”和“目标是什么”，把配置差异翻译成尽量少的生命周期动作。</p>
+        <div class="doc-baseline"><span>DSH v0.1.0-rc.5</span><span>commit 47f9438</span><span>协调层</span></div>
+        <div class="doc-summary"><strong>一句话模型</strong><p>Loader 不是按文件顺序执行插件的脚本。它先准备候选、等待相关 Fiber 稳定，再提交新状态；候选失败时尽可能保留或恢复旧状态。</p></div>
+
+        <section class="doc-section" id="problem">
+          <h2>它解决什么问题</h2>
+          <p>当用户只修改一个插件的配置时，重启整个 Agent 既慢，也会丢失无关组件的内存态；直接在原对象上改，又可能把系统留在“新旧各一半”的状态。协调层负责识别变化类型，只触发必要动作，并把异步生命周期纳入一次可判断成败的更新。</p>
+          <p>Include 负责把分散配置纳入同一棵配置结构；Loader 维护配置条目与插件 Fiber 的对应关系；HMR 在允许的入口监听模块变化并请求替换。三者都服务于同一个目标：让运行态向声明态收敛。</p>
+          <div class="doc-callout"><p><strong>这一层的关键词不是“加载”，而是“协调”。</strong>导入模块只是准备工作，相关生命周期是否已经稳定，才决定更新能否提交。</p></div>
+        </section>
+
+        <section class="doc-section" id="flow">
+          <h2>这一层如何工作</h2>
+          <div class="doc-flow">
+            <div><small>01 / DIFF</small><strong>识别变化</strong><p>围绕 id、name、isolate、intercept、config、disabled 判断新增、移除或更新。</p></div>
+            <div><small>02 / SETTLE</small><strong>准备候选</strong><p>导入并验证候选，让相关 Fiber 完成激活、失败或卸载等异步转移。</p></div>
+            <div><small>03 / COMMIT</small><strong>提交或恢复</strong><p>候选稳定后更新缓存与运行态；失败则回到旧插件或旧配置。</p></div>
+          </div>
+          <h3>字段变化对应不同成本</h3>
+          <p><code>disabled</code> 变化可能只需要停用或恢复现有条目；<code>config</code> 变化可能走配置更新或重载；<code>name</code>、<code>isolate</code> 等身份和边界变化通常需要更完整地重建。协调器的价值，就在于不把所有差异都粗暴地当成全量重启。</p>
+          <h3>汇合点把异步变成可提交结果</h3>
+          <p>插件回调可以创建异步任务，服务变化还会唤醒依赖者。Loader 因此需要等待生命周期沉淀（settlement），才能知道候选拓扑最终是 ACTIVE、PENDING 还是 FAILED。</p>
+        </section>
+
+        <section class="doc-section" id="rules">
+          <h2>关键规则</h2>
+          <ul>
+            <li><strong>先按条目身份找差异。</strong><code>id</code> 稳定时，协调器才有机会做最小更新。</li>
+            <li><strong>模块导入不等于插件激活。</strong>依赖未满足时，Fiber 可以保持 PENDING。</li>
+            <li><strong>更新包含等待阶段。</strong>相关生命周期没有沉淀，就不能把半完成候选当成新事实。</li>
+            <li><strong>组内更新可以并发。</strong>失败应被限制在相关候选范围，不必让无关插件一起重启。</li>
+            <li><strong>该版本的 web-app 关闭共享 HMR。</strong>浏览器侧重载边界尚未被当作已验证能力。</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="source">
+          <h2>源码阅读顺序</h2>
+          <ol class="source-order">
+            <li><span>01</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/vendor/loader"><code>vendor/loader ↗</code></a><small>从配置条目、差异分类和插件实例映射开始。</small></div></li>
+            <li><span>02</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/vendor/include"><code>vendor/include ↗</code></a><small>看外部 Patch 如何进入同一协调范围。</small></div></li>
+            <li><span>03</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/vendor/hmr"><code>vendor/hmr ↗</code></a><small>区分模块更新信号与真正的生命周期替换。</small></div></li>
+            <li><span>04</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/packages/boot/app-boot"><code>packages/boot/app-boot ↗</code></a><small>回到启动入口，确认 Loader 与不同运行模式怎样连接。</small></div></li>
+          </ol>
+        </section>
+
+        <section class="doc-section" id="misconception">
+          <h2>常见误解</h2>
+          <div class="misconception">
+            <div><small>误解</small><p>热更新就是重新 import 一次文件，然后用新导出替换旧导出。</p></div>
+            <div><small>更准确的理解</small><p>模块变化只是起点。旧效应要撤销，依赖者要排空，候选还要等待生命周期稳定。</p></div>
+            <div><small>误解</small><p>只要新插件导入成功，更新就已经成功。</p></div>
+            <div><small>更准确的理解</small><p>导入成功不代表依赖满足、apply 成功或异步效应稳定；提交判断发生得更晚。</p></div>
+          </div>
+        </section>
+
+        <nav class="doc-pagination" aria-label="文档前后篇"><a href="profile.html"><small>← 上一层</small><strong>Profile · Bundle · Patch</strong></a><a href="context.html"><small>下一层 →</small><strong>Cordis Context · Γ∞</strong></a></nav>
+      </article>
+    </main>
+    <footer class="site-footer"><p><strong>DSH ARCHITECTURE DOCS</strong> · 02 / 05</p><p>源码基线：DSH v0.1.0-rc.5 · <a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438">47f9438</a></p><a href="#article" class="back-top">回到顶部 ↑</a></footer>
+  </body>
+</html>

@@ -30,6 +30,7 @@ window.DSH_ATLAS = {
           detail: "Bundle 提供基础行，Profile 组合 bundle，用户 patch 做最后覆盖。同一 id 后写胜出；覆盖以整行替换进行，不做深合并。插件根据服务可用性激活，配置行的先后顺序不决定加载顺序。",
           evidence: "packages/bundle/{base,web-app,headless}/cordis.patch.yml",
           principle: "声明定义目标态，服务可用性决定激活顺序",
+          docsUrl: "docs/dsh-0.1.0-rc.5/profile.html",
           tone: "yellow"
         },
         {
@@ -39,8 +40,9 @@ window.DSH_ATLAS = {
           title: "Loader · Include · HMR",
           short: "把配置差异翻译成最小生命周期动作。",
           detail: "Loader 根据 id/name/isolate/intercept/config/disabled 的变化选择重建、原位更新、卸载或重载。候选配置先验证并等待生命周期沉淀；失败时恢复旧插件或旧配置。",
-          evidence: "vendor/cordis-plugin-loader · vendor/cordis-plugin-include",
+          evidence: "vendor/loader · vendor/include · vendor/hmr",
           principle: "先准备候选，再提交运行态",
+          docsUrl: "docs/dsh-0.1.0-rc.5/loader.html",
           tone: "orange"
         },
         {
@@ -52,6 +54,7 @@ window.DSH_ATLAS = {
           detail: "Context 是统一载体：服务以键进入 ctx，隔离决定同一键在不同上下文解析到哪个值，拦截承载横切元数据，ctx.effect 记录变更及其逆。",
           evidence: "vendor/cordis/src/context.ts",
           principle: "跨插件共享状态必须实体化为上下文键",
+          docsUrl: "docs/dsh-0.1.0-rc.5/context.html",
           tone: "mint"
         },
         {
@@ -63,6 +66,7 @@ window.DSH_ATLAS = {
           detail: "每个插件实例对应 Fiber。target 与 committed 的差异驱动 reload/unload；inject 声明读取边界；effect 收集 disposer。卸载先停止供给，再等待依赖者排空，最后逆序恢复。",
           evidence: "vendor/cordis/src/fiber.ts",
           principle: "装载写效果，拆卸由逆自动推导",
+          docsUrl: "docs/dsh-0.1.0-rc.5/fiber.html",
           tone: "cyan"
         },
         {
@@ -74,6 +78,7 @@ window.DSH_ATLAS = {
           detail: "核心包分别贡献 ctx.sessions、ctx.systemPrompt、ctx.tools、ctx.agents、ctx.agentLoop 与 ctx.llm。这些服务在 Context 上形成当前 agent，任何一项都可以换成另一种实现。",
           evidence: "packages/core/* · packages/llm/*",
           principle: "Everything is a plugin",
+          docsUrl: "docs/dsh-0.1.0-rc.5/plugins.html",
           tone: "blue"
         }
       ],

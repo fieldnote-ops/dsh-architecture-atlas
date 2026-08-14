@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c19">
+    <meta name="description" content="DSH 领域插件分层解读：Session、System Prompt、Tools、Agent、Agent Loop、LLM 与 Scope 如何组成一次对话。">
+    <meta property="og:title" content="Session · Tools · Agent · LLM｜DSH Architecture Docs">
+    <meta property="og:description" content="读懂 DSH 的领域层：Agent 不是固定核心，而是 Context 上暂时成立的服务拓扑。">
+    <meta property="og:image" content="../../assets/social-card.png">
+    <title>Session · Tools · Agent · LLM｜DSH Architecture Docs</title>
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260814.4">
+    <link rel="stylesheet" href="../docs.css?v=20260814.4">
+  </head>
+  <body class="docs-body">
+    <a class="skip-link" href="#article">跳到正文</a>
+    <header class="site-header docs-header">
+      <a class="wordmark" href="../../" aria-label="DSH Architecture Atlas 首页"><span class="wordmark-mark" aria-hidden="true">D/</span><span>ARCHITECTURE ATLAS</span></a>
+      <nav class="header-nav" aria-label="主导航"><a href="../../#atlas">架构图</a><a href="../" aria-current="page">Docs</a><a href="../../#mechanisms">机制</a><a href="../../#evidence">证据</a></nav>
+      <div class="header-actions"><a class="docs-version" href="../#version">DSH v0.1.0-rc.5</a></div>
+    </header>
+    <main class="docs-shell">
+      <aside class="docs-sidebar" aria-label="五层文档导航">
+        <p>DSH v0.1.0-rc.5 / 五层阅读</p>
+        <nav><a href="profile.html"><span>01</span>Profile / Bundle / Patch</a><a href="loader.html"><span>02</span>Loader / Include / HMR</a><a href="context.html"><span>03</span>Cordis Context Γ∞</a><a href="fiber.html"><span>04</span>Fiber / Effect / Inject</a><a href="plugins.html" aria-current="page"><span>05</span>Domain Plugins</a></nav>
+        <a class="back-atlas" href="../../#atlas">← 返回交互架构图</a>
+      </aside>
+
+      <article class="doc-article" id="article">
+        <p class="doc-breadcrumb">DOCS / 05 / DOMAIN PLUGINS</p>
+        <h1>Session · Tools ·<br>Agent · LLM</h1>
+        <p class="doc-lede">领域插件把前四层的运行时机制变成 Agent 能力。会话、提示词、工具、循环和模型都以服务进入 Context，没有哪一个天然拥有“核心”地位。</p>
+        <div class="doc-baseline"><span>DSH v0.1.0-rc.5</span><span>commit 47f9438</span><span>领域插件</span></div>
+        <div class="doc-summary"><strong>一句话模型</strong><p>一个正在运行的 DSH Agent，可以看成 <code>ctx.sessions</code>、<code>ctx.systemPrompt</code>、<code>ctx.tools</code>、<code>ctx.agents</code>、<code>ctx.agentLoop</code> 与 <code>ctx.llm</code> 在当前范围内同时可用。</p></div>
+
+        <section class="doc-section" id="problem">
+          <h2>它解决什么问题</h2>
+          <p>传统 Agent 框架常把循环、模型调用和工具执行焊在一个主类里，周边能力才叫插件。DSH 把这条边界再往里推：默认 Agent Loop 也只是服务提供者，LLM 是适配接缝，工具系统和会话系统各自维护领域语义。</p>
+          <p>这样一来，“替换 Agent 行为”不必 fork 整个应用。只要新插件满足相同服务契约，并在 Context 中进入适当范围，依赖它的上层就可以按生命周期规则重新协调。</p>
+          <div class="doc-callout"><p><strong>Everything is a plugin 的工程含义：</strong>不是所有文件都叫 plugin，而是运行所需的领域能力都通过同一套服务、依赖和生命周期机制进入系统。</p></div>
+        </section>
+
+        <section class="doc-section" id="services">
+          <h2>六个主要服务接缝</h2>
+          <div class="service-table-wrap" tabindex="0">
+            <table class="service-table">
+              <thead><tr><th>Context 键</th><th>领域职责</th><th>阅读时关注</th></tr></thead>
+              <tbody>
+                <tr><td><code>ctx.sessions</code></td><td>追加式会话事件日志</td><td>模型可见上下文如何从记录重建</td></tr>
+                <tr><td><code>ctx.systemPrompt</code></td><td>提示词片段与工具 schema</td><td>多个来源如何组合系统提示</td></tr>
+                <tr><td><code>ctx.tools</code></td><td>工具注册表与执行管线</td><td>发现、校验、调用与结果回写</td></tr>
+                <tr><td><code>ctx.agents</code></td><td>Agent 接口与活跃注册表</td><td>不同 Agent 实现怎样被发现</td></tr>
+                <tr><td><code>ctx.agentLoop</code></td><td>Turn / Step 默认驱动</td><td>何时调用模型，何时执行工具</td></tr>
+                <tr><td><code>ctx.llm</code></td><td>模型适配器接缝</td><td>供应商差异如何停在边界内</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p><code>scope</code> 不只是表中的另一个业务服务。它把运行范围带入这些领域能力，帮助同一套服务在不同会话、Agent 或隔离上下文中解析出合适的行为。</p>
+        </section>
+
+        <section class="doc-section" id="flow">
+          <h2>一次对话如何穿过领域层</h2>
+          <div class="doc-flow">
+            <div><small>01 / RECORD</small><strong>输入进入 Session</strong><p>用户消息先成为会话事实，后续模型上下文可以从事件日志重建。</p></div>
+            <div><small>02 / DECIDE</small><strong>Loop 组织一次 Step</strong><p>读取 prompt、tools、agent 与 llm，组装请求并判断下一步。</p></div>
+            <div><small>03 / ACT</small><strong>模型或工具返回</strong><p>流式输出、工具调用与结果继续写回会话，推动下一次 Step。</p></div>
+          </div>
+          <h3>Session 是事实来源，不只是聊天数组</h3>
+          <p>会话采用追加式事件记录。消息、模型输出和工具结果沿事件顺序进入日志，“模型看见了什么”应当可以从记录重建。这为追踪、恢复和界面同步提供共同事实来源。</p>
+          <h3>Prompt 和 Tools 都是可组合输入</h3>
+          <p>系统提示不是散落在 Loop 内的一长段字符串；工具也不是模型调用函数里的硬编码表。它们各自由服务管理，Loop 在运行时读取当前范围内可用的片段、schema 与执行器。</p>
+          <h3>Agent Loop 本身也能替换</h3>
+          <p>默认 Loop 用 Turn / Step 推进一次对话，但它通过 <code>ctx.agentLoop</code> 提供能力，而不是框架不可替换的主循环。实验新的规划方式、审批策略或多步执行时，可以把变化限制在这一接缝。</p>
+        </section>
+
+        <section class="doc-section" id="rules">
+          <h2>关键规则</h2>
+          <ul>
+            <li><strong>服务契约比具体类更重要。</strong>领域插件通过 Context 键协作，不应依赖另一实现的内部状态。</li>
+            <li><strong>Session 保留可重建事实。</strong>瞬时 UI 状态不应冒充会话历史。</li>
+            <li><strong>Prompt 与 Tools 在运行时组合。</strong>不同插件可以在自己的范围内贡献片段和工具。</li>
+            <li><strong>LLM 停在适配边界。</strong>模型供应商差异不应渗入所有领域插件。</li>
+            <li><strong>Loop 没有特权。</strong>它依赖别的服务，也会随依赖消失而被 Fiber 协调。</li>
+            <li><strong>流式控制是重要工程扩展。</strong>事件、并发工具和 token 流超出简化形式模型时，应回到实现逐项核对。</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="source">
+          <h2>源码阅读顺序</h2>
+          <ol class="source-order">
+            <li><span>01</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/packages/core/session"><code>packages/core/session ↗</code></a><small>从追加式记录开始，建立会话事实模型。</small></div></li>
+            <li><span>02</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/packages/core/system-prompt"><code>packages/core/system-prompt ↗</code></a><small>看提示词片段和工具描述怎样进入模型输入。</small></div></li>
+            <li><span>03</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/packages/core/tools"><code>packages/core/tools ↗</code></a><small>追工具注册、调用管线与结果形态。</small></div></li>
+            <li><span>04</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/packages/core/agent"><code>packages/core/agent ↗</code></a><small>理解 Agent 接口和活跃实现的注册方式。</small></div></li>
+            <li><span>05</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/packages/core/agent-loop"><code>packages/core/agent-loop ↗</code></a><small>沿 Turn / Step 读取一次完整决策循环。</small></div></li>
+            <li><span>06</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/packages/llm/llm"><code>packages/llm/llm ↗</code></a><small>最后看模型适配器如何接到 Loop。</small></div></li>
+            <li><span>07</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/packages/core/scope"><code>packages/core/scope ↗</code></a><small>补上运行范围，理解同一服务在不同上下文中的解析。</small></div></li>
+          </ol>
+        </section>
+
+        <section class="doc-section" id="misconception">
+          <h2>常见误解</h2>
+          <div class="misconception">
+            <div><small>误解</small><p>插件只是给一个稳定 Agent 核心增加额外工具或界面。</p></div>
+            <div><small>更准确的理解</small><p>在 DSH 中，会话、模型、工具、Agent 和 Loop 本身都由插件提供；这些服务拓扑就是正在运行的 Agent。</p></div>
+            <div><small>误解</small><p>换一个模型只需要把 URL 和 API Key 改掉。</p></div>
+            <div><small>更准确的理解</small><p>适配器还要处理请求形态、流式事件、工具调用与错误语义；边界稳定不代表实现差异消失。</p></div>
+          </div>
+        </section>
+
+        <nav class="doc-pagination" aria-label="文档前后篇"><a href="fiber.html"><small>← 上一层</small><strong>Fiber · Effect · Inject</strong></a><a href="../"><small>完成五层阅读 →</small><strong>返回 Docs 首页</strong></a></nav>
+      </article>
+    </main>
+    <footer class="site-footer"><p><strong>DSH ARCHITECTURE DOCS</strong> · 05 / 05</p><p>源码基线：DSH v0.1.0-rc.5 · <a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438">47f9438</a></p><a href="#article" class="back-top">回到顶部 ↑</a></footer>
+  </body>
+</html>

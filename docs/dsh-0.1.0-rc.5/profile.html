@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c19">
+    <meta name="description" content="DSH Profile、Bundle 与 Patch 分层解读：目标拓扑如何组合、覆盖规则是什么、源码从哪里读。">
+    <meta property="og:title" content="Profile · Bundle · Patch｜DSH Architecture Docs">
+    <meta property="og:description" content="读懂 DSH 的声明层：配置描述目标，依赖决定顺序。">
+    <meta property="og:image" content="../../assets/social-card.png">
+    <title>Profile · Bundle · Patch｜DSH Architecture Docs</title>
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260814.4">
+    <link rel="stylesheet" href="../docs.css?v=20260814.4">
+  </head>
+  <body class="docs-body">
+    <a class="skip-link" href="#article">跳到正文</a>
+    <header class="site-header docs-header">
+      <a class="wordmark" href="../../" aria-label="DSH Architecture Atlas 首页"><span class="wordmark-mark" aria-hidden="true">D/</span><span>ARCHITECTURE ATLAS</span></a>
+      <nav class="header-nav" aria-label="主导航"><a href="../../#atlas">架构图</a><a href="../" aria-current="page">Docs</a><a href="../../#mechanisms">机制</a><a href="../../#evidence">证据</a></nav>
+      <div class="header-actions"><a class="docs-version" href="../#version">DSH v0.1.0-rc.5</a></div>
+    </header>
+    <main class="docs-shell">
+      <aside class="docs-sidebar" aria-label="五层文档导航">
+        <p>DSH v0.1.0-rc.5 / 五层阅读</p>
+        <nav>
+          <a href="profile.html" aria-current="page"><span>01</span>Profile / Bundle / Patch</a>
+          <a href="loader.html"><span>02</span>Loader / Include / HMR</a>
+          <a href="context.html"><span>03</span>Cordis Context Γ∞</a>
+          <a href="fiber.html"><span>04</span>Fiber / Effect / Inject</a>
+          <a href="plugins.html"><span>05</span>Domain Plugins</a>
+        </nav>
+        <a class="back-atlas" href="../../#atlas">← 返回交互架构图</a>
+      </aside>
+
+      <article class="doc-article" id="article">
+        <p class="doc-breadcrumb">DOCS / 01 / DECLARATIVE LAYER</p>
+        <h1>Profile ·<br>Bundle · Patch</h1>
+        <p class="doc-lede">声明层不负责“按顺序启动插件”，而是把基础能力、运行模式与用户选择组合成一份目标拓扑。</p>
+        <div class="doc-baseline"><span>DSH v0.1.0-rc.5</span><span>commit 47f9438</span><span>声明层</span></div>
+
+        <div class="doc-summary"><strong>一句话模型</strong><p>把配置文件想成“系统最后应该长什么样”的清单。Profile 组合 Bundle，Patch 按条目 <code>id</code> 覆盖；真正的激活顺序由服务依赖决定。</p></div>
+
+        <section class="doc-section" id="problem">
+          <h2>它解决什么问题</h2>
+          <p>一个 Agent 运行时往往同时需要会话、提示词、工具、模型适配器、循环、沙箱和界面。如果把它们写进一段启动脚本，运行模式一多，脚本就会充满条件分支。DSH 把“选哪些组件、各自用什么配置”留在声明层，让同一组插件可以被 web、headless 等不同入口重组。</p>
+          <p>这样做也划清了职责：声明层只给出目标，Loader 才负责把当前运行态协调到目标态。配置的书写顺序因此不是生命周期顺序。</p>
+          <div class="doc-callout"><p><strong>阅读锚点：</strong>向下看时追踪配置如何成为目标态；不要把 YAML 行序当成插件调用栈。</p></div>
+        </section>
+
+        <section class="doc-section" id="flow">
+          <h2>这一层如何工作</h2>
+          <div class="doc-flow">
+            <div><small>01 / BASE</small><strong>基础 Bundle</strong><p>放入多数运行模式都会需要的插件条目与默认配置。</p></div>
+            <div><small>02 / MODE</small><strong>模式 Bundle</strong><p>web-app 或 headless 继续增加、替换适合当前入口的条目。</p></div>
+            <div><small>03 / USER</small><strong>用户 Patch</strong><p>最后按相同 id 覆盖，形成实际交给 Loader 的目标集合。</p></div>
+          </div>
+          <h3>覆盖以条目为单位</h3>
+          <p>同一 <code>id</code> 再次出现时，后写条目获胜。对 <code>config</code> 而言，这是整行替换，不是任意深度的对象合并。后一个条目没有写出的字段，不应被想当然地从前一个条目继承。</p>
+          <h3>顺序由依赖图产生</h3>
+          <p>条目可以先被发现、模块可以先被导入，但插件只有在自己声明的服务依赖可用后才能进入激活过程。于是“先写 Agent Loop、后写 LLM”并不意味着 Loop 会在没有 LLM 的情况下运行。</p>
+        </section>
+
+        <section class="doc-section" id="rules">
+          <h2>关键规则</h2>
+          <ul>
+            <li><strong>Profile 是组合入口。</strong>它选取 Bundle，并叠加适合一次运行的 Patch。</li>
+            <li><strong>Bundle 是可复用配置片段。</strong>base、web-app、headless 表达不同粒度的默认能力。</li>
+            <li><strong><code>id</code> 是覆盖锚点。</strong>更新配置时先看条目是否仍代表同一个插件实例。</li>
+            <li><strong><code>config</code> 按整项替换。</strong>需要保留的字段要在后一个条目中明确写出。</li>
+            <li><strong>配置顺序不授予运行时特权。</strong>服务可用性和 Fiber 协调才决定激活。</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="source">
+          <h2>源码阅读顺序</h2>
+          <p>先比较三份 Patch，再看启动包如何选择它们。链接固定到本页对应的源码提交。</p>
+          <ol class="source-order">
+            <li><span>01</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/blob/47f9438/packages/bundle/base/cordis.patch.yml"><code>packages/bundle/base/cordis.patch.yml ↗</code></a><small>先认识所有模式共享的基础服务。</small></div></li>
+            <li><span>02</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/blob/47f9438/packages/bundle/web-app/cordis.patch.yml"><code>packages/bundle/web-app/cordis.patch.yml ↗</code></a><small>观察 web 入口增加了什么，以及哪些能力被显式限制。</small></div></li>
+            <li><span>03</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/blob/47f9438/packages/bundle/headless/cordis.patch.yml"><code>packages/bundle/headless/cordis.patch.yml ↗</code></a><small>与 web-app 对照，分离界面能力和 Agent 运行能力。</small></div></li>
+            <li><span>04</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/packages/boot/app-boot"><code>packages/boot/app-boot ↗</code></a><small>最后看应用入口怎样取得 Profile 并交给运行时。</small></div></li>
+          </ol>
+        </section>
+
+        <section class="doc-section" id="misconception">
+          <h2>常见误解</h2>
+          <div class="misconception">
+            <div><small>误解</small><p>Patch 会像常见配置库一样，把嵌套对象逐字段深合并。</p></div>
+            <div><small>更准确的理解</small><p>相同 id 的后一个配置条目覆盖前一个；依赖旧字段时，应在新条目中明确保留。</p></div>
+            <div><small>误解</small><p>配置写在前面，就一定先加载、先提供服务。</p></div>
+            <div><small>更准确的理解</small><p>声明只描述目标集合。运行时通过 inject 和服务可用性计算激活关系。</p></div>
+          </div>
+        </section>
+
+        <nav class="doc-pagination" aria-label="文档前后篇">
+          <a href="../"><small>← Docs 首页</small><strong>选择阅读路径</strong></a>
+          <a href="loader.html"><small>下一层 →</small><strong>Loader · Include · HMR</strong></a>
+        </nav>
+      </article>
+    </main>
+    <footer class="site-footer"><p><strong>DSH ARCHITECTURE DOCS</strong> · 01 / 05</p><p>源码基线：DSH v0.1.0-rc.5 · <a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438">47f9438</a></p><a href="#article" class="back-top">回到顶部 ↑</a></footer>
+  </body>
+</html>

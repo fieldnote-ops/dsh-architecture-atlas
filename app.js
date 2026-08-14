@@ -120,6 +120,7 @@
     byId("inspector-detail").textContent = layer.detail;
     byId("inspector-principle").textContent = layer.principle;
     byId("inspector-evidence").textContent = layer.evidence;
+    byId("inspector-doc-link").href = layer.docsUrl || "docs/";
   }
 
   function renderTopology(version) {
@@ -336,6 +337,13 @@
     });
   }
 
+  function updateDocsLinks(version) {
+    $$('[data-docs-layer]').forEach((link) => {
+      const layer = version.layers.find((item) => item.id === link.dataset.docsLayer);
+      if (layer?.docsUrl) link.href = layer.docsUrl;
+    });
+  }
+
   function renderVersion(version) {
     state.version = version;
     document.documentElement.dataset.version = version.id;
@@ -350,6 +358,7 @@
     renderEvidence(version);
     renderGaps(version);
     renderChangelog(version);
+    updateDocsLinks(version);
   }
 
   function canonicalVersionUrl() {
