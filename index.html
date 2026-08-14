@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c19">
+    <meta name="description" content="DeepSeek Harness（DSH）架构的中文可视化解读：从 Profile、Loader、Cordis Context 到 Fiber 与领域插件。">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="DSH Architecture Atlas｜一张图看懂 Everything is a Plugin">
+    <meta property="og:description" content="可交互、可追溯、按版本维护的 DeepSeek Harness 中文架构解读。">
+    <meta property="og:image" content="assets/social-card.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>DSH Architecture Atlas｜可视化架构解读</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+    <script src="data/versions.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到正文</a>
+
+    <header class="site-header" id="top">
+      <a class="wordmark" href="#top" aria-label="DSH Architecture Atlas 首页">
+        <span class="wordmark-mark" aria-hidden="true">D/</span>
+        <span>ARCHITECTURE ATLAS</span>
+      </a>
+      <nav class="header-nav" aria-label="主导航">
+        <a href="#atlas">架构图</a>
+        <a href="#mechanisms">机制</a>
+        <a href="#evidence">证据</a>
+      </nav>
+      <div class="header-actions">
+        <label class="version-control">
+          <span class="sr-only">选择解读版本</span>
+          <span class="version-dot" aria-hidden="true"></span>
+          <select id="version-select" aria-label="选择解读版本"></select>
+        </label>
+        <button class="icon-button" id="share-button" type="button" aria-label="复制当前版本链接">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15l6-6M11 6l1.4-1.4a4.2 4.2 0 016 6L17 12M13 18l-1.4 1.4a4.2 4.2 0 01-6-6L7 12"/></svg>
+          <span>复制链接</span>
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-grid" aria-hidden="true"></div>
+        <div class="hero-copy reveal">
+          <p class="kicker"><span>COMMUNITY FIELD GUIDE</span><span>中文独立解读</span></p>
+          <h1 id="hero-title">
+            一个 Agent，<br>
+            <em>只是插件暂时达成了共识。</em>
+          </h1>
+          <p class="hero-lede" data-bind="lede"></p>
+          <div class="hero-cta">
+            <a class="button button-primary" href="#atlas">进入架构图 <span aria-hidden="true">↓</span></a>
+            <a class="button button-quiet" href="#journey">跟一次对话走完全程</a>
+          </div>
+        </div>
+
+        <aside class="hero-aside reveal" aria-label="版本研究基线">
+          <div class="status-stamp">
+            <span class="status-stamp-label">SNAPSHOT</span>
+            <strong data-bind="versionLabel"></strong>
+            <span data-bind="status"></span>
+          </div>
+          <dl class="baseline-list">
+            <div><dt>DSH</dt><dd data-bind="dshVersion"></dd></div>
+            <div><dt>Source</dt><dd data-bind="sourceCommit"></dd></div>
+            <div><dt>Cordis</dt><dd data-bind="cordisVersion"></dd></div>
+            <div><dt>Reviewed</dt><dd data-bind="date"></dd></div>
+          </dl>
+          <p class="baseline-note">这是一份带版本锚点的研究快照，不把快速变化的 Developer Preview 写成永恒结论。</p>
+        </aside>
+
+        <div class="hero-principle reveal">
+          <span class="principle-number">00</span>
+          <p>不是“核心 + 挂件”<br><strong>而是“上下文 + 暂时成立的拓扑”</strong></p>
+        </div>
+      </section>
+
+      <section class="thesis-band" aria-label="核心结论">
+        <p data-bind="summary"></p>
+        <div class="thesis-key" aria-label="架构阅读方向">
+          <span>CONFIG <i>↓</i></span>
+          <span>AVAILABILITY <i>↑</i></span>
+          <span>RECOVERY <i>↺</i></span>
+        </div>
+      </section>
+
+      <section class="section architecture-section" id="atlas" aria-labelledby="atlas-title">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-index">01 / SYSTEM MAP</p>
+            <h2 id="atlas-title">五层架构，不是五层调用栈</h2>
+          </div>
+          <p>从上往下是声明如何变成运行态；从下往上是服务可用性如何反过来决定插件能否激活。点选任一层查看证据。</p>
+        </div>
+
+        <div class="architecture-shell reveal">
+          <div class="architecture-map" id="architecture-map" aria-label="DSH 五层交互架构图"></div>
+          <aside class="layer-inspector" id="layer-inspector" aria-live="polite">
+            <p class="inspector-kicker" id="inspector-eyebrow"></p>
+            <h3 id="inspector-title"></h3>
+            <p id="inspector-detail"></p>
+            <dl>
+              <div><dt>架构原则</dt><dd id="inspector-principle"></dd></div>
+              <div><dt>源码落点</dt><dd><code id="inspector-evidence"></code></dd></div>
+            </dl>
+            <p class="inspector-help">选择左侧架构层，细读其职责与源码证据。</p>
+          </aside>
+        </div>
+
+        <div class="direction-legend reveal" aria-label="图例">
+          <div><span class="legend-arrow config">↓</span><strong>配置向下</strong><p>描述目标拓扑，交给 Loader 协调。</p></div>
+          <div><span class="legend-arrow availability">↑</span><strong>可用性向上</strong><p>服务键是否存在，决定依赖者是否激活。</p></div>
+          <div><span class="legend-arrow recovery">↺</span><strong>恢复向内</strong><p>每层产生的效果都随所属 Fiber 逆序撤销。</p></div>
+        </div>
+      </section>
+
+      <section class="section topology-section" aria-labelledby="topology-title">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-index">02 / LIVE CONTEXT</p>
+            <h2 id="topology-title">运行中的 agent，是 ctx 上的一组活键</h2>
+          </div>
+          <p>每个核心包贡献一段领域词汇。没有哪一个节点天然拥有“核心”地位，连循环驱动也能被替换。</p>
+        </div>
+
+        <div class="topology-layout reveal">
+          <div class="context-field" id="context-field" aria-label="Cordis Context 服务拓扑图">
+            <div class="context-orbit orbit-one" aria-hidden="true"></div>
+            <div class="context-orbit orbit-two" aria-hidden="true"></div>
+            <div class="context-core">
+              <span>Γ∞</span>
+              <strong>Context</strong>
+              <small>shared runtime</small>
+            </div>
+            <svg class="topology-lines" id="topology-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+          </div>
+          <div class="topology-copy">
+            <p class="pull-quote">“模型、工具、会话、循环，不是住在框架里；它们在 Context 上彼此成为条件。”</p>
+            <ul class="topology-legend" id="topology-legend"></ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section journey-section" id="journey" aria-labelledby="journey-title">
+        <div class="section-heading light reveal">
+          <div>
+            <p class="section-index">03 / ONE CONVERSATION</p>
+            <h2 id="journey-title">一次对话，穿过六个架构时刻</h2>
+          </div>
+          <p>把“everything is a plugin”从口号还原成运行时发生的事情。</p>
+        </div>
+        <div class="journey-track" id="journey-track"></div>
+      </section>
+
+      <section class="section mechanism-section" id="mechanisms" aria-labelledby="mechanism-title">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-index">04 / MECHANISM LAB</p>
+            <h2 id="mechanism-title">三件事，让插件真的可以被替换</h2>
+          </div>
+          <p>插件化不是“能 import”。关键是撤销、依赖响应和失败时的事务恢复。</p>
+        </div>
+
+        <div class="mechanism-lab reveal">
+          <div class="tab-list" id="mechanism-tabs" role="tablist" aria-label="核心机制"></div>
+          <article class="mechanism-panel" id="mechanism-panel" role="tabpanel" tabindex="0">
+            <div class="mechanism-copy">
+              <p class="panel-index" id="mechanism-index"></p>
+              <h3 id="mechanism-heading"></h3>
+              <p id="mechanism-intro"></p>
+              <ol class="mechanism-beats" id="mechanism-beats"></ol>
+              <p class="caveat"><strong>边界：</strong><span id="mechanism-caveat"></span></p>
+            </div>
+            <div class="code-stage" aria-label="机制伪代码">
+              <div class="code-stage-header"><span></span><span></span><span></span><small>mechanism.ts</small></div>
+              <pre><code id="mechanism-code"></code></pre>
+              <div class="effect-stack" id="effect-stack" aria-hidden="true">
+                <span>inverse 03</span><span>inverse 02</span><span>inverse 01</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section fiber-section" aria-labelledby="fiber-title">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-index">05 / FIBER STATE MACHINE</p>
+            <h2 id="fiber-title">论文四态，落地成工程六态</h2>
+          </div>
+          <p>DSH 把“等待依赖、失败、已离开”物化为独立状态，让异步生命周期更可观测。</p>
+        </div>
+
+        <div class="fiber-machine reveal">
+          <div class="fiber-rail" id="fiber-rail" role="list" aria-label="Fiber 六态"></div>
+          <div class="fiber-detail" id="fiber-detail" aria-live="polite"></div>
+          <button class="play-button" id="fiber-play" type="button">
+            <span class="play-icon" aria-hidden="true">▶</span>
+            演示一轮生命周期
+          </button>
+        </div>
+      </section>
+
+      <section class="section evidence-section" id="evidence" aria-labelledby="evidence-title">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-index">06 / THEORY → SOURCE</p>
+            <h2 id="evidence-title">每个判断，尽量落到可检查的代码</h2>
+          </div>
+          <p>“论文里这样说”与“工程里这样做”是两列不同证据；表格同时标出直接对应、工程精化和理论之外的扩展。</p>
+        </div>
+
+        <div class="evidence-table-wrap reveal" tabindex="0">
+          <table class="evidence-table">
+            <thead><tr><th>论文机制</th><th>DSH / Cordis 落点</th><th>源码证据</th><th>关系</th></tr></thead>
+            <tbody id="evidence-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section gap-section" aria-labelledby="gap-title">
+        <div class="section-heading light reveal">
+          <div>
+            <p class="section-index">07 / HONEST BOUNDARIES</p>
+            <h2 id="gap-title">这套架构没有解决什么</h2>
+          </div>
+          <p>好的架构解读不把设计目标冒充运行时保证。</p>
+        </div>
+        <div class="gap-grid" id="gap-grid"></div>
+      </section>
+
+      <section class="section source-section" aria-labelledby="source-title">
+        <div class="section-heading reveal">
+          <div>
+            <p class="section-index">08 / SOURCE & VERSIONING</p>
+            <h2 id="source-title">一份可以继续生长的公共笔记</h2>
+          </div>
+          <p>版本号同时记录“解读站发布版”和它所依据的 DSH / Cordis / 论文基线。旧链接保持可复查。</p>
+        </div>
+
+        <div class="source-grid reveal">
+          <article class="source-card source-card-primary">
+            <p class="card-label">CURRENT RELEASE</p>
+            <h3 data-bind="versionLabel"></h3>
+            <dl>
+              <div><dt>解读日期</dt><dd data-bind="date"></dd></div>
+              <div><dt>DSH</dt><dd data-bind="dshVersion"></dd></div>
+              <div><dt>Commit</dt><dd><a id="source-commit-link" href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438" rel="noreferrer"><code data-bind="sourceCommit"></code> ↗</a></dd></div>
+              <div><dt>Cordis</dt><dd data-bind="cordisVersion"></dd></div>
+              <div><dt>论文草稿</dt><dd data-bind="paperDraft"></dd></div>
+            </dl>
+            <button class="button button-invert" id="permalink-button" type="button">复制此版本永久链接</button>
+          </article>
+
+          <article class="source-card">
+            <p class="card-label">CHANGELOG</p>
+            <h3>本版包含</h3>
+            <ul class="changelog" id="changelog"></ul>
+          </article>
+
+          <article class="source-card">
+            <p class="card-label">PRIMARY SOURCES</p>
+            <h3>继续核对原始材料</h3>
+            <ul class="source-links">
+              <li><a href="https://github.com/deepseek-ai/deepseek-harness" rel="noreferrer">DeepSeek Harness <span>↗</span></a></li>
+              <li><a href="https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/architecture.md" rel="noreferrer">官方架构文档 <span>↗</span></a></li>
+              <li><a href="https://github.com/cordiverse/paper" rel="noreferrer">时空可组合性论文 <span>↗</span></a></li>
+              <li><a href="https://github.com/cordiverse/cordis" rel="noreferrer">Cordis 上游 <span>↗</span></a></li>
+            </ul>
+            <p class="source-disclaimer">本站为独立、非官方、AI 辅助且经人工式证据核对的中文解读，与 DeepSeek、Cordis 或 GitHub 无隶属、赞助或背书关系。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="community-strip" aria-labelledby="community-title">
+        <div>
+          <p class="section-index">SHARE THE MAP</p>
+          <h2 id="community-title">如果一句话转发</h2>
+          <blockquote>DSH 不是“一个 Agent 核心 + 一堆插件”，而是 Profile 描述目标、Loader 协调差异、Cordis Context 承载服务、Fiber 保证可逆生命周期，最后由一组可替换插件临时组成 agent。</blockquote>
+        </div>
+        <button class="button button-primary" id="copy-summary" type="button">复制社区摘要</button>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p><strong>DSH ARCHITECTURE ATLAS</strong> · Independent community field guide</p>
+      <p>MIT · No analytics · No cookies · <a href="https://github.com/deepseek-ai/deepseek-harness">Source first</a></p>
+      <a href="#top" class="back-top">回到顶部 ↑</a>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <noscript>
+      <div class="noscript">此可视化需要 JavaScript 来切换版本和展开架构证据；基础文本与源码链接仍可阅读。</div>
+    </noscript>
+  </body>
+</html>

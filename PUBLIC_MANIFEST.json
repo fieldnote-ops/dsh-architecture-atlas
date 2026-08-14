@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "release": "0.1.0",
+  "release_date": "2026-08-14",
+  "artifact_kind": "static_site",
+  "publication_target": {
+    "platform": "GitHub Pages",
+    "repository": "pending_authenticated_owner/dsh-architecture-atlas",
+    "branch": "main",
+    "deployment": "GitHub Actions"
+  },
+  "research_baseline": {
+    "dsh_version": "v0.1.0-rc.5",
+    "dsh_commit": "47f9438",
+    "cordis_version": "4.0.1",
+    "paper_draft": "2026-08-13"
+  },
+  "site_files": [
+    ".nojekyll",
+    "app.js",
+    "assets/favicon.svg",
+    "assets/social-card.png",
+    "assets/social-card.svg",
+    "data/versions.js",
+    "index.html",
+    "styles.css"
+  ],
+  "network_policy": "no_runtime_requests",
+  "tracking": "none",
+  "cookies": "none",
+  "forms": "none",
+  "personal_data": "none",
+  "external_links": [
+    "https://github.com/deepseek-ai/deepseek-harness",
+    "https://github.com/cordiverse/paper",
+    "https://github.com/cordiverse/cordis"
+  ],
+  "rights": "Original code and commentary are MIT licensed; upstream names, source code, paper, and trademarks retain their own licenses.",
+  "disclosure": "Independent, unofficial, AI-assisted, evidence-reviewed community interpretation."
+}
