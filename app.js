@@ -17,7 +17,11 @@
     mechanismId: null,
     fiberId: null,
     fiberTimer: null,
-    toastTimer: null
+    journeyIndex: 0,
+    journeyTimer: null,
+    journeyPlaying: false,
+    toastTimer: null,
+    reduceMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches
   };
 
   function requestedVersion() {
@@ -96,6 +100,7 @@
         <span class="layer-short">${layer.short}</span>
         <span class="layer-arrow" aria-hidden="true">→</span>`;
       button.addEventListener("click", () => selectLayer(layer.id));
+      button.addEventListener("keydown", (event) => handleChoiceKeys(event, ".layer-button", "layer", selectLayer));
       map.append(button);
     });
 
@@ -155,19 +160,93 @@
   }
 
   function renderJourney(version) {
+    clearJourneyTimer();
+    state.journeyIndex = 0;
     const track = byId("journey-track");
     track.innerHTML = "";
-    version.conversation.forEach((moment) => {
+    version.conversation.forEach((moment, index) => {
       const article = document.createElement("article");
-      article.className = "journey-card reveal";
+      article.className = `journey-card reveal${index === 0 ? " is-active" : ""}`;
+      article.dataset.stepIndex = String(index);
+      article.tabIndex = 0;
+      article.setAttribute("role", "button");
+      article.setAttribute("aria-pressed", String(index === 0));
+      article.setAttribute("aria-label", `第 ${index + 1} 步：${moment.title}`);
+      article.style.setProperty("--reveal-order", String(index));
       article.innerHTML = `
         <div class="journey-step"><strong>${moment.step}</strong><span>${moment.actor}</span></div>
         <h3>${moment.title}</h3>
         <p>${moment.body}</p>
         <span class="journey-signal">${moment.signal}</span>`;
+      article.addEventListener("click", () => selectJourneyStep(index, true));
+      article.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          selectJourneyStep(index, true);
+        } else {
+          handleChoiceKeys(event, ".journey-card", "stepIndex", (next) => selectJourneyStep(Number(next), true));
+        }
+      });
       track.append(article);
       observeReveal(article);
     });
+    updateJourneyControls();
+  }
+
+  function selectJourneyStep(index, stopPlayback = false) {
+    const total = state.version.conversation.length;
+    if (!total) return;
+    if (stopPlayback) clearJourneyTimer();
+    state.journeyIndex = Math.max(0, Math.min(index, total - 1));
+    $$(".journey-card").forEach((card, cardIndex) => {
+      const active = cardIndex === state.journeyIndex;
+      card.classList.toggle("is-active", active);
+      card.setAttribute("aria-pressed", String(active));
+    });
+    const activeCard = $$(".journey-card")[state.journeyIndex];
+    if (activeCard && !state.reduceMotion) activeCard.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+    updateJourneyControls();
+  }
+
+  function updateJourneyControls() {
+    const total = state.version?.conversation.length || 0;
+    const button = byId("journey-play");
+    const atEnd = total > 0 && state.journeyIndex === total - 1;
+    button.setAttribute("aria-pressed", String(state.journeyPlaying));
+    button.querySelector("span").textContent = state.journeyPlaying ? "Ⅱ" : atEnd ? "↺" : "▶";
+    button.querySelector("strong").textContent = state.journeyPlaying ? "暂停流程" : atEnd ? "重新播放" : state.reduceMotion ? "下一步" : "播放流程";
+    byId("journey-status").textContent = total ? `第 ${state.journeyIndex + 1} 步，共 ${total} 步` : "暂无流程";
+    byId("journey-progress-bar").style.transform = `scaleX(${total ? (state.journeyIndex + 1) / total : 0})`;
+  }
+
+  function toggleJourneyPlayback() {
+    const total = state.version.conversation.length;
+    if (!total) return;
+    if (state.reduceMotion) {
+      selectJourneyStep(state.journeyIndex >= total - 1 ? 0 : state.journeyIndex + 1);
+      return;
+    }
+    if (state.journeyPlaying) {
+      clearJourneyTimer();
+      return;
+    }
+    if (state.journeyIndex >= total - 1) selectJourneyStep(0);
+    state.journeyPlaying = true;
+    updateJourneyControls();
+    state.journeyTimer = window.setInterval(() => {
+      if (state.journeyIndex >= total - 1) {
+        clearJourneyTimer();
+        return;
+      }
+      selectJourneyStep(state.journeyIndex + 1);
+    }, 1500);
+  }
+
+  function clearJourneyTimer() {
+    if (state.journeyTimer) window.clearInterval(state.journeyTimer);
+    state.journeyTimer = null;
+    state.journeyPlaying = false;
+    if (byId("journey-play") && state.version) updateJourneyControls();
   }
 
   function renderMechanisms(version) {
@@ -251,10 +330,10 @@
       button.type = "button";
       button.className = `fiber-state${fiber.id === state.fiberId ? " is-active" : ""}`;
       button.dataset.fiber = fiber.id;
-      button.setAttribute("role", "listitem");
       button.setAttribute("aria-pressed", String(fiber.id === state.fiberId));
       button.innerHTML = `<span class="fiber-state-dot">${fiber.no}</span><strong>${fiber.id}</strong><small>${fiber.title}</small>`;
       button.addEventListener("click", () => selectFiber(fiber.id));
+      button.addEventListener("keydown", (event) => handleChoiceKeys(event, ".fiber-state", "fiber", selectFiber));
       rail.append(button);
     });
     updateFiberDetail();
@@ -283,6 +362,11 @@
     clearFiberTimer();
     const sequence = ["PENDING", "LOADING", "ACTIVE", "UNLOADING", "DISPOSED"]
       .filter((id) => state.version.fiberStates.some((fiber) => fiber.id === id));
+    if (state.reduceMotion) {
+      const current = sequence.indexOf(state.fiberId);
+      selectFiber(sequence[(current + 1 + sequence.length) % sequence.length]);
+      return;
+    }
     let index = 0;
     selectFiber(sequence[index]);
     byId("fiber-play").setAttribute("aria-label", "生命周期演示进行中");
@@ -343,6 +427,19 @@
       const layer = version.layers.find((item) => item.id === link.dataset.docsLayer);
       if (layer?.docsUrl) link.href = layer.docsUrl;
     });
+    $$('[data-feedback-link]').forEach((link) => {
+      if (version.feedback?.docsUrl) link.href = version.feedback.docsUrl;
+    });
+  }
+
+  function updateFeedbackSnapshot(version) {
+    if (!version.feedback) return;
+    byId("feedback-archived-count").textContent = String(version.feedback.archivedCount ?? 0);
+    byId("feedback-incorporated-count").textContent = String(version.feedback.incorporatedCount ?? 0);
+    byId("feedback-scan-time").dateTime = version.feedback.scanTime;
+    byId("feedback-scan-time").textContent = version.feedback.scanTimeLabel;
+    byId("feedback-submit-link").href = version.feedback.submitUrl;
+    byId("feedback-browse-link").href = version.feedback.browseUrl;
   }
 
   function renderVersion(version) {
@@ -360,6 +457,20 @@
     renderGaps(version);
     renderChangelog(version);
     updateDocsLinks(version);
+    updateFeedbackSnapshot(version);
+  }
+
+  function handleChoiceKeys(event, selector, dataKey, select) {
+    if (!["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    const choices = $$(selector);
+    const current = choices.indexOf(event.currentTarget);
+    const backwards = event.key === "ArrowUp" || event.key === "ArrowLeft";
+    let next = backwards ? (current - 1 + choices.length) % choices.length : (current + 1) % choices.length;
+    if (event.key === "Home") next = 0;
+    if (event.key === "End") next = choices.length - 1;
+    event.preventDefault();
+    choices[next].focus();
+    select(choices[next].dataset[dataKey]);
   }
 
   function canonicalVersionUrl() {
@@ -398,6 +509,7 @@
     byId("share-button").addEventListener("click", () => copyText(canonicalVersionUrl(), "当前版本链接已复制"));
     byId("permalink-button").addEventListener("click", () => copyText(canonicalVersionUrl(), "永久链接已复制"));
     byId("fiber-play").addEventListener("click", playFiberLifecycle);
+    byId("journey-play").addEventListener("click", toggleJourneyPlayback);
     byId("copy-command").addEventListener("click", () => copyText("npx @deepseek-ai/dsh web", "启动命令已复制"));
     byId("copy-summary").addEventListener("click", () => {
       const text = `DSH 不是“一个 Agent 核心 + 一堆插件”，而是 Profile 描述目标、Loader 协调差异、Cordis Context 承载服务、Fiber 保证可逆生命周期，最后由一组可替换插件临时组成 agent。\n\n可视化解读（${versionLabel(state.version)}）：${canonicalVersionUrl()}`;
@@ -424,8 +536,33 @@
     $$(".reveal").forEach(observeReveal);
   }
 
+  function setupReadingProgress() {
+    const bar = byId("reading-progress-bar");
+    let queued = false;
+    const update = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 0;
+      bar.style.transform = `scaleX(${progress})`;
+      queued = false;
+    };
+    window.addEventListener("scroll", () => {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(update);
+    }, { passive: true });
+    update();
+  }
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      clearJourneyTimer();
+      clearFiberTimer();
+    }
+  });
+
   setupVersionSelect();
   setupActions();
   renderVersion(findVersion(requestedVersion()));
   setupReveals();
+  setupReadingProgress();
 })();

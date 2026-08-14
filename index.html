@@ -12,9 +12,9 @@
     <meta name="twitter:card" content="summary_large_image">
     <title>DSH Architecture Atlas｜可视化架构解读</title>
     <link rel="icon" href="assets/favicon.png" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=20260814.4">
-    <script src="data/versions.js?v=20260814.4" defer></script>
-    <script src="app.js?v=20260814.4" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260814.6">
+    <script src="data/versions.js?v=20260814.6" defer></script>
+    <script src="app.js?v=20260814.6" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">跳到正文</a>
@@ -29,6 +29,7 @@
         <a href="docs/">文档</a>
         <a href="#mechanisms">机制</a>
         <a href="#evidence">证据</a>
+        <a href="#feedback">社区反馈</a>
       </nav>
       <div class="header-actions">
         <label class="version-control">
@@ -42,6 +43,7 @@
         </button>
       </div>
     </header>
+    <div class="reading-progress" aria-hidden="true"><span id="reading-progress-bar"></span></div>
 
     <main id="main">
       <section class="hero" aria-labelledby="hero-title">
@@ -164,6 +166,7 @@
           <a href="docs/dsh-0.1.0-rc.5/fiber.html" data-docs-layer="fiber"><small>04 / 生命周期</small><strong>插件生命周期</strong><span>插件如何等待、运行和退出 →</span></a>
           <a href="docs/dsh-0.1.0-rc.5/plugins.html" data-docs-layer="plugins"><small>05 / 领域层</small><strong>Agent 能力</strong><span>会话、工具与模型如何协作 →</span></a>
           <a class="docs-gateway-all" href="docs/"><small>完整阅读路径</small><strong>打开文档</strong><span>从入门、架构到运行指南 →</span></a>
+          <a class="docs-gateway-feedback" href="docs/dsh-0.1.0-rc.5/feedback.html" data-feedback-link><small>当前版本</small><strong>社区反馈</strong><span>按版本查看来源与核查时间 →</span></a>
         </div>
       </section>
 
@@ -201,6 +204,11 @@
             <h2 id="journey-title">一次对话，穿过六个架构时刻</h2>
           </div>
           <p>把“everything is a plugin”从口号还原成运行时发生的事情。</p>
+        </div>
+        <div class="journey-controls reveal" aria-label="对话流程播放控制">
+          <button class="journey-play" id="journey-play" type="button" aria-pressed="false"><span aria-hidden="true">▶</span><strong>播放流程</strong></button>
+          <div class="journey-progress" aria-hidden="true"><span id="journey-progress-bar"></span></div>
+          <p id="journey-status" aria-live="polite">第 1 步，共 6 步</p>
         </div>
         <div class="journey-track" id="journey-track"></div>
       </section>
@@ -245,7 +253,7 @@
         </div>
 
         <div class="fiber-machine reveal">
-          <div class="fiber-rail" id="fiber-rail" role="list" aria-label="Fiber 六态"></div>
+          <div class="fiber-rail" id="fiber-rail" role="group" aria-label="Fiber 六态"></div>
           <div class="fiber-detail" id="fiber-detail" aria-live="polite"></div>
           <button class="play-button" id="fiber-play" type="button">
             <span class="play-icon" aria-hidden="true">▶</span>
@@ -326,6 +334,27 @@
         </div>
       </section>
 
+      <section class="feedback-pulse" id="feedback" aria-labelledby="feedback-title">
+        <div class="feedback-pulse-copy reveal">
+          <p class="section-index">COMMUNITY / CURRENT VERSION</p>
+          <h2 id="feedback-title">社区讨论，必须先归到正确版本</h2>
+          <p>这里汇总 GitHub、知乎、X、Reddit 等公开社区中能核验的讨论。每条记录都保留来源链接、社区、原帖日期和收录时间；当前页面只显示 <strong data-bind="versionLabel"></strong> 的反馈。</p>
+          <div class="feedback-actions">
+            <a class="button button-primary" href="docs/dsh-0.1.0-rc.5/feedback.html" data-feedback-link>查看当前版本反馈 →</a>
+            <a class="button button-outline" id="feedback-submit-link" href="https://github.com/fieldnote-ops/dsh-architecture-atlas/issues/new?template=community-feedback.yml" rel="noreferrer">提交公开反馈 ↗</a>
+          </div>
+        </div>
+        <aside class="feedback-snapshot reveal" aria-label="当前版本社区反馈快照">
+          <div class="feedback-counts">
+            <div><strong id="feedback-archived-count">0</strong><span>已归档信号</span></div>
+            <div><strong id="feedback-incorporated-count">0</strong><span>已改变文档结论</span></div>
+          </div>
+          <ul class="feedback-channels" aria-label="覆盖社区"><li>GitHub</li><li>知乎</li><li>X</li><li>Reddit</li><li>其他公开来源</li></ul>
+          <p>最近扫描：<time id="feedback-scan-time" datetime="2026-08-14T05:23:45Z">2026-08-14 13:23:45 UTC+8</time></p>
+          <a id="feedback-browse-link" href="https://github.com/fieldnote-ops/dsh-architecture-atlas/issues?q=is%3Aissue%20label%3Acommunity-feedback%20label%3Adsh-0.1.0-rc.5" rel="noreferrer">查看公开反馈队列 ↗</a>
+        </aside>
+      </section>
+
       <section class="community-strip" aria-labelledby="community-title">
         <div>
           <p class="section-index">SHARE THE MAP</p>
@@ -338,7 +367,7 @@
 
     <footer class="site-footer">
       <p><strong>DSH ARCHITECTURE ATLAS</strong> · 独立中文架构解读</p>
-      <p>MIT · 无统计脚本 · 无 Cookie · <a href="docs/">阅读文档</a> · <a href="https://github.com/deepseek-ai/deepseek-harness">查看官方源码</a></p>
+      <p>MIT · 无统计脚本 · 无 Cookie · <a href="docs/">阅读文档</a> · <a href="docs/dsh-0.1.0-rc.5/feedback.html" data-feedback-link>社区反馈</a> · <a href="https://github.com/deepseek-ai/deepseek-harness">查看官方源码</a></p>
       <a href="#top" class="back-top">回到顶部 ↑</a>
     </footer>
 

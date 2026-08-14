@@ -98,6 +98,15 @@ window.DSH_ATLAS = {
         { step: "05", actor: "Tools / LLM", title: "事件和工具管线协作", body: "模型请求、流式输出与工具调用在类型化事件和服务操作上流动；这些异步控制流超出了论文演算的显式范围。", signal: "runtime flow" },
         { step: "06", actor: "Fiber", title: "替换时精确撤销", body: "旧插件停止供给，依赖者先卸载，disposer 逆序执行；候选失败则恢复旧配置，避免半重载态。", signal: "recovery" }
       ],
+      feedback: {
+        docsUrl: "docs/dsh-0.1.0-rc.5/feedback.html",
+        scanTime: "2026-08-14T05:23:45Z",
+        scanTimeLabel: "2026-08-14 13:23:45 UTC+8",
+        submitUrl: "https://github.com/fieldnote-ops/dsh-architecture-atlas/issues/new?template=community-feedback.yml",
+        browseUrl: "https://github.com/fieldnote-ops/dsh-architecture-atlas/issues?q=is%3Aissue%20label%3Acommunity-feedback%20label%3Adsh-0.1.0-rc.5",
+        archivedCount: 1,
+        incorporatedCount: 0
+      },
       mechanisms: [
         {
           id: "effects",
@@ -183,7 +192,8 @@ window.DSH_ATLAS = {
         "Profile、Loader、Context、Fiber 与领域插件之间的关系",
         "一次对话如何穿过六个架构时刻",
         "可逆效应、响应式依赖和事务协调如何工作",
-        "源码证据与运行时边界"
+        "源码证据与运行时边界",
+        "按当前 DSH 版本归档的社区反馈与核查时间"
       ]
     }
   ]

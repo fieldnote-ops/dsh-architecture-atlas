@@ -12,13 +12,28 @@
     { group: "架构", slug: "plugins", title: "Agent 能力", description: "Session、Prompt、Tools、Agent Loop 与 LLM。", keywords: "session prompt tools agent llm" },
     { group: "运行指南", slug: "conversation", title: "一次对话如何运行", description: "沿一条消息追踪 Session、Loop、LLM 与工具调用。", keywords: "conversation turn step message tool" },
     { group: "运行指南", slug: "updates", title: "更新与恢复", description: "配置更新、热重载、汇合与失败恢复。", keywords: "reload rollback settlement update 热更新 hmr" },
-    { group: "参考", slug: "boundaries", title: "能力边界与版本", description: "哪些是框架保证，哪些仍取决于实现与版本。", keywords: "boundary version developer preview 限制" }
+    { group: "参考", slug: "boundaries", title: "能力边界与版本", description: "哪些是框架保证，哪些仍取决于实现与版本。", keywords: "boundary version developer preview 限制" },
+    { group: "参考", slug: "feedback", title: "社区反馈", description: "按当前 DSH 版本查看 GitHub、知乎、X、Reddit 等公开反馈。", keywords: "community feedback github 知乎 x reddit 时间戳 版本" }
   ];
 
   const currentFile = window.location.pathname.split("/").pop() || "index.html";
   const currentSlug = currentFile.replace(/\.html$/, "");
   const insideVersion = window.location.pathname.includes(`/${versionPath}/`);
   const hrefFor = (slug) => `${insideVersion ? "" : `${versionPath}/`}${slug}.html`;
+
+  function setupHeaderFeedbackLink() {
+    const nav = document.querySelector(".docs-header .header-nav");
+    if (!nav || nav.querySelector('[data-header-feedback]')) return;
+    const link = document.createElement("a");
+    link.dataset.headerFeedback = "";
+    link.href = hrefFor("feedback");
+    link.textContent = "社区反馈";
+    if (currentSlug === "feedback") {
+      nav.querySelector('a[aria-current="page"]')?.removeAttribute("aria-current");
+      link.setAttribute("aria-current", "page");
+    }
+    nav.append(link);
+  }
 
   function buildSidebar() {
     const sidebar = document.getElementById("docs-sidebar");
@@ -123,7 +138,9 @@
       if (!matches.length) results.innerHTML = `<p class="docs-search-empty">没有匹配结果。换一个词试试。</p>`;
     };
 
+    let opener = null;
     const open = () => {
+      opener = document.activeElement;
       render(input.value);
       dialog.showModal();
       window.setTimeout(() => input.focus(), 0);
@@ -139,6 +156,20 @@
     });
     dialog.addEventListener("click", (event) => {
       if (event.target === dialog) dialog.close();
+    });
+    dialog.addEventListener("close", () => {
+      if (opener instanceof HTMLElement) opener.focus();
+    });
+    input.addEventListener("keydown", (event) => {
+      const firstResult = results.querySelector("a");
+      if (event.key === "ArrowDown" && firstResult) {
+        event.preventDefault();
+        firstResult.focus();
+      }
+      if (event.key === "Enter" && firstResult) {
+        event.preventDefault();
+        firstResult.click();
+      }
     });
   }
 
@@ -157,8 +188,50 @@
     });
   }
 
+  function setupReadingProgress() {
+    const header = document.querySelector(".docs-header");
+    if (!header) return;
+    const progress = document.createElement("div");
+    progress.className = "reading-progress";
+    progress.setAttribute("aria-hidden", "true");
+    const bar = document.createElement("span");
+    progress.append(bar);
+    header.after(progress);
+    let queued = false;
+    const update = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.transform = `scaleX(${scrollable > 0 ? Math.min(1, window.scrollY / scrollable) : 0})`;
+      queued = false;
+    };
+    window.addEventListener("scroll", () => {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(update);
+    }, { passive: true });
+    update();
+  }
+
+  function setupActiveTableOfContents() {
+    const tocLinks = [...document.querySelectorAll(".docs-toc a")];
+    if (!tocLinks.length || !("IntersectionObserver" in window)) return;
+    const linksById = new Map(tocLinks.map((link) => [decodeURIComponent(link.hash.slice(1)), link]));
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+      if (!visible) return;
+      tocLinks.forEach((link) => link.removeAttribute("aria-current"));
+      linksById.get(visible.target.id)?.setAttribute("aria-current", "location");
+    }, { rootMargin: "-90px 0px -62%", threshold: 0 });
+    linksById.forEach((_, id) => {
+      const heading = document.getElementById(id);
+      if (heading) observer.observe(heading);
+    });
+  }
+
+  setupHeaderFeedbackLink();
   buildSidebar();
   buildTableOfContents();
   setupSearch();
   setupCopyButtons();
+  setupReadingProgress();
+  setupActiveTableOfContents();
 })();

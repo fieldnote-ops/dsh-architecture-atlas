@@ -1,0 +1,83 @@
+name: DSH 当前版本社区反馈
+description: 提交与 DSH v0.1.0-rc.5 相关的公开社区讨论或文档反馈
+title: "[DSH v0.1.0-rc.5 社区反馈] "
+labels: ["community-feedback", "dsh-0.1.0-rc.5"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢补充社区反馈。本 Issue 公开可见，请勿提交账号、Token、内部链接、个人信息、客户数据、未公开材料或安全漏洞细节。
+  - type: dropdown
+    id: dsh-version
+    attributes:
+      label: DSH 版本
+      description: 当前文档只接收能归属到此版本的反馈。
+      options:
+        - v0.1.0-rc.5 (commit 47f9438)
+    validations:
+      required: true
+  - type: dropdown
+    id: community
+    attributes:
+      label: 来源社区
+      options:
+        - GitHub
+        - 知乎
+        - X
+        - Reddit
+        - 其他公开社区
+    validations:
+      required: true
+  - type: input
+    id: source-url
+    attributes:
+      label: 原始公开链接
+      description: 请直接链接到原帖、Issue 或公开讨论。
+      placeholder: https://...
+    validations:
+      required: true
+  - type: input
+    id: source-time
+    attributes:
+      label: 原帖时间
+      description: 优先填写带时区时间；如果平台只显示相对时间，请如实说明。
+      placeholder: 2026-08-14 13:20 UTC+8，或“平台显示 25 分钟前”
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: 反馈类型
+      options:
+        - 架构理解
+        - 文档清晰度
+        - 对话与工具流程
+        - 性能与 Token 使用
+        - 插件与扩展体验
+        - 版本边界
+        - 其他
+    validations:
+      required: true
+  - type: textarea
+    id: observation
+    attributes:
+      label: 你观察到了什么
+      description: 请概括原帖观点，并区分事实、体验和推测。
+      placeholder: 这条讨论指出……；我认为它与当前版本的……有关。
+    validations:
+      required: true
+  - type: textarea
+    id: documentation-impact
+    attributes:
+      label: 可能影响哪一页文档
+      description: 如果不确定，可以写“待判断”。
+      placeholder: 例如：插件生命周期、一次对话如何运行、能力边界与版本。
+    validations:
+      required: true
+  - type: checkboxes
+    id: public-data-check
+    attributes:
+      label: 公开信息确认
+      options:
+        - label: 我确认内容不含账号、Token、内部链接、个人信息、客户数据、未公开材料或安全漏洞细节。
+          required: true

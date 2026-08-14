@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "release": "0.1.0",
+  "release": "0.2.0",
   "release_date": "2026-08-14",
   "artifact_kind": "static_site",
   "publication_target": {
@@ -27,6 +27,7 @@
     "docs/dsh-0.1.0-rc.5/conversation.html",
     "docs/dsh-0.1.0-rc.5/context.html",
     "docs/dsh-0.1.0-rc.5/fiber.html",
+    "docs/dsh-0.1.0-rc.5/feedback.html",
     "docs/dsh-0.1.0-rc.5/introduction.html",
     "docs/dsh-0.1.0-rc.5/loader.html",
     "docs/dsh-0.1.0-rc.5/mental-model.html",
@@ -40,19 +41,23 @@
   "network_policy": "no_runtime_requests",
   "tracking": "none",
   "cookies": "none",
-  "forms": "local documentation search only; no submission",
+  "forms": "local documentation search plus an external public GitHub Issue form; no site-side submission or storage",
   "personal_data": "none",
   "external_links": [
     "https://github.com/deepseek-ai/deepseek-harness",
+    "https://github.com/fieldnote-ops/dsh-architecture-atlas/issues",
     "https://github.com/cordiverse/paper",
-    "https://github.com/cordiverse/cordis"
+    "https://github.com/cordiverse/cordis",
+    "https://www.zhihu.com/search",
+    "https://x.com/search",
+    "https://www.reddit.com"
   ],
   "rights": "Original code and commentary are MIT licensed; upstream names, source code, paper, and trademarks retain their own licenses.",
   "disclosure": "Independent, unofficial, AI-assisted, evidence-reviewed community interpretation.",
   "files": {
     "app.js": {
-      "sha256": "8f958bb1b15c02e1c13e66e85f9a77b1fb328b67fa115fb0a43e4c07adda5d29",
-      "bytes": 15818
+      "sha256": "f46aefe71ea677106b7a5bab69d64373f0b7f1ab57915bf17e372b29c77901fa",
+      "bytes": 21813
     },
     "assets/favicon.png": {
       "sha256": "0ca294d15bfc54bd7367c378d1f83d072ffecb98d217a581c27841d2132a263d",
@@ -63,68 +68,72 @@
       "bytes": 67873
     },
     "data/versions.js": {
-      "sha256": "544840d388f299364d89067920d3968d8f10c4d76b7d067483aee4e4100228ff",
-      "bytes": 12622
+      "sha256": "815f01651f2f52e464203bfbdc531a99e1dee4c117ccdb5d991514051f80bac0",
+      "bytes": 13193
     },
     "docs/docs.css": {
-      "sha256": "6257eea9da52b009367ebd6cbb5e3ee7884fec96c153a69df80126e7e0cce582",
-      "bytes": 20261
+      "sha256": "20eb4d2c3bfc33042ef6d1d89bf67e4bcb9adf12f3a08cf3fb448983e3bb599a",
+      "bytes": 21734
     },
     "docs/docs.js": {
-      "sha256": "6dbcb27ec693bf02676e0b2b6e73fd5f16a40a72d701baf3d6cdbdc9da6f06e2",
-      "bytes": 8200
+      "sha256": "e968a2fde8136f28e139ec58bb15902048cb18ecac371eaafd0901f20b119cb5",
+      "bytes": 11276
     },
     "docs/dsh-0.1.0-rc.5/boundaries.html": {
-      "sha256": "f50994687b4e6ee12653304289e51257810fd2e7bb95e09eb260190e2b435183",
-      "bytes": 5396
+      "sha256": "99c556856ca2183bb0d085bdf9a4289bb79e41f794f07389d290a73283f03426",
+      "bytes": 5409
     },
     "docs/dsh-0.1.0-rc.5/conversation.html": {
-      "sha256": "c3ae5b0337970de00e543eda22eac532a326a08657dbc081a3befd7928d786ef",
+      "sha256": "0862554b11feb61f97e1258670293c4697cf98917ca187d70d5eb275ae0147e7",
       "bytes": 6088
     },
     "docs/dsh-0.1.0-rc.5/context.html": {
-      "sha256": "e3ce6084d001b2c75e4b5e6294667556cee315f3b0b383c547dc0ea49cb21c28",
+      "sha256": "b939839ca718eee525899f9f8e82eb714bccaa22e675893474fbe9f26c1c0369",
       "bytes": 9189
     },
     "docs/dsh-0.1.0-rc.5/fiber.html": {
-      "sha256": "8a4b0cb331ab2b88230aeded4af582d7640cfd140f5a870def2cdee69599011f",
+      "sha256": "68841a16b36f8cda56f60e60e522a6c664381992b4da6843a02a2072a08891a9",
       "bytes": 12492
     },
+    "docs/dsh-0.1.0-rc.5/feedback.html": {
+      "sha256": "64e0ad7d35b05931c611847faccbe63a108a2a5e128d4f4b8702380d2449c916",
+      "bytes": 9073
+    },
     "docs/dsh-0.1.0-rc.5/introduction.html": {
-      "sha256": "42c3ac34e8e1bbfe84576cc793bac02ce01462051efa09bf405ccac097b77be4",
+      "sha256": "d9410573d1a8d7078c8ace44dc2ba089f5b67f3f479a50c1e70df290fb86256f",
       "bytes": 6180
     },
     "docs/dsh-0.1.0-rc.5/loader.html": {
-      "sha256": "30f2659fa747249dc68832f9f15bfa832245168c81fd4b8032576d1b4d0859db",
+      "sha256": "52f422d27d63d6b7e1a0c2f09814f68ced850d7738f9882ca50a07a3562f9f6a",
       "bytes": 8696
     },
     "docs/dsh-0.1.0-rc.5/mental-model.html": {
-      "sha256": "5b3b3b31d2f7fd84198e7cd309158a60cd6fdb122dbf618f7d24419d3c218fd3",
+      "sha256": "a5fbf3be93a3de818a9312198c43c4b8b9b327ea9ff518a9df9a67e26c54b8d1",
       "bytes": 6490
     },
     "docs/dsh-0.1.0-rc.5/plugins.html": {
-      "sha256": "8a340b7facb0edade517b09f33426be789dab45af229f8e4cb7aa0ac89922621",
+      "sha256": "6511176dec3efe9b67dd4c0f69affc76882f86621854e495efbb4401972c321c",
       "bytes": 11561
     },
     "docs/dsh-0.1.0-rc.5/profile.html": {
-      "sha256": "d337d261ef6f214e05fb75c3fdc84ba0acc64a79d369aa8a115cb060ae91ff42",
+      "sha256": "bc345710dbf1e019b40755d74bcaafd6190fdbaf91f355e2cddf40df567868b0",
       "bytes": 8760
     },
     "docs/dsh-0.1.0-rc.5/updates.html": {
-      "sha256": "82d47bac0fe7cff64470056217e4c8bb07ec81439fcd9428cc8bb3e57636ffbb",
+      "sha256": "f79af5f89aabaeaaff81f716defe16c37a43f2371f105b8504312fbdd65741c2",
       "bytes": 5437
     },
     "docs/index.html": {
-      "sha256": "eb5a0da495faf2c32690363fbb71ac59328826908d101be8829c0cb67a612c74",
-      "bytes": 6276
+      "sha256": "e0e172ef5e4dad31556274d5b6577804ab866e0ed966c53a53d66cb60d22af0e",
+      "bytes": 6478
     },
     "index.html": {
-      "sha256": "d73ce044477a6d58b287680b31a69b8d19e6c7a66bb4c8523508189d88e549ce",
-      "bytes": 20094
+      "sha256": "e907030c78d45e2e02e8fa89c33ce63ddee00fd50076f11fdf350bf062ce94bd",
+      "bytes": 22854
     },
     "styles.css": {
-      "sha256": "b4932d04a37493e7faa8536a703c258212fde794fe46b2fcb3748d70ec866f2c",
-      "bytes": 39039
+      "sha256": "11e09337b934e63ccb578ca0081810228b7462ebe5fdba0fe5a7ed5da06b7db7",
+      "bytes": 43763
     }
   }
 }

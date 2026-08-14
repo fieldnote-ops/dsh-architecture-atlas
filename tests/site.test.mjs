@@ -50,6 +50,9 @@ test("every release includes the required architecture evidence", () => {
     assert.ok(version.mechanisms.length >= 3);
     assert.ok(version.matrix.length >= 6);
     assert.ok(version.gaps.length >= 3);
+    assert.equal(typeof version.feedback?.docsUrl, "string");
+    assert.match(version.feedback?.scanTime || "", /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/);
+    assert.equal(typeof version.feedback?.submitUrl, "string");
   }
 });
 
@@ -70,7 +73,7 @@ test("all local links and assets resolve from every HTML page", () => {
 });
 
 test("versioned documentation covers onboarding, architecture, operations, and reference", () => {
-  const expected = ["introduction", "mental-model", "profile", "loader", "context", "fiber", "plugins", "conversation", "updates", "boundaries"];
+  const expected = ["introduction", "mental-model", "profile", "loader", "context", "fiber", "plugins", "conversation", "updates", "boundaries", "feedback"];
   assert.ok(existsSync(resolve(root, "docs/index.html")));
   for (const name of expected) {
     const page = read(`docs/dsh-0.1.0-rc.5/${name}.html`);
@@ -96,8 +99,40 @@ test("documentation shell provides grouped navigation, local search, and page ou
   for (const group of ["开始", "架构", "运行指南", "参考"]) assert.ok(script.includes(`group: "${group}"`));
   assert.match(script, /docs-search-dialog/);
   assert.match(script, /buildTableOfContents/);
+  assert.match(script, /setupReadingProgress/);
+  assert.match(script, /setupActiveTableOfContents/);
   assert.match(read("docs/index.html"), /所有文档/);
   assert.ok(!script.includes("<form"), "local documentation search must not create a submission surface");
+});
+
+test("community feedback is version-scoped, timestamped, multi-community, and privacy-aware", () => {
+  const page = read("docs/dsh-0.1.0-rc.5/feedback.html");
+  for (const community of ["GitHub", "知乎", "X", "Reddit"]) assert.ok(page.includes(community));
+  assert.match(page, /仅限 DSH v0\.1\.0-rc\.5/);
+  assert.match(page, /datetime="2026-08-14T05:23:45Z"/);
+  assert.match(page, /原帖时间/);
+  assert.match(page, /收录时间/);
+  assert.match(page, /纳入时间/);
+  assert.match(page, /0 条改变当前架构结论/);
+  assert.match(page, /请勿提交私密信息/);
+
+  const issueForm = read(".github/ISSUE_TEMPLATE/community-feedback.yml");
+  assert.match(issueForm, /v0\.1\.0-rc\.5 \(commit 47f9438\)/);
+  assert.match(issueForm, /来源社区/);
+  assert.match(issueForm, /原帖时间/);
+  assert.match(issueForm, /Token/);
+});
+
+test("motion controls are user-triggered, keyboard reachable, and reduced-motion aware", () => {
+  const html = read("index.html");
+  const script = read("app.js");
+  assert.match(html, /id="journey-play"/);
+  assert.match(html, /id="journey-progress-bar"/);
+  assert.match(html, /id="reading-progress-bar"/);
+  assert.match(script, /prefers-reduced-motion: reduce/);
+  assert.match(script, /toggleJourneyPlayback/);
+  assert.match(script, /handleChoiceKeys/);
+  assert.ok(!/<body[^>]+autoplay/i.test(html));
 });
 
 test("public manifest pins every deployed byte", () => {
