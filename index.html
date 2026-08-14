@@ -12,11 +12,11 @@
     <meta name="twitter:card" content="summary_large_image">
     <title>AI Harness Atlas｜AI Harness 观察图谱</title>
     <link rel="icon" href="assets/favicon.png" type="image/png">
-    <link rel="stylesheet" href="styles.css?v=20260814.10">
-    <script src="data/versions.js?v=20260814.10" defer></script>
-    <script src="data/atlas.js?v=20260814.10" defer></script>
-    <script src="atlas.js?v=20260814.10" defer></script>
-    <script src="app.js?v=20260814.10" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260814.11">
+    <script src="data/versions.js?v=20260814.11" defer></script>
+    <script src="data/atlas.js?v=20260814.11" defer></script>
+    <script src="atlas.js?v=20260814.11" defer></script>
+    <script src="app.js?v=20260814.11" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#main">跳到正文</a>
@@ -28,20 +28,19 @@
       </a>
       <nav class="header-nav" aria-label="主导航">
         <a href="#atlas-overview">观察图谱</a>
+        <a href="docs/atlas.html">阅读方法</a>
+        <a href="#dsh-case">DSH 精选案例</a>
         <a href="docs/">文档</a>
-        <a href="#atlas">DSH 架构</a>
-        <a href="docs/atlas.html">对象档案</a>
-        <a href="#community">公开讨论观察</a>
+        <a href="docs/dsh-0.1.0-rc.5/community.html" data-community-link>公开讨论观察</a>
       </nav>
       <div class="header-actions">
-        <label class="version-control">
-          <span class="sr-only">选择 DSH 版本</span>
-          <span class="version-dot" aria-hidden="true"></span>
-          <select id="version-select" aria-label="选择 DSH 版本"></select>
-        </label>
-        <button class="icon-button" id="share-button" type="button" aria-label="复制当前版本链接">
+        <div class="atlas-scope" aria-label="当前图谱范围">
+          <span>ATLAS SCOPE</span>
+          <strong>10 对象 · 6 维度</strong>
+        </div>
+        <button class="icon-button" id="share-button" type="button" aria-label="复制图谱链接">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15l6-6M11 6l1.4-1.4a4.2 4.2 0 016 6L17 12M13 18l-1.4 1.4a4.2 4.2 0 01-6-6L7 12"/></svg>
-            <span>复制链接</span>
+            <span>复制图谱链接</span>
         </button>
       </div>
     </header>
@@ -61,24 +60,24 @@
           <div class="hero-cta">
             <a class="button button-primary" href="#atlas-overview">进入观察图谱 <span aria-hidden="true">↓</span></a>
             <a class="button button-quiet" href="docs/">阅读文档 <span aria-hidden="true">→</span></a>
-            <a class="button button-quiet" href="#atlas">先看 DSH 架构</a>
+            <a class="button button-quiet" href="#dsh-case">进入 DSH 精选案例</a>
             <a class="button button-quiet" href="docs/atlas.html">打开对象档案 <span aria-hidden="true">→</span></a>
           </div>
         </div>
 
-        <aside class="hero-aside reveal" aria-label="当前内容对应的 DSH 源码版本">
+        <aside class="hero-aside reveal" aria-label="AI Harness Atlas 图谱范围">
           <div class="status-stamp">
-            <span class="status-stamp-label">当前专题</span>
-            <strong data-bind="versionLabel"></strong>
-            <span data-bind="status"></span>
+            <span class="status-stamp-label">当前图谱</span>
+            <strong>10 个观察对象</strong>
+            <span>持续扩展</span>
           </div>
           <dl class="baseline-list">
-            <div><dt>上游状态</dt><dd>Developer Preview</dd></div>
-            <div><dt>源码提交</dt><dd data-bind="sourceCommit"></dd></div>
-            <div><dt>Cordis</dt><dd data-bind="cordisVersion"></dd></div>
-            <div><dt>核对日期</dt><dd data-bind="date"></dd></div>
+            <div><dt>比较维度</dt><dd>06</dd></div>
+            <div><dt>对象类型</dt><dd>07</dd></div>
+            <div><dt>版本机制</dt><dd>独立归档</dd></div>
+            <div><dt>观察立场</dt><dd>非官方</dd></div>
           </dl>
-          <p class="baseline-note">首页先建立跨项目共同语言。右侧版本只控制 DSH 专题内容；其他对象从观察图谱进入各自档案。</p>
+          <p class="baseline-note">DSH 是第一份完整深度档案。它的版本选择只在 DSH 精选案例区生效，不代表整个图谱的版本。</p>
         </aside>
 
         <div class="hero-principle reveal">
@@ -126,7 +125,7 @@
         </div>
       </section>
 
-      <section class="dsh-intro" aria-labelledby="dsh-intro-title">
+      <section class="dsh-intro" id="dsh-case" aria-labelledby="dsh-intro-title">
         <div class="dsh-intro-copy reveal">
           <p class="section-index">DSH / 一个完整专题</p>
           <h2 id="dsh-intro-title">DeepSeek Harness：<br>把模型接到真实环境的 Agent 运行壳</h2>
@@ -138,6 +137,21 @@
           </div>
         </div>
         <aside class="dsh-quickstart reveal" aria-label="DSH 快速链接">
+          <div class="dsh-case-toolbar">
+            <div>
+              <span>DSH 精选案例</span>
+              <strong>按版本阅读</strong>
+            </div>
+            <label class="version-control">
+              <span class="version-dot" aria-hidden="true"></span>
+              <span class="sr-only">选择 DSH 版本</span>
+              <select id="version-select" aria-label="选择 DSH 版本"></select>
+            </label>
+            <button class="icon-button" id="share-button" type="button" aria-label="复制 DSH 案例链接">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 15l6-6M11 6l1.4-1.4a4.2 4.2 0 016 6L17 12M13 18l-1.4 1.4a4.2 4.2 0 01-6-6L7 12"/></svg>
+              <span>复制案例链接</span>
+            </button>
+          </div>
           <div class="quickstart-command">
             <span>快速体验</span>
             <code>npx @deepseek-ai/dsh web</code>
@@ -203,6 +217,14 @@
         </div>
       </section>
 
+      <details class="dsh-deep-dive" id="dsh-deep-dive">
+        <summary>
+          <span class="dsh-deep-dive-label">DSH / 深度阅读</span>
+          <span class="dsh-deep-dive-title">继续阅读 DSH 的运行机制</span>
+          <span class="dsh-deep-dive-note">一次对话、生命周期、证据与公开讨论都在这里展开。</span>
+          <span class="dsh-deep-dive-toggle"><span>展开深度档案</span><b aria-hidden="true">↓</b></span>
+        </summary>
+        <div class="dsh-deep-dive-body">
       <section class="section topology-section" aria-labelledby="topology-title">
         <div class="section-heading reveal">
           <div>
@@ -391,6 +413,8 @@
         </div>
         <button class="button button-primary" id="copy-summary" type="button">复制社区摘要</button>
       </section>
+        </div>
+      </details>
     </main>
 
     <footer class="site-footer">

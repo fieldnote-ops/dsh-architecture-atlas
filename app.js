@@ -367,7 +367,7 @@
   function renderVersion(version) {
     state.version = version;
     document.documentElement.dataset.version = version.id;
-    document.title = `AI Harness Atlas｜${versionLabel(version)} 中文架构解读`;
+    document.title = "AI Harness Atlas｜多 Harness 观察图谱";
     byId("version-select").value = version.id;
     bindVersionText(version);
     renderArchitecture(version);
@@ -402,6 +402,13 @@
     return url.toString();
   }
 
+  function atlasCanonicalUrl() {
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.hash = "atlas-overview";
+    return url.toString();
+  }
+
   async function copyText(text, message) {
     try {
       await navigator.clipboard.writeText(text);
@@ -428,7 +435,7 @@
   }
 
   function setupActions() {
-    byId("share-button").addEventListener("click", () => copyText(canonicalVersionUrl(), "当前版本链接已复制"));
+    byId("share-button").addEventListener("click", () => copyText(atlasCanonicalUrl(), "图谱主页链接已复制"));
     byId("permalink-button").addEventListener("click", () => copyText(canonicalVersionUrl(), "永久链接已复制"));
     byId("fiber-play").addEventListener("click", playFiberLifecycle);
     byId("copy-command").addEventListener("click", () => copyText("npx @deepseek-ai/dsh web", "启动命令已复制"));

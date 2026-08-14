@@ -216,6 +216,17 @@ test("page contains accessibility and sharing essentials", () => {
   assert.ok(existsSync(resolve(root, "assets/social-card.png")));
 });
 
+test("homepage keeps the Atlas mental model ahead of the DSH case study", () => {
+  const html = read("index.html");
+  const header = html.match(/<header[\s\S]*?<\/header>/)?.[0] || "";
+  assert.match(html, /class="atlas-scope"/);
+  assert.match(html, /id="dsh-case"/);
+  assert.match(html, /<details class="dsh-deep-dive" id="dsh-deep-dive">/);
+  assert.ok(!header.includes('id="version-select"'), "DSH version control must stay inside its case study");
+  assert.match(html, /10 个观察对象/);
+  assert.match(html, /DSH 是第一份完整深度档案/);
+});
+
 test("reader-facing copy does not expose production language", () => {
   const publicCopy = `${htmlFiles.map(read).join("\n")}\n${read("data/versions.js")}`;
   const producerPhrases = [

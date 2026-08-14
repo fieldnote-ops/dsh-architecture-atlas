@@ -59,8 +59,8 @@
   "disclosure": "Independent, unofficial, AI-assisted, evidence-reviewed community interpretation.",
   "files": {
     "app.js": {
-      "sha256": "45744811a760463b76ca677ab2838dc4e76af08f620915d51b93a8e150ed0d6e",
-      "bytes": 18368
+      "sha256": "72dfa8113b0ffe7eb54533fc278949cb75a39dfd691594542539ebd208d93d1e",
+      "bytes": 18513
     },
     "atlas.js": {
       "sha256": "b6f1147a06014614c97f8d6e885243acc0a960a49ef44ae9c4f999ca64cb3b3f",
@@ -143,12 +143,12 @@
       "bytes": 6900
     },
     "index.html": {
-      "sha256": "82530be0f6a9c4015af7ea31a03da86d7e6ed77b563c64c4a0db19812db87722",
-      "bytes": 24978
+      "sha256": "c10b8e8e78ad7c017449cc3700fc835786c15a1804f35d7f7215802f348bdd6e",
+      "bytes": 26236
     },
     "styles.css": {
-      "sha256": "a5e68556d720a0cf283c17b4f02c2fe3c19f0b0ecc076a1eba1aff387df5928b",
-      "bytes": 49561
+      "sha256": "1859579a47e28698227bf3c3fb953751d0b497a3353e21c3c8a86471984c4a4a",
+      "bytes": 52921
     }
   }
 }

@@ -208,6 +208,24 @@ pre {
   gap: 10px;
 }
 
+.atlas-scope {
+  display: grid;
+  gap: 3px;
+  padding-right: 12px;
+  color: rgba(255, 253, 246, 0.58);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .1em;
+  text-align: right;
+}
+
+.atlas-scope strong {
+  color: var(--acid);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .03em;
+}
+
 .version-control,
 .icon-button {
   display: inline-flex;
@@ -925,6 +943,44 @@ pre {
   box-shadow: 10px 10px 0 var(--acid);
 }
 
+.dsh-case-toolbar {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 26px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid rgba(255,255,255,.18);
+}
+
+.dsh-case-toolbar > div {
+  display: grid;
+  gap: 4px;
+}
+
+.dsh-case-toolbar > div span {
+  color: var(--acid);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.dsh-case-toolbar > div strong {
+  color: var(--white);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dsh-case-toolbar .version-control {
+  min-width: 150px;
+}
+
+.dsh-case-toolbar .icon-button {
+  min-height: 38px;
+  white-space: nowrap;
+}
+
 .quickstart-command {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -964,6 +1020,87 @@ pre {
   color: var(--ink);
   border-color: var(--acid);
   background: var(--acid);
+}
+
+.dsh-deep-dive {
+  border-top: 1px solid var(--line-strong);
+  background: var(--paper);
+}
+
+.dsh-deep-dive > summary {
+  display: grid;
+  grid-template-columns: auto minmax(240px, 1fr) minmax(220px, .8fr) auto;
+  gap: 24px;
+  align-items: center;
+  padding: 30px var(--gutter);
+  color: var(--ink);
+  list-style: none;
+  cursor: pointer;
+}
+
+.dsh-deep-dive > summary::-webkit-details-marker {
+  display: none;
+}
+
+.dsh-deep-dive > summary:focus-visible {
+  outline-offset: -4px;
+}
+
+.dsh-deep-dive-label {
+  color: #5a756c;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+}
+
+.dsh-deep-dive-title {
+  font-family: var(--serif);
+  font-size: clamp(25px, 3vw, 42px);
+  letter-spacing: -.04em;
+}
+
+.dsh-deep-dive-note {
+  color: #60736b;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.dsh-deep-dive-toggle {
+  display: inline-flex;
+  gap: 16px;
+  align-items: center;
+  padding: 10px 13px;
+  border: 1px solid var(--line-strong);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.dsh-deep-dive-toggle b {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 400;
+  transition: transform 180ms ease;
+}
+
+.dsh-deep-dive[open] > summary {
+  border-bottom: 1px solid var(--line-strong);
+  background: var(--paper-2);
+}
+
+.dsh-deep-dive[open] .dsh-deep-dive-toggle b {
+  transform: rotate(180deg);
+}
+
+.dsh-deep-dive-body {
+  overflow: clip;
+}
+
+.dsh-deep-dive[open] .dsh-deep-dive-body .reveal {
+  opacity: 1;
+  transform: none;
 }
 
 .resource-links {
@@ -2493,6 +2630,22 @@ pre {
     display: none;
   }
 
+  .atlas-scope {
+    display: none;
+  }
+
+  .dsh-case-toolbar {
+    grid-template-columns: 1fr auto;
+  }
+
+  .dsh-case-toolbar > div {
+    grid-column: 1 / -1;
+  }
+
+  .dsh-case-toolbar .icon-button span {
+    display: inline;
+  }
+
   .version-control select {
     max-width: 132px;
   }
@@ -2518,6 +2671,17 @@ pre {
   .community-pulse,
   .community-strip {
     grid-template-columns: 1fr;
+  }
+
+  .dsh-deep-dive > summary {
+    grid-template-columns: 1fr auto;
+    gap: 10px 18px;
+  }
+
+  .dsh-deep-dive-label,
+  .dsh-deep-dive-title,
+  .dsh-deep-dive-note {
+    grid-column: 1 / -1;
   }
 
   .dsh-quickstart {
@@ -2644,6 +2808,33 @@ pre {
     width: 38px;
     justify-content: center;
     padding: 0;
+  }
+
+  .dsh-case-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .dsh-case-toolbar .version-control,
+  .dsh-case-toolbar .icon-button {
+    width: 100%;
+  }
+
+  .dsh-case-toolbar .version-control select {
+    max-width: none;
+    flex: 1;
+  }
+
+  .dsh-case-toolbar .icon-button {
+    justify-content: flex-start;
+  }
+
+  .dsh-deep-dive > summary {
+    padding: 24px var(--gutter);
+  }
+
+  .dsh-deep-dive-toggle {
+    justify-content: space-between;
+    width: 100%;
   }
 
   .hero h1 {
