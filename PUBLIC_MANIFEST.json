@@ -5,7 +5,7 @@
   "artifact_kind": "static_site",
   "publication_target": {
     "platform": "GitHub Pages",
-    "repository": "fieldnote-ops/dsh-architecture-atlas",
+    "repository": "fieldnote-ops/ai-harness-atlas",
     "branch": "main",
     "deployment": "GitHub Actions"
   },
@@ -48,7 +48,7 @@
   "personal_data": "none",
   "external_links": [
     "https://github.com/deepseek-ai/deepseek-harness",
-    "https://github.com/fieldnote-ops/dsh-architecture-atlas/issues",
+    "https://github.com/fieldnote-ops/ai-harness-atlas/issues",
     "https://github.com/cordiverse/paper",
     "https://github.com/cordiverse/cordis",
     "https://www.zhihu.com/search",
@@ -71,16 +71,16 @@
       "bytes": 1539
     },
     "assets/social-card.png": {
-      "sha256": "05908c8a6f3f35f19817d734cc89d0be1e6a5e91c878380fe39507c9ff30edc0",
-      "bytes": 67873
+      "sha256": "400d6f65c1f943bfb96aa0336621721eaf5de7c9d52f003d5a5b8735d474ca4f",
+      "bytes": 70940
     },
     "data/atlas.js": {
       "sha256": "abcb0a08de6a5fff6a6e707088bcb401423928fd8a060496fd424bc63d010cb1",
       "bytes": 9200
     },
     "data/versions.js": {
-      "sha256": "d1c01406792e8715625e73f75a76e5c7fc2105064cbc1ab55981a86a5d4ded37",
-      "bytes": 13238
+      "sha256": "9e94e8e03d8e5a5e7a9d7a2de3b13d3a4b9c27dc2639bcf6df70c6c36a567a70",
+      "bytes": 13226
     },
     "docs/docs.css": {
       "sha256": "75c1e98d55094260860f067fdf43c64b6d46a9be8acc470ce791ef2a78e69d69",
@@ -111,8 +111,8 @@
       "bytes": 12485
     },
     "docs/dsh-0.1.0-rc.5/community.html": {
-      "sha256": "fd8a5dd37584196db0a64dcba477007d90452223fa85b71ded2019e53102d566",
-      "bytes": 11483
+      "sha256": "3055000e69fae2477062618eaf0ab3ec677cc6047552015a2fc8c17d88c779f6",
+      "bytes": 11471
     },
     "docs/dsh-0.1.0-rc.5/introduction.html": {
       "sha256": "49494958669704c4b948a0251bcaa6021c88008a48ee86f934b27ae361884767",
@@ -143,8 +143,8 @@
       "bytes": 6900
     },
     "index.html": {
-      "sha256": "c10b8e8e78ad7c017449cc3700fc835786c15a1804f35d7f7215802f348bdd6e",
-      "bytes": 26236
+      "sha256": "326beef79581656ac1292f5a1a8b23b747c87648f167036e3bc430e5849c99c6",
+      "bytes": 26224
     },
     "styles.css": {
       "sha256": "1859579a47e28698227bf3c3fb953751d0b497a3353e21c3c8a86471984c4a4a",

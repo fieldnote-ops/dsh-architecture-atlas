@@ -1,11 +1,11 @@
 {
-  "name": "dsh-architecture-atlas",
+  "name": "ai-harness-atlas",
   "version": "0.3.0",
   "private": true,
   "description": "Independent Chinese atlas for AI Harness architecture, versions, and public discussion observations",
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "build:public": "python3 scripts/build_public_artifact.py --check --artifact dsh-architecture-atlas-public.zip"
+    "build:public": "python3 scripts/build_public_artifact.py --check --artifact ai-harness-atlas-public.zip"
   },
   "license": "MIT"
 }

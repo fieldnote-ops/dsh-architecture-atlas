@@ -4,6 +4,8 @@
 
 本站不是任何 Harness 项目的官方文档，也不代表 DeepSeek、OpenAI、Anthropic、Google、Cline 或其他项目方。
 
+在线阅读：[AI Harness Atlas](https://fieldnote-ops.github.io/ai-harness-atlas/) · 仓库：[fieldnote-ops/ai-harness-atlas](https://github.com/fieldnote-ops/ai-harness-atlas)
+
 它试图回答一个具体问题：`Everything is a plugin` 在运行时究竟意味着什么？站点从 Profile / Bundle / Patch 开始，穿过 Loader、Cordis Context、Fiber 生命周期与领域服务，最后还原一次对话如何由一组可替换插件临时组成。
 
 DSH（DeepSeek Harness）是 DeepSeek AI 开源的 Agent Harness。简单说，模型负责判断下一步，而 Harness 负责把模型接到会话、上下文、工具、权限、沙箱、文件系统和界面，让这一步可执行、可追踪。官方仓库：[deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)。

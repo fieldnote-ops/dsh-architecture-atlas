@@ -190,7 +190,7 @@ test("motion is purposeful, keyboard reachable, and reduced-motion aware", () =>
 
 test("public manifest pins every deployed byte", () => {
   const manifest = JSON.parse(read("PUBLIC_MANIFEST.json"));
-  assert.equal(manifest.publication_target.repository, "fieldnote-ops/dsh-architecture-atlas");
+  assert.equal(manifest.publication_target.repository, "fieldnote-ops/ai-harness-atlas");
   assert.ok(manifest.site_files.includes("PUBLIC_MANIFEST.json"));
   assert.deepEqual(Object.keys(manifest.files).sort(), manifest.site_files.filter((path) => path !== "PUBLIC_MANIFEST.json").sort());
   for (const [path, evidence] of Object.entries(manifest.files)) {

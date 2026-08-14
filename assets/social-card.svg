@@ -10,22 +10,22 @@
   <circle cx="1065" cy="75" r="174" fill="none" stroke="#fffdf6" stroke-opacity=".12" stroke-dasharray="8 10"/>
   <g transform="translate(76 60)">
     <rect width="42" height="42" fill="none" stroke="#fffdf6" stroke-opacity=".4"/>
-    <text x="9" y="27" fill="#d5f568" font-family="monospace" font-size="12" font-weight="700">D/</text>
-    <text x="56" y="27" fill="#fffdf6" font-family="monospace" font-size="14" font-weight="700" letter-spacing="2">DSH ARCHITECTURE ATLAS</text>
+    <text x="7" y="27" fill="#d5f568" font-family="monospace" font-size="12" font-weight="700">AH/</text>
+    <text x="56" y="27" fill="#fffdf6" font-family="monospace" font-size="14" font-weight="700" letter-spacing="2">AI HARNESS ATLAS</text>
   </g>
-  <text x="76" y="190" fill="#fffdf6" font-family="STSong, Songti SC, serif" font-size="62">一个 Agent，</text>
-  <text x="76" y="280" fill="#d5f568" font-family="STSong, Songti SC, serif" font-size="82" font-weight="600">只是插件暂时</text>
-  <text x="76" y="370" fill="#d5f568" font-family="STSong, Songti SC, serif" font-size="82" font-weight="600">达成了共识。</text>
+  <text x="76" y="190" fill="#fffdf6" font-family="STSong, Songti SC, serif" font-size="62">先看清 Harness，</text>
+  <text x="76" y="280" fill="#d5f568" font-family="STSong, Songti SC, serif" font-size="82" font-weight="600">再看懂 Agent 如何</text>
+  <text x="76" y="370" fill="#d5f568" font-family="STSong, Songti SC, serif" font-size="82" font-weight="600">运行。</text>
   <g transform="translate(76 430)">
     <rect width="1048" height="1" fill="#fffdf6" opacity=".18"/>
     <g transform="translate(0 34)" font-family="monospace" font-size="12">
-      <rect width="183" height="42" fill="#f2d35c"/><text x="16" y="26" fill="#10201c">01 PROFILE / PATCH</text>
-      <rect x="193" width="154" height="42" fill="#ff9d63"/><text x="209" y="26" fill="#10201c">02 LOADER</text>
-      <rect x="357" width="187" height="42" fill="#83dab3"/><text x="373" y="26" fill="#10201c">03 CONTEXT Γ∞</text>
-      <rect x="554" width="180" height="42" fill="#69cfdb"/><text x="570" y="26" fill="#10201c">04 FIBER</text>
-      <rect x="744" width="304" height="42" fill="#7796f5"/><text x="760" y="26" fill="#10201c">05 DOMAIN PLUGINS</text>
+      <rect width="183" height="42" fill="#f2d35c"/><text x="16" y="26" fill="#10201c">01 RUNTIME</text>
+      <rect x="193" width="154" height="42" fill="#ff9d63"/><text x="209" y="26" fill="#10201c">02 AGENT SDK</text>
+      <rect x="357" width="187" height="42" fill="#83dab3"/><text x="373" y="26" fill="#10201c">03 ORCHESTRATION</text>
+      <rect x="554" width="180" height="42" fill="#69cfdb"/><text x="570" y="26" fill="#10201c">04 CODING AGENT</text>
+      <rect x="744" width="304" height="42" fill="#7796f5"/><text x="760" y="26" fill="#10201c">05 VERSION / EVIDENCE</text>
     </g>
   </g>
   <text x="76" y="581" fill="#fffdf6" fill-opacity=".52" font-family="monospace" font-size="12" letter-spacing="1">可交互 · 有源码证据 · 按版本维护的中文独立解读</text>
-  <text x="1124" y="581" fill="#d5f568" font-family="monospace" font-size="12" text-anchor="end">DSH v0.1.0-rc.5</text>
+  <text x="1124" y="581" fill="#d5f568" font-family="monospace" font-size="12" text-anchor="end">10 OBJECTS · 6 DIMENSIONS</text>
 </svg>

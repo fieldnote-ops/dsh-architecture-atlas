@@ -103,8 +103,8 @@ window.DSH_ATLAS = {
         keyword: "DeepSeek Harness",
         scanTime: "2026-08-14T05:48:32Z",
         scanTimeLabel: "2026-08-14 13:48:32 UTC+8",
-        submitUrl: "https://github.com/fieldnote-ops/dsh-architecture-atlas/issues/new?template=community-observation.yml",
-        browseUrl: "https://github.com/fieldnote-ops/dsh-architecture-atlas/issues?q=is%3Aissue%20label%3Acommunity-observation%20label%3Adsh-0.1.0-rc.5",
+        submitUrl: "https://github.com/fieldnote-ops/ai-harness-atlas/issues/new?template=community-observation.yml",
+        browseUrl: "https://github.com/fieldnote-ops/ai-harness-atlas/issues?q=is%3Aissue%20label%3Acommunity-observation%20label%3Adsh-0.1.0-rc.5",
         archivedCount: 3,
         incorporatedCount: 0
       },
