@@ -11,17 +11,18 @@
     <title>Loader · Include · HMR｜DSH Architecture Docs</title>
     <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../../styles.css?v=20260814.4">
-    <link rel="stylesheet" href="../docs.css?v=20260814.4">
+    <link rel="stylesheet" href="../docs.css?v=20260814.5">
+    <script src="../docs.js?v=20260814.5" defer></script>
   </head>
-  <body class="docs-body">
+  <body class="docs-body" data-doc-page="loader">
     <a class="skip-link" href="#article">跳到正文</a>
     <header class="site-header docs-header">
       <a class="wordmark" href="../../" aria-label="DSH Architecture Atlas 首页"><span class="wordmark-mark" aria-hidden="true">D/</span><span>ARCHITECTURE ATLAS</span></a>
-      <nav class="header-nav" aria-label="主导航"><a href="../../#atlas">架构图</a><a href="../" aria-current="page">Docs</a><a href="../../#mechanisms">机制</a><a href="../../#evidence">证据</a></nav>
-      <div class="header-actions"><a class="docs-version" href="../#version">DSH v0.1.0-rc.5</a></div>
+      <nav class="header-nav" aria-label="主导航"><a href="../../#atlas">架构图</a><a href="../" aria-current="page">文档</a><a href="../../#mechanisms">机制</a><a href="../../#evidence">证据</a></nav>
+      <div class="header-actions"><a class="docs-version" href="../#versions">DSH v0.1.0-rc.5</a></div>
     </header>
     <main class="docs-shell">
-      <aside class="docs-sidebar" aria-label="五层文档导航">
+      <aside class="docs-sidebar" id="docs-sidebar" aria-label="文档导航">
         <p>DSH v0.1.0-rc.5 / 五层阅读</p>
         <nav><a href="profile.html"><span>01</span>Profile / Bundle / Patch</a><a href="loader.html" aria-current="page"><span>02</span>Loader / Include / HMR</a><a href="context.html"><span>03</span>Cordis Context Γ∞</a><a href="fiber.html"><span>04</span>Fiber / Effect / Inject</a><a href="plugins.html"><span>05</span>Domain Plugins</a></nav>
         <a class="back-atlas" href="../../#atlas">← 返回交互架构图</a>
@@ -65,14 +66,18 @@
           </ul>
         </section>
 
-        <section class="doc-section" id="source">
-          <h2>源码阅读顺序</h2>
-          <ol class="source-order">
+        <section class="doc-section" id="reference">
+          <h2>实现参考</h2>
+          <p>下面是本页对应的 DSH 实现，默认收起，不影响按概念连续阅读。</p>
+          <details class="implementation-reference">
+            <summary>查看 DSH v0.1.0-rc.5 对应实现</summary>
+            <ol class="source-order">
             <li><span>01</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/vendor/loader"><code>vendor/loader ↗</code></a><small>从配置条目、差异分类和插件实例映射开始。</small></div></li>
             <li><span>02</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/vendor/include"><code>vendor/include ↗</code></a><small>看外部 Patch 如何进入同一协调范围。</small></div></li>
             <li><span>03</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/vendor/hmr"><code>vendor/hmr ↗</code></a><small>区分模块更新信号与真正的生命周期替换。</small></div></li>
             <li><span>04</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/packages/boot/app-boot"><code>packages/boot/app-boot ↗</code></a><small>回到启动入口，确认 Loader 与不同运行模式怎样连接。</small></div></li>
-          </ol>
+            </ol>
+          </details>
         </section>
 
         <section class="doc-section" id="misconception">
@@ -85,7 +90,7 @@
           </div>
         </section>
 
-        <nav class="doc-pagination" aria-label="文档前后篇"><a href="profile.html"><small>← 上一层</small><strong>Profile · Bundle · Patch</strong></a><a href="context.html"><small>下一层 →</small><strong>Cordis Context · Γ∞</strong></a></nav>
+        <nav class="doc-pagination" aria-label="文档前后篇"><a href="profile.html"><small>← 上一篇</small><strong>声明与配置</strong></a><a href="context.html"><small>下一篇 →</small><strong>统一上下文</strong></a></nav>
       </article>
     </main>
     <footer class="site-footer"><p><strong>DSH ARCHITECTURE DOCS</strong> · 02 / 05</p><p>源码基线：DSH v0.1.0-rc.5 · <a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438">47f9438</a></p><a href="#article" class="back-top">回到顶部 ↑</a></footer>

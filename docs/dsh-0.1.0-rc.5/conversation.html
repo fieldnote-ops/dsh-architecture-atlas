@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c19">
+    <meta name="description" content="一次 DSH 对话如何运行：从 Session 记录、Prompt 与 Tools 组装，到 Agent Loop、LLM 和工具结果回写。">
+    <meta property="og:title" content="一次对话如何运行｜DSH Architecture Docs">
+    <meta property="og:description" content="沿一条用户消息理解 DSH 的实际运行流程。">
+    <meta property="og:image" content="../../assets/social-card.png">
+    <title>一次对话如何运行｜DSH Architecture Docs</title>
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260814.4">
+    <link rel="stylesheet" href="../docs.css?v=20260814.5">
+    <script src="../docs.js?v=20260814.5" defer></script>
+  </head>
+  <body class="docs-body" data-doc-page="conversation">
+    <a class="skip-link" href="#article">跳到正文</a>
+    <header class="site-header docs-header">
+      <a class="wordmark" href="../../" aria-label="DSH Architecture Atlas 首页"><span class="wordmark-mark" aria-hidden="true">D/</span><span>ARCHITECTURE ATLAS</span></a>
+      <nav class="header-nav" aria-label="主导航"><a href="../../#atlas">架构图</a><a href="../" aria-current="page">文档</a><a href="../../#mechanisms">机制</a><a href="../../#evidence">证据</a></nav>
+      <div class="header-actions"><a class="docs-version" href="../#versions">DSH v0.1.0-rc.5</a></div>
+    </header>
+    <main class="docs-shell">
+      <aside class="docs-sidebar" id="docs-sidebar" aria-label="文档导航"><nav><a href="conversation.html" aria-current="page">一次对话如何运行</a><a href="updates.html">更新与恢复</a></nav></aside>
+      <article class="doc-article" id="article">
+        <p class="doc-breadcrumb">文档 / 运行指南 / 一次对话如何运行</p>
+        <h1>一次对话如何运行</h1>
+        <p class="doc-lede">下面从一条用户消息出发，追踪它如何进入会话、调用模型和工具，再变成下一轮可见的上下文。</p>
+        <div class="doc-baseline"><span>DSH v0.1.0-rc.5</span><span>Session</span><span>Turn / Step</span></div>
+
+        <div class="doc-summary"><strong>运行前提</strong><p><code>ctx.sessions</code>、<code>ctx.systemPrompt</code>、<code>ctx.tools</code>、<code>ctx.agents</code>、<code>ctx.agentLoop</code> 和 <code>ctx.llm</code> 已在当前 Context 中可用。</p></div>
+
+        <section class="doc-section" id="input">
+          <h2>1. 用户输入进入 Session</h2>
+          <p>消息先写入追加式会话记录。Session 是后续步骤的事实来源：界面显示、模型上下文和工具结果都应能沿记录重建，而不是依靠某个页面组件的临时状态。</p>
+        </section>
+
+        <section class="doc-section" id="assemble">
+          <h2>2. Loop 组装当前 Step</h2>
+          <p>Agent Loop 读取会话记录、系统提示片段和当前可用工具。它还会取得 Agent 与 LLM 服务，形成这一步的模型请求。工具 schema 在这里与普通提示词一起进入模型上下文。</p>
+          <div class="doc-callout"><p>Turn 是一次用户回合；Step 是其中的一次模型判断。发生工具调用时，一个 Turn 可以包含多个 Step。</p></div>
+        </section>
+
+        <section class="doc-section" id="model">
+          <h2>3. LLM 返回文本或工具意图</h2>
+          <p>LLM 适配器处理供应商请求和流式事件。模型可能直接返回文本，也可能请求调用一个或多个工具。适配器负责跨模型差异，Loop 只依赖稳定的服务接口。</p>
+        </section>
+
+        <section class="doc-section" id="tools">
+          <h2>4. 工具管线执行调用</h2>
+          <p>Tools 服务根据名称找到执行器，校验参数，并在当前 Scope 中运行。权限、沙箱或环境限制可以在工具执行链上介入。执行结果随后写回 Session，成为下一次 Step 的输入。</p>
+        </section>
+
+        <section class="doc-section" id="finish">
+          <h2>5. 回合结束或继续</h2>
+          <p>如果模型还需要处理工具结果，Loop 开始下一个 Step；如果已经得到面向用户的结果，这个 Turn 结束。流式内容和事件会同步给订阅者，但完整的会话事实仍以 Session 记录为准。</p>
+          <div class="doc-flow">
+            <div><small>RECORD</small><strong>记录输入</strong><p>用户消息追加到会话。</p></div>
+            <div><small>DECIDE</small><strong>模型判断</strong><p>Loop 组织上下文并调用 LLM。</p></div>
+            <div><small>ACT / REPEAT</small><strong>执行或结束</strong><p>工具结果回写，必要时进入下一 Step。</p></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="observe">
+          <h2>排查问题时看哪里</h2>
+          <ul>
+            <li>模型没有看到某条信息：先检查 Session 记录与 Prompt 组合。</li>
+            <li>工具没有出现：检查 <code>ctx.tools</code> 当前范围和 schema 生成。</li>
+            <li>工具执行后没有继续：检查结果是否写回 Session，以及 Loop 是否开始下一 Step。</li>
+            <li>更换模型后行为异常：区分 LLM 适配问题和 Loop 决策问题。</li>
+          </ul>
+        </section>
+
+        <nav class="doc-pagination" aria-label="文档前后篇"><a href="plugins.html"><small>← 上一篇</small><strong>Agent 能力</strong></a><a href="updates.html"><small>下一篇 →</small><strong>更新与恢复</strong></a></nav>
+      </article>
+    </main>
+    <footer class="site-footer"><p><strong>DSH ARCHITECTURE DOCS</strong> · 运行指南</p><p>源码基线：DSH v0.1.0-rc.5 · <a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438">47f9438</a></p><a href="#article" class="back-top">回到顶部 ↑</a></footer>
+  </body>
+</html>

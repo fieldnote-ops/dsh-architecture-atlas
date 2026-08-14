@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c19">
+    <meta name="description" content="理解 DSH 的核心心智模型：目标拓扑、统一上下文、服务可用性和可逆生命周期。">
+    <meta property="og:title" content="核心心智模型｜DSH Architecture Docs">
+    <meta property="og:description" content="用三条方向和五个层次理解 DeepSeek Harness。">
+    <meta property="og:image" content="../../assets/social-card.png">
+    <title>核心心智模型｜DSH Architecture Docs</title>
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260814.4">
+    <link rel="stylesheet" href="../docs.css?v=20260814.5">
+    <script src="../docs.js?v=20260814.5" defer></script>
+  </head>
+  <body class="docs-body" data-doc-page="mental-model">
+    <a class="skip-link" href="#article">跳到正文</a>
+    <header class="site-header docs-header">
+      <a class="wordmark" href="../../" aria-label="DSH Architecture Atlas 首页"><span class="wordmark-mark" aria-hidden="true">D/</span><span>ARCHITECTURE ATLAS</span></a>
+      <nav class="header-nav" aria-label="主导航"><a href="../../#atlas">架构图</a><a href="../" aria-current="page">文档</a><a href="../../#mechanisms">机制</a><a href="../../#evidence">证据</a></nav>
+      <div class="header-actions"><a class="docs-version" href="../#versions">DSH v0.1.0-rc.5</a></div>
+    </header>
+    <main class="docs-shell">
+      <aside class="docs-sidebar" id="docs-sidebar" aria-label="文档导航"><nav><a href="introduction.html">DSH 是什么</a><a href="mental-model.html" aria-current="page">核心心智模型</a></nav></aside>
+      <article class="doc-article" id="article">
+        <p class="doc-breadcrumb">文档 / 开始 / 核心心智模型</p>
+        <h1>核心心智模型</h1>
+        <p class="doc-lede">把 DSH 想成一张随配置和服务变化而重排的能力图，会比“核心程序加载一串插件”更接近真实运行方式。</p>
+        <div class="doc-baseline"><span>DSH v0.1.0-rc.5</span><span>五层架构</span><span>Everything is a plugin</span></div>
+
+        <div class="doc-summary"><strong>最短版本</strong><p>Profile 说明想要什么；Loader 让运行态向目标靠拢；Context 保存当前可用的服务；Fiber 管理每个插件的生命周期；领域插件共同组成 Agent。</p></div>
+
+        <section class="doc-section" id="topology">
+          <h2>Agent 是一张服务拓扑</h2>
+          <p>在 DSH 中，Agent 不是一个永远存在的主对象。当前 Context 中同时可用的会话、提示词、工具、Agent Loop 和 LLM 服务，构成了此刻的 Agent。替换其中一项，依赖图会重新协调。</p>
+          <p>这解释了官方所说的 Everything is a Plugin：Loop 也没有特权，它和工具或模型适配器一样，通过服务契约进入系统。</p>
+        </section>
+
+        <section class="doc-section" id="directions">
+          <h2>记住三条方向</h2>
+          <div class="direction-legend docs-direction-legend">
+            <div><span class="legend-arrow config">↓</span><strong>配置向下</strong><p>Profile 描述目标，Loader 把差异交给生命周期协调。</p></div>
+            <div><span class="legend-arrow availability">↑</span><strong>可用性向上</strong><p>服务出现或消失，决定依赖者激活、等待还是退出。</p></div>
+            <div><span class="legend-arrow recovery">↺</span><strong>恢复向内</strong><p>插件产生的 effect 归属自己的 Fiber，卸载时逆序撤销。</p></div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="layers">
+          <h2>五个层次各管什么</h2>
+          <ol>
+            <li><strong>声明与配置：</strong>用 Profile、Bundle 和 Patch 组合目标系统。</li>
+            <li><strong>运行时协调：</strong>Loader 比较当前状态和目标状态，安排必要更新。</li>
+            <li><strong>统一上下文：</strong>Context 解析服务、隔离范围、事件和效应。</li>
+            <li><strong>插件生命周期：</strong>Fiber 表达等待、激活、失败与卸载。</li>
+            <li><strong>Agent 能力：</strong>Session、Tools、Agent Loop 和 LLM 完成领域工作。</li>
+          </ol>
+          <p>它们不是传统意义的五层调用栈。一次服务变化可能从 Context 向上影响领域插件，又由 Fiber 向内触发清理。</p>
+        </section>
+
+        <section class="doc-section" id="example">
+          <h2>用更换 LLM 举例</h2>
+          <p>用户 Patch 指向新的模型适配器。Loader 发现目标发生变化，准备候选插件。候选通过 Context 提供新的 <code>ctx.llm</code>；依赖该服务的 Agent Loop 被 Fiber 重新协调。旧适配器退出时，它建立的连接和监听器按 effect 记录撤销。</p>
+          <p>这里没有一段“先停 Loop、再换 LLM、最后重启 Loop”的固定脚本。顺序来自服务依赖，恢复来自生命周期记录。</p>
+        </section>
+
+        <section class="doc-section" id="avoid">
+          <h2>不要带入的旧模型</h2>
+          <div class="misconception">
+            <div><small>不要这样想</small><p>一个 Agent 核心持有所有对象，插件只能在外围挂钩。</p></div>
+            <div><small>换成这个模型</small><p>Agent 是当前 Context 上可用服务形成的拓扑，没有不可替换的领域核心。</p></div>
+            <div><small>不要这样想</small><p>配置文件从第一行到最后一行决定插件启动顺序。</p></div>
+            <div><small>换成这个模型</small><p>配置描述目标集合，inject 声明的服务依赖决定激活关系。</p></div>
+          </div>
+        </section>
+
+        <nav class="doc-pagination" aria-label="文档前后篇"><a href="introduction.html"><small>← 上一篇</small><strong>DSH 是什么</strong></a><a href="profile.html"><small>下一篇 →</small><strong>声明与配置</strong></a></nav>
+      </article>
+    </main>
+    <footer class="site-footer"><p><strong>DSH ARCHITECTURE DOCS</strong> · 核心心智模型</p><p>源码基线：DSH v0.1.0-rc.5 · Cordis 4.0.1</p><a href="#article" class="back-top">回到顶部 ↑</a></footer>
+  </body>
+</html>

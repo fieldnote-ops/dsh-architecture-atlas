@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c19">
+    <meta name="description" content="DSH 更新与恢复指南：配置变化如何经过差异识别、候选准备、生命周期汇合与失败恢复。">
+    <meta property="og:title" content="更新与恢复｜DSH Architecture Docs">
+    <meta property="og:description" content="理解 DSH 如何更新插件，而不留下半完成的运行态。">
+    <meta property="og:image" content="../../assets/social-card.png">
+    <title>更新与恢复｜DSH Architecture Docs</title>
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260814.4">
+    <link rel="stylesheet" href="../docs.css?v=20260814.5">
+    <script src="../docs.js?v=20260814.5" defer></script>
+  </head>
+  <body class="docs-body" data-doc-page="updates">
+    <a class="skip-link" href="#article">跳到正文</a>
+    <header class="site-header docs-header">
+      <a class="wordmark" href="../../" aria-label="DSH Architecture Atlas 首页"><span class="wordmark-mark" aria-hidden="true">D/</span><span>ARCHITECTURE ATLAS</span></a>
+      <nav class="header-nav" aria-label="主导航"><a href="../../#atlas">架构图</a><a href="../" aria-current="page">文档</a><a href="../../#mechanisms">机制</a><a href="../../#evidence">证据</a></nav>
+      <div class="header-actions"><a class="docs-version" href="../#versions">DSH v0.1.0-rc.5</a></div>
+    </header>
+    <main class="docs-shell">
+      <aside class="docs-sidebar" id="docs-sidebar" aria-label="文档导航"><nav><a href="conversation.html">一次对话如何运行</a><a href="updates.html" aria-current="page">更新与恢复</a></nav></aside>
+      <article class="doc-article" id="article">
+        <p class="doc-breadcrumb">文档 / 运行指南 / 更新与恢复</p>
+        <h1>更新与恢复</h1>
+        <p class="doc-lede">DSH 把更新当成一次运行态协调：先识别真正变化的部分，再等待相关生命周期稳定，最后提交新状态或保留旧状态。</p>
+        <div class="doc-baseline"><span>DSH v0.1.0-rc.5</span><span>Loader</span><span>Fiber settlement</span></div>
+
+        <section class="doc-section" id="change">
+          <h2>什么会触发更新</h2>
+          <p>Profile 或 Patch 变化后，Loader 比较相同 <code>id</code> 的旧条目和新条目。<code>disabled</code>、<code>config</code>、<code>name</code>、<code>isolate</code> 与 <code>intercept</code> 的变化成本不同，因此不会一律全量重启。</p>
+          <p>模块文件变化也可以触发 HMR，但模块重新导入只是更新信号。真正的替换仍要经过 Fiber 生命周期。</p>
+        </section>
+
+        <section class="doc-section" id="stages">
+          <h2>一次更新的四个阶段</h2>
+          <ol>
+            <li>Loader 计算配置差异，确定哪些插件需要新增、停用、重载或保持。</li>
+            <li>候选模块被导入并验证，相关 Fiber 开始激活或退出。</li>
+            <li>运行时等待依赖变化和异步效应沉淀，得到 ACTIVE、PENDING 或 FAILED 等稳定结果。</li>
+            <li>候选成功后提交新配置；失败时保留或恢复旧插件和旧配置。</li>
+          </ol>
+        </section>
+
+        <section class="doc-section" id="unload">
+          <h2>卸载为什么需要等待</h2>
+          <p>提供服务的插件不能先销毁资源，再通知使用者。Fiber 会先停止对外供给，让依赖者感知服务不可用并退出；下游稳定后，提供者才逆序执行 disposer。</p>
+          <p>这段等待避免了最常见的半卸载状态：服务对象已经失效，但上层插件仍在发起调用。</p>
+        </section>
+
+        <section class="doc-section" id="failure">
+          <h2>失败时能恢复到什么程度</h2>
+          <p>框架可以恢复配置选择、插件供给和已记录 effect 的调用顺序。外部世界是否真的回到原样，取决于每个 disposer 是否完整，以及外部操作本身是否可逆。</p>
+          <div class="doc-callout"><p>数据库写入、已经发送的网络请求或第三方系统状态，不能因为 Fiber 回到旧状态就自动撤回。插件仍要自行设计幂等和补偿。</p></div>
+        </section>
+
+        <section class="doc-section" id="hmr">
+          <h2>关于 HMR</h2>
+          <p>HMR 更适合被理解为“触发一次受控替换”，不是保存插件内部所有状态的魔法。组件内存会随旧 runner 退出；需要跨重载保存的数据，应放在替换边界之外。</p>
+          <p>在本页对应的基线中，web-app 明确关闭共享 HMR。浏览器侧重载仍应被视为能力边界。</p>
+        </section>
+
+        <nav class="doc-pagination" aria-label="文档前后篇"><a href="conversation.html"><small>← 上一篇</small><strong>一次对话如何运行</strong></a><a href="boundaries.html"><small>下一篇 →</small><strong>能力边界与版本</strong></a></nav>
+      </article>
+    </main>
+    <footer class="site-footer"><p><strong>DSH ARCHITECTURE DOCS</strong> · 运行指南</p><p>源码基线：DSH v0.1.0-rc.5 · Cordis 4.0.1</p><a href="#article" class="back-top">回到顶部 ↑</a></footer>
+  </body>
+</html>

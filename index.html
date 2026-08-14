@@ -26,7 +26,7 @@
       </a>
       <nav class="header-nav" aria-label="主导航">
         <a href="#atlas">架构图</a>
-        <a href="docs/">Docs</a>
+        <a href="docs/">文档</a>
         <a href="#mechanisms">机制</a>
         <a href="#evidence">证据</a>
       </nav>
@@ -55,7 +55,7 @@
           <p class="hero-lede" data-bind="lede"></p>
           <div class="hero-cta">
             <a class="button button-primary" href="#atlas">进入架构图 <span aria-hidden="true">↓</span></a>
-            <a class="button button-quiet" href="docs/">阅读分层 Docs <span aria-hidden="true">→</span></a>
+            <a class="button button-quiet" href="docs/">阅读文档 <span aria-hidden="true">→</span></a>
             <a class="button button-quiet" href="#journey">跟一次对话走完全程</a>
             <a class="button button-quiet" href="https://github.com/deepseek-ai/deepseek-harness" rel="noreferrer">DSH 官方仓库 <span aria-hidden="true">↗</span></a>
           </div>
@@ -153,17 +153,17 @@
         <div class="docs-gateway-head reveal">
           <div>
             <p class="section-index">DOCS / LAYER BY LAYER</p>
-            <h2 id="docs-gateway-title">从一张图，走到每一层的源码</h2>
+            <h2 id="docs-gateway-title">从架构总览，进入完整文档</h2>
           </div>
-          <p>架构图回答“各层如何关联”；Docs 继续回答“这一层为何存在、如何运行、先读哪些代码、容易误解什么”。内容按 DSH 源码版本保存。</p>
+          <p>架构图适合建立全局认识；文档继续解释 DSH 的概念、运行流程和更新机制。每个版本独立保存，正文不要求先读源码。</p>
         </div>
         <div class="docs-gateway-grid reveal">
-          <a href="docs/dsh-0.1.0-rc.5/profile.html" data-docs-layer="profile"><small>01 / 声明层</small><strong>Profile · Bundle · Patch</strong><span>从配置组合读懂目标拓扑 →</span></a>
-          <a href="docs/dsh-0.1.0-rc.5/loader.html" data-docs-layer="loader"><small>02 / 协调层</small><strong>Loader · Include · HMR</strong><span>从差异协调读懂运行态更新 →</span></a>
-          <a href="docs/dsh-0.1.0-rc.5/context.html" data-docs-layer="context"><small>03 / 运行时</small><strong>Cordis Context Γ∞</strong><span>从服务键读懂统一上下文 →</span></a>
-          <a href="docs/dsh-0.1.0-rc.5/fiber.html" data-docs-layer="fiber"><small>04 / 生命周期</small><strong>Fiber · Effect · Inject</strong><span>从六态读懂可逆生命周期 →</span></a>
-          <a href="docs/dsh-0.1.0-rc.5/plugins.html" data-docs-layer="plugins"><small>05 / 领域层</small><strong>Session · Tools · Agent · LLM</strong><span>从服务拓扑读懂一次对话 →</span></a>
-          <a class="docs-gateway-all" href="docs/"><small>完整阅读路径</small><strong>打开 Docs</strong><span>按顺序阅读五层文档 →</span></a>
+          <a href="docs/dsh-0.1.0-rc.5/profile.html" data-docs-layer="profile"><small>01 / 声明层</small><strong>声明与配置</strong><span>Profile 如何描述目标系统 →</span></a>
+          <a href="docs/dsh-0.1.0-rc.5/loader.html" data-docs-layer="loader"><small>02 / 协调层</small><strong>运行时协调</strong><span>配置变化如何安全生效 →</span></a>
+          <a href="docs/dsh-0.1.0-rc.5/context.html" data-docs-layer="context"><small>03 / 运行时</small><strong>统一上下文</strong><span>服务如何被提供和发现 →</span></a>
+          <a href="docs/dsh-0.1.0-rc.5/fiber.html" data-docs-layer="fiber"><small>04 / 生命周期</small><strong>插件生命周期</strong><span>插件如何等待、运行和退出 →</span></a>
+          <a href="docs/dsh-0.1.0-rc.5/plugins.html" data-docs-layer="plugins"><small>05 / 领域层</small><strong>Agent 能力</strong><span>会话、工具与模型如何协作 →</span></a>
+          <a class="docs-gateway-all" href="docs/"><small>完整阅读路径</small><strong>打开文档</strong><span>从入门、架构到运行指南 →</span></a>
         </div>
       </section>
 
@@ -315,7 +315,7 @@
             <p class="card-label">原始资料</p>
             <h3>继续往源码里看</h3>
             <ul class="source-links">
-              <li><a href="docs/">分层 Docs <span>→</span></a></li>
+              <li><a href="docs/">中文文档 <span>→</span></a></li>
               <li><a href="https://github.com/deepseek-ai/deepseek-harness" rel="noreferrer">DeepSeek Harness <span>↗</span></a></li>
               <li><a href="https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/architecture.md" rel="noreferrer">官方架构文档 <span>↗</span></a></li>
               <li><a href="https://github.com/cordiverse/paper" rel="noreferrer">时空可组合性论文 <span>↗</span></a></li>
@@ -338,7 +338,7 @@
 
     <footer class="site-footer">
       <p><strong>DSH ARCHITECTURE ATLAS</strong> · 独立中文架构解读</p>
-      <p>MIT · 无统计脚本 · 无 Cookie · <a href="docs/">阅读 Docs</a> · <a href="https://github.com/deepseek-ai/deepseek-harness">查看官方源码</a></p>
+      <p>MIT · 无统计脚本 · 无 Cookie · <a href="docs/">阅读文档</a> · <a href="https://github.com/deepseek-ai/deepseek-harness">查看官方源码</a></p>
       <a href="#top" class="back-top">回到顶部 ↑</a>
     </footer>
 

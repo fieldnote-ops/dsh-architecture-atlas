@@ -11,17 +11,18 @@
     <title>Profile · Bundle · Patch｜DSH Architecture Docs</title>
     <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../../styles.css?v=20260814.4">
-    <link rel="stylesheet" href="../docs.css?v=20260814.4">
+    <link rel="stylesheet" href="../docs.css?v=20260814.5">
+    <script src="../docs.js?v=20260814.5" defer></script>
   </head>
-  <body class="docs-body">
+  <body class="docs-body" data-doc-page="profile">
     <a class="skip-link" href="#article">跳到正文</a>
     <header class="site-header docs-header">
       <a class="wordmark" href="../../" aria-label="DSH Architecture Atlas 首页"><span class="wordmark-mark" aria-hidden="true">D/</span><span>ARCHITECTURE ATLAS</span></a>
-      <nav class="header-nav" aria-label="主导航"><a href="../../#atlas">架构图</a><a href="../" aria-current="page">Docs</a><a href="../../#mechanisms">机制</a><a href="../../#evidence">证据</a></nav>
-      <div class="header-actions"><a class="docs-version" href="../#version">DSH v0.1.0-rc.5</a></div>
+      <nav class="header-nav" aria-label="主导航"><a href="../../#atlas">架构图</a><a href="../" aria-current="page">文档</a><a href="../../#mechanisms">机制</a><a href="../../#evidence">证据</a></nav>
+      <div class="header-actions"><a class="docs-version" href="../#versions">DSH v0.1.0-rc.5</a></div>
     </header>
     <main class="docs-shell">
-      <aside class="docs-sidebar" aria-label="五层文档导航">
+      <aside class="docs-sidebar" id="docs-sidebar" aria-label="文档导航">
         <p>DSH v0.1.0-rc.5 / 五层阅读</p>
         <nav>
           <a href="profile.html" aria-current="page"><span>01</span>Profile / Bundle / Patch</a>
@@ -72,15 +73,18 @@
           </ul>
         </section>
 
-        <section class="doc-section" id="source">
-          <h2>源码阅读顺序</h2>
-          <p>先比较三份 Patch，再看启动包如何选择它们。链接固定到本页对应的源码提交。</p>
-          <ol class="source-order">
+        <section class="doc-section" id="reference">
+          <h2>实现参考</h2>
+          <p>正文已经覆盖声明层的行为。需要核对具体实现时，可以展开下面的固定版本链接。</p>
+          <details class="implementation-reference">
+            <summary>查看 DSH v0.1.0-rc.5 对应实现</summary>
+            <ol class="source-order">
             <li><span>01</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/blob/47f9438/packages/bundle/base/cordis.patch.yml"><code>packages/bundle/base/cordis.patch.yml ↗</code></a><small>先认识所有模式共享的基础服务。</small></div></li>
             <li><span>02</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/blob/47f9438/packages/bundle/web-app/cordis.patch.yml"><code>packages/bundle/web-app/cordis.patch.yml ↗</code></a><small>观察 web 入口增加了什么，以及哪些能力被显式限制。</small></div></li>
             <li><span>03</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/blob/47f9438/packages/bundle/headless/cordis.patch.yml"><code>packages/bundle/headless/cordis.patch.yml ↗</code></a><small>与 web-app 对照，分离界面能力和 Agent 运行能力。</small></div></li>
             <li><span>04</span><div><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438/packages/boot/app-boot"><code>packages/boot/app-boot ↗</code></a><small>最后看应用入口怎样取得 Profile 并交给运行时。</small></div></li>
-          </ol>
+            </ol>
+          </details>
         </section>
 
         <section class="doc-section" id="misconception">
@@ -94,8 +98,8 @@
         </section>
 
         <nav class="doc-pagination" aria-label="文档前后篇">
-          <a href="../"><small>← Docs 首页</small><strong>选择阅读路径</strong></a>
-          <a href="loader.html"><small>下一层 →</small><strong>Loader · Include · HMR</strong></a>
+          <a href="mental-model.html"><small>← 上一篇</small><strong>核心心智模型</strong></a>
+          <a href="loader.html"><small>下一篇 →</small><strong>运行时协调</strong></a>
         </nav>
       </article>
     </main>

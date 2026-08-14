@@ -4,15 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#101c19">
-    <meta name="description" content="DeepSeek Harness（DSH）中文分层架构文档：从声明、协调、Context、Fiber 到领域插件，沿源码顺序读懂运行时。">
+    <meta name="description" content="DeepSeek Harness（DSH）中文文档：介绍核心概念、系统架构、对话流程、更新机制与能力边界。">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="DSH Architecture Docs｜从架构图走到源码">
-    <meta property="og:description" content="按 DSH 版本保存的五层中文架构文档与源码阅读路径。">
+    <meta property="og:title" content="DSH Architecture Docs｜DeepSeek Harness 中文文档">
+    <meta property="og:description" content="按版本保存的 DSH 中文架构与运行机制文档。">
     <meta property="og:image" content="../assets/social-card.png">
     <title>Docs｜DSH Architecture Atlas</title>
     <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="../styles.css?v=20260814.4">
-    <link rel="stylesheet" href="docs.css?v=20260814.4">
+    <link rel="stylesheet" href="docs.css?v=20260814.5">
+    <script src="docs.js?v=20260814.5" defer></script>
   </head>
   <body class="docs-body">
     <a class="skip-link" href="#main">跳到正文</a>
@@ -23,30 +24,31 @@
       </a>
       <nav class="header-nav" aria-label="主导航">
         <a href="../#atlas">架构图</a>
-        <a href="./" aria-current="page">Docs</a>
+        <a href="./" aria-current="page">文档</a>
         <a href="../#mechanisms">机制</a>
         <a href="../#evidence">证据</a>
       </nav>
       <div class="header-actions">
-        <a class="docs-version" href="#version">DSH v0.1.0-rc.5</a>
+        <a class="docs-version" href="#versions">DSH v0.1.0-rc.5</a>
       </div>
     </header>
 
     <main id="main">
       <section class="docs-home-hero" aria-labelledby="docs-title">
         <div class="docs-home-copy">
-          <p class="section-index">DOCS / ARCHITECTURE READING ROOM</p>
-          <h1 id="docs-title">从架构图，<br>走到源码。</h1>
-          <p>五篇分层文档沿着同一条主线展开：Profile 描述目标，Loader 协调变化，Context 承载服务，Fiber 管理生命周期，领域插件最终组成一次对话。</p>
+          <p class="section-index">DEEPSEEK HARNESS / 中文文档</p>
+          <h1 id="docs-title">DSH 文档</h1>
+          <p>理解 DSH 如何由插件组成、一次对话怎样运行，以及配置变化时系统如何更新和恢复。</p>
+          <div class="hero-cta docs-home-cta"><a class="button button-primary" href="dsh-0.1.0-rc.5/introduction.html">开始阅读 →</a><a class="button button-quiet" href="../#atlas">查看架构图</a></div>
         </div>
-        <aside class="docs-home-aside" id="version" aria-label="文档对应的源码版本">
-          <span>SOURCE VERSION / 当前源码版本</span>
+        <aside class="docs-home-aside" id="versions" aria-label="文档版本">
+          <span>DOCUMENT VERSION / 文档版本</span>
           <h2>DSH v0.1.0-rc.5</h2>
           <dl>
-            <div><dt>DSH commit</dt><dd><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438">47f9438 ↗</a></dd></div>
-            <div><dt>Cordis</dt><dd>4.0.1</dd></div>
-            <div><dt>论文草稿</dt><dd>2026-08-13</dd></div>
-            <div><dt>核对日期</dt><dd>2026-08-14</dd></div>
+            <div><dt>状态</dt><dd>Developer Preview</dd></div>
+            <div><dt>对应提交</dt><dd><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438">47f9438 ↗</a></dd></div>
+            <div><dt>运行时</dt><dd>Cordis 4.0.1</dd></div>
+            <div><dt>文档日期</dt><dd>2026-08-14</dd></div>
           </dl>
         </aside>
       </section>
@@ -54,44 +56,43 @@
       <section class="reading-paths" aria-labelledby="paths-title">
         <div class="docs-section-head">
           <div>
-            <p class="section-index">HOW TO READ</p>
-            <h2 id="paths-title">按你的问题选择入口</h2>
+            <p class="section-index">GET STARTED</p>
+            <h2 id="paths-title">从你的问题开始</h2>
           </div>
-          <p>第一次接触 DSH，建议从左到右、从第一层开始。已经熟悉插件系统，可以直接进入 Context 或 Fiber。</p>
+          <p>不需要先读源码。选择一个入口，文档会在页尾带你进入下一篇。</p>
         </div>
         <div class="path-grid">
-          <a class="path-card" href="../#atlas">
-            <small>10 分钟 / 建立全局模型</small>
-            <h3>先看架构图</h3>
-            <p>认识配置向下、可用性向上、恢复向内三条方向，再进入单层细读。</p>
+          <a class="path-card" href="dsh-0.1.0-rc.5/introduction.html">
+            <small>第一次接触 DSH</small>
+            <h3>DSH 是什么</h3>
+            <p>了解 Harness 负责什么、系统有哪些部分，以及当前项目状态。</p>
           </a>
-          <a class="path-card" href="dsh-0.1.0-rc.5/profile.html">
-            <small>45 分钟 / 顺序阅读</small>
-            <h3>从声明层开始</h3>
-            <p>连续读完五层，理解一份配置怎样成为可运行、可替换的 Agent 拓扑。</p>
+          <a class="path-card" href="dsh-0.1.0-rc.5/mental-model.html">
+            <small>想先理解架构</small>
+            <h3>核心心智模型</h3>
+            <p>用服务拓扑和三条方向理解 Everything is a Plugin。</p>
           </a>
-          <a class="path-card" href="dsh-0.1.0-rc.5/context.html">
-            <small>源码同行 / 抓住主干</small>
-            <h3>从运行时切入</h3>
-            <p>先看 Context 和 Fiber，再带着服务、依赖与效应三个概念回到领域插件。</p>
+          <a class="path-card" href="dsh-0.1.0-rc.5/conversation.html">
+            <small>想看真实运行过程</small>
+            <h3>一次对话如何运行</h3>
+            <p>沿用户消息追踪 Session、Agent Loop、LLM 和工具调用。</p>
           </a>
         </div>
       </section>
 
-      <section class="docs-layer-section" aria-labelledby="layers-title">
+      <section class="docs-layer-section" aria-labelledby="directory-title">
         <div class="docs-section-head">
           <div>
-            <p class="section-index">FIVE LAYERS</p>
-            <h2 id="layers-title">五层文档</h2>
+            <p class="section-index">DOCUMENTATION</p>
+            <h2 id="directory-title">所有文档</h2>
           </div>
-          <p>每篇都包含问题背景、运行流程、关键规则、源码阅读顺序和常见误解。页尾可以直接进入下一层。</p>
+          <p>左侧导航会在文章页持续显示。源码链接只放在实现参考中，不影响正文阅读。</p>
         </div>
-        <div class="layer-doc-list">
-          <a class="layer-doc-link" href="dsh-0.1.0-rc.5/profile.html"><small>01</small><strong>Profile · Bundle · Patch</strong><span>目标系统如何由基础配置、运行模式和用户覆盖组合出来。</span><b>→</b></a>
-          <a class="layer-doc-link" href="dsh-0.1.0-rc.5/loader.html"><small>02</small><strong>Loader · Include · HMR</strong><span>配置差异如何变成最小生命周期动作，并在失败时恢复旧状态。</span><b>→</b></a>
-          <a class="layer-doc-link" href="dsh-0.1.0-rc.5/context.html"><small>03</small><strong>Cordis Context · Γ∞</strong><span>服务、隔离、拦截与效应如何共享同一运行时载体。</span><b>→</b></a>
-          <a class="layer-doc-link" href="dsh-0.1.0-rc.5/fiber.html"><small>04</small><strong>Fiber · Effect · Inject</strong><span>插件怎样等待、激活、失败、排空、卸载，并逆序撤销效果。</span><b>→</b></a>
-          <a class="layer-doc-link" href="dsh-0.1.0-rc.5/plugins.html"><small>05</small><strong>Session · Tools · Agent · LLM</strong><span>领域服务如何在 Context 上临时组成一个可替换的 Agent。</span><b>→</b></a>
+        <div class="docs-directory-grid">
+          <section><h3>开始</h3><a href="dsh-0.1.0-rc.5/introduction.html"><strong>DSH 是什么</strong><span>职责、组成与项目状态</span></a><a href="dsh-0.1.0-rc.5/mental-model.html"><strong>核心心智模型</strong><span>服务拓扑与三条方向</span></a></section>
+          <section><h3>架构</h3><a href="dsh-0.1.0-rc.5/profile.html"><strong>声明与配置</strong><span>Profile、Bundle、Patch</span></a><a href="dsh-0.1.0-rc.5/loader.html"><strong>运行时协调</strong><span>Loader、Include、HMR</span></a><a href="dsh-0.1.0-rc.5/context.html"><strong>统一上下文</strong><span>服务、隔离、事件与效应</span></a><a href="dsh-0.1.0-rc.5/fiber.html"><strong>插件生命周期</strong><span>六态、依赖和撤销</span></a><a href="dsh-0.1.0-rc.5/plugins.html"><strong>Agent 能力</strong><span>Session、Tools、Loop、LLM</span></a></section>
+          <section><h3>运行指南</h3><a href="dsh-0.1.0-rc.5/conversation.html"><strong>一次对话如何运行</strong><span>从用户输入到工具结果</span></a><a href="dsh-0.1.0-rc.5/updates.html"><strong>更新与恢复</strong><span>差异、汇合与回滚边界</span></a></section>
+          <section><h3>参考</h3><a href="dsh-0.1.0-rc.5/boundaries.html"><strong>能力边界与版本</strong><span>框架保证、实现责任与资料</span></a></section>
         </div>
       </section>
     </main>

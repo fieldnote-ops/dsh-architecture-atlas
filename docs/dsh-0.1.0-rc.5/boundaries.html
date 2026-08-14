@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c19">
+    <meta name="description" content="DSH 能力边界与版本说明：框架保证、实现责任、流式事件、HMR 限制与版本基线。">
+    <meta property="og:title" content="能力边界与版本｜DSH Architecture Docs">
+    <meta property="og:description" content="区分 DSH 的运行时保证、插件责任与版本差异。">
+    <meta property="og:image" content="../../assets/social-card.png">
+    <title>能力边界与版本｜DSH Architecture Docs</title>
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260814.4">
+    <link rel="stylesheet" href="../docs.css?v=20260814.5">
+    <script src="../docs.js?v=20260814.5" defer></script>
+  </head>
+  <body class="docs-body" data-doc-page="boundaries">
+    <a class="skip-link" href="#article">跳到正文</a>
+    <header class="site-header docs-header">
+      <a class="wordmark" href="../../" aria-label="DSH Architecture Atlas 首页"><span class="wordmark-mark" aria-hidden="true">D/</span><span>ARCHITECTURE ATLAS</span></a>
+      <nav class="header-nav" aria-label="主导航"><a href="../../#atlas">架构图</a><a href="../" aria-current="page">文档</a><a href="../../#mechanisms">机制</a><a href="../../#evidence">证据</a></nav>
+      <div class="header-actions"><a class="docs-version" href="../#versions">DSH v0.1.0-rc.5</a></div>
+    </header>
+    <main class="docs-shell">
+      <aside class="docs-sidebar" id="docs-sidebar" aria-label="文档导航"><nav><a href="boundaries.html" aria-current="page">能力边界与版本</a></nav></aside>
+      <article class="doc-article" id="article">
+        <p class="doc-breadcrumb">文档 / 参考 / 能力边界与版本</p>
+        <h1>能力边界与版本</h1>
+        <p class="doc-lede">这一页专门区分“运行时可以保证什么”和“仍要由插件或具体版本负责什么”。</p>
+        <div class="doc-baseline"><span>DSH v0.1.0-rc.5</span><span>commit 47f9438</span><span>核对日期 2026-08-14</span></div>
+
+        <section class="doc-section" id="guarantees">
+          <h2>运行时提供的保证</h2>
+          <ul>
+            <li>服务依赖未满足时，插件可以停在 PENDING，而不是读取不存在的服务。</li>
+            <li>插件产生的 effect 归属当前 Fiber，并在卸载时按 LIFO 调用 disposer。</li>
+            <li>提供者退出前，依赖它的插件会先收到服务不可用并开始排空。</li>
+            <li>Loader 可以等待相关生命周期沉淀，再决定提交候选或恢复旧状态。</li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="responsibilities">
+          <h2>插件仍要负责的部分</h2>
+          <p>disposer 是否真的撤销了外部副作用，框架无法替插件证明。直接 import 内部对象、写全局变量或漏掉清理函数，也会绕开依赖和 effect 机制。</p>
+          <p>需要跨重载保留的状态必须放在替换边界之外。否则旧 runner 退出时，组件内存会一起消失。</p>
+        </section>
+
+        <section class="doc-section" id="formal">
+          <h2>形式模型没有覆盖全部工程行为</h2>
+          <p>Cordis 论文解释统一上下文、可逆效应和生命周期转移。DSH 还使用 waterfall、parallel、serial 事件、异步工具调用和 LLM 流式输出。这些是必要工程能力，但没有被简化演算逐项描述。</p>
+        </section>
+
+        <section class="doc-section" id="version">
+          <h2>版本基线</h2>
+          <dl class="reference-facts">
+            <div><dt>DSH</dt><dd>v0.1.0-rc.5</dd></div>
+            <div><dt>源码提交</dt><dd><a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438">47f9438 ↗</a></dd></div>
+            <div><dt>vendored Cordis</dt><dd>4.0.1</dd></div>
+            <div><dt>论文草稿</dt><dd>2026-08-13</dd></div>
+          </dl>
+          <p>DSH 仍处于 Developer Preview。查看其他 DSH 版本时，请从文档页顶切换，不要混用不同版本的行为描述。</p>
+        </section>
+
+        <section class="doc-section" id="sources">
+          <h2>资料链接</h2>
+          <ul>
+            <li><a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness ↗</a></li>
+            <li><a href="https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/architecture.md">DSH 官方架构文档 ↗</a></li>
+            <li><a href="https://github.com/cordiverse/cordis">Cordis ↗</a></li>
+            <li><a href="https://github.com/cordiverse/paper">A Programming Paradigm for Spatiotemporal Composability ↗</a></li>
+          </ul>
+        </section>
+
+        <nav class="doc-pagination" aria-label="文档前后篇"><a href="updates.html"><small>← 上一篇</small><strong>更新与恢复</strong></a><a href="../"><small>返回 →</small><strong>文档首页</strong></a></nav>
+      </article>
+    </main>
+    <footer class="site-footer"><p><strong>DSH ARCHITECTURE DOCS</strong> · 参考</p><p>独立中文解读 · 不代表 DeepSeek 或 Cordis</p><a href="#article" class="back-top">回到顶部 ↑</a></footer>
+  </body>
+</html>

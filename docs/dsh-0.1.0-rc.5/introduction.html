@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#101c19">
+    <meta name="description" content="DeepSeek Harness（DSH）入门：它解决什么问题、由哪些部分组成，以及该从哪里开始阅读。">
+    <meta property="og:title" content="DSH 是什么｜DSH Architecture Docs">
+    <meta property="og:description" content="认识 DeepSeek Harness 的职责、组成与阅读路径。">
+    <meta property="og:image" content="../../assets/social-card.png">
+    <title>DSH 是什么｜DSH Architecture Docs</title>
+    <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../../styles.css?v=20260814.4">
+    <link rel="stylesheet" href="../docs.css?v=20260814.5">
+    <script src="../docs.js?v=20260814.5" defer></script>
+  </head>
+  <body class="docs-body" data-doc-page="introduction">
+    <a class="skip-link" href="#article">跳到正文</a>
+    <header class="site-header docs-header">
+      <a class="wordmark" href="../../" aria-label="DSH Architecture Atlas 首页"><span class="wordmark-mark" aria-hidden="true">D/</span><span>ARCHITECTURE ATLAS</span></a>
+      <nav class="header-nav" aria-label="主导航"><a href="../../#atlas">架构图</a><a href="../" aria-current="page">文档</a><a href="../../#mechanisms">机制</a><a href="../../#evidence">证据</a></nav>
+      <div class="header-actions"><a class="docs-version" href="../#versions">DSH v0.1.0-rc.5</a></div>
+    </header>
+    <main class="docs-shell">
+      <aside class="docs-sidebar" id="docs-sidebar" aria-label="文档导航"><nav><a href="introduction.html" aria-current="page">DSH 是什么</a><a href="mental-model.html">核心心智模型</a></nav></aside>
+      <article class="doc-article" id="article">
+        <p class="doc-breadcrumb">文档 / 开始 / DSH 是什么</p>
+        <h1>DSH 是什么</h1>
+        <p class="doc-lede">DeepSeek Harness 是一个开源 Agent Harness。模型负责决定下一步，DSH 负责把这一步放进真实的会话、工具和运行环境中。</p>
+        <div class="doc-baseline"><span>DSH v0.1.0-rc.5</span><span>Developer Preview</span><span>MIT</span></div>
+
+        <div class="doc-summary"><strong>先记住这一点</strong><p>DSH 不是一个固定的 Agent 核心。会话、提示词、工具、模型连接和 Agent Loop 都是插件提供的服务，Cordis 负责让它们在依赖满足时运行。</p></div>
+
+        <section class="doc-section" id="responsibility">
+          <h2>Harness 负责什么</h2>
+          <p>大模型只产生文本或结构化意图。要让 Agent 真正工作，还需要保存对话、组织系统提示、列出可用工具、执行工具调用、处理流式输出，并把结果写回会话。Harness 把这些工作连成一条可观察的运行链。</p>
+          <p>DSH 还要处理运行时变化。插件可能晚于应用启动才出现，依赖也可能暂时失效；配置更新不能把系统留在新旧混合的状态。这部分由 Cordis 的 Context 和 Fiber 机制承担。</p>
+        </section>
+
+        <section class="doc-section" id="parts">
+          <h2>系统由什么组成</h2>
+          <div class="doc-flow">
+            <div><small>CONFIGURATION</small><strong>声明系统</strong><p>Profile、Bundle 与 Patch 描述这次运行需要哪些能力。</p></div>
+            <div><small>RUNTIME</small><strong>Cordis 运行时</strong><p>Loader、Context 和 Fiber 处理服务发现、依赖与生命周期。</p></div>
+            <div><small>DOMAIN</small><strong>Agent 能力</strong><p>Session、Prompt、Tools、Agent Loop 与 LLM 完成一次对话。</p></div>
+          </div>
+          <p>这三个部分不是三段固定调用。配置向运行时声明目标；服务可用性反过来决定插件能否激活；卸载时，Fiber 沿依赖关系和 effect 记录恢复旧状态。</p>
+        </section>
+
+        <section class="doc-section" id="status">
+          <h2>当前项目状态</h2>
+          <p>DSH 官方仓库将项目标记为 Developer Preview。接口和配置仍可能变化，因此本站按 DSH 版本保存文档。当前内容对应 <code>v0.1.0-rc.5</code>、提交 <code>47f9438</code> 和 vendored Cordis <code>4.0.1</code>。</p>
+          <div class="doc-callout"><p>需要在项目中采用 DSH 时，请同时查看对应版本的官方 README 和架构文档，不要把本文描述直接套到其他版本。</p></div>
+        </section>
+
+        <section class="doc-section" id="start">
+          <h2>从哪里开始</h2>
+          <p>第一次阅读，下一篇先看“核心心智模型”，再按左侧“架构”分组继续。只想追踪一次对话，可以直接打开“一次对话如何运行”。</p>
+          <div class="quickstart-command doc-command"><span>快速体验</span><code>npx @deepseek-ai/dsh web</code><button type="button" data-copy-text="npx @deepseek-ai/dsh web">复制</button></div>
+        </section>
+
+        <section class="doc-section" id="official">
+          <h2>官方资料</h2>
+          <ul>
+            <li><a href="https://github.com/deepseek-ai/deepseek-harness">DeepSeek Harness GitHub 仓库 ↗</a></li>
+            <li><a href="https://github.com/deepseek-ai/deepseek-harness/blob/master/README.zh.md">中文 README ↗</a></li>
+            <li><a href="https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/architecture.md">官方架构文档 ↗</a></li>
+          </ul>
+        </section>
+
+        <nav class="doc-pagination" aria-label="文档前后篇"><a href="../"><small>← 文档首页</small><strong>版本与阅读入口</strong></a><a href="mental-model.html"><small>下一篇 →</small><strong>核心心智模型</strong></a></nav>
+      </article>
+    </main>
+    <footer class="site-footer"><p><strong>DSH ARCHITECTURE DOCS</strong> · 开始</p><p>源码基线：DSH v0.1.0-rc.5 · <a href="https://github.com/deepseek-ai/deepseek-harness/tree/47f9438">47f9438</a></p><a href="#article" class="back-top">回到顶部 ↑</a></footer>
+  </body>
+</html>

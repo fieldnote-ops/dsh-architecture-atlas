@@ -68,16 +68,34 @@ test("all local links and assets resolve from every HTML page", () => {
   }
 });
 
-test("versioned Docs include a home and five continuous layer guides", () => {
-  const expected = ["profile", "loader", "context", "fiber", "plugins"];
+test("versioned documentation covers onboarding, architecture, operations, and reference", () => {
+  const expected = ["introduction", "mental-model", "profile", "loader", "context", "fiber", "plugins", "conversation", "updates", "boundaries"];
   assert.ok(existsSync(resolve(root, "docs/index.html")));
   for (const name of expected) {
     const page = read(`docs/dsh-0.1.0-rc.5/${name}.html`);
-    assert.match(page, /<h1>/, `${name} guide needs a title`);
-    assert.match(page, /源码阅读顺序/, `${name} guide needs a source reading path`);
-    assert.match(page, /常见误解/, `${name} guide needs misconceptions`);
-    assert.match(page, /class="doc-pagination"/, `${name} guide needs continuous navigation`);
+    assert.match(page, /<h1>/, `${name} document needs a title`);
+    assert.match(page, /id="docs-sidebar"/, `${name} document needs the global sidebar`);
+    assert.match(page, /class="doc-pagination"/, `${name} document needs continuous navigation`);
+    assert.match(page, /docs\.js/, `${name} document needs documentation interactions`);
   }
+});
+
+test("implementation paths are optional references, not the documentation model", () => {
+  const architecturePages = ["profile", "loader", "context", "fiber", "plugins"];
+  for (const name of architecturePages) {
+    const page = read(`docs/dsh-0.1.0-rc.5/${name}.html`);
+    assert.match(page, /<details class="implementation-reference">/, `${name} should fold implementation links`);
+    assert.match(page, /常见误解/, `${name} needs reader-oriented misconceptions`);
+    assert.ok(!page.includes("源码阅读顺序"), `${name} must not present source order as the reading model`);
+  }
+});
+
+test("documentation shell provides grouped navigation, local search, and page outline", () => {
+  const script = read("docs/docs.js");
+  for (const group of ["开始", "架构", "运行指南", "参考"]) assert.ok(script.includes(`group: "${group}"`));
+  assert.match(script, /docs-search-dialog/);
+  assert.match(script, /buildTableOfContents/);
+  assert.match(read("docs/index.html"), /所有文档/);
 });
 
 test("the architecture map exposes one version-aware Docs link per layer", () => {
@@ -109,7 +127,8 @@ test("reader-facing copy does not expose production language", () => {
     "站点零",
     "AI 辅助",
     "人工式证据核对",
-    "生成产物"
+    "生成产物",
+    "源码阅读顺序"
   ];
   for (const phrase of producerPhrases) {
     assert.ok(!publicCopy.includes(phrase), `producer-facing phrase leaked into public copy: ${phrase}`);
