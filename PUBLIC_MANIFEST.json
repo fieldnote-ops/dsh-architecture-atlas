@@ -5,7 +5,7 @@
   "artifact_kind": "static_site",
   "publication_target": {
     "platform": "GitHub Pages",
-    "repository": "pending_authenticated_owner/dsh-architecture-atlas",
+    "repository": "fieldnote-ops/dsh-architecture-atlas",
     "branch": "main",
     "deployment": "GitHub Actions"
   },
@@ -16,11 +16,10 @@
     "paper_draft": "2026-08-13"
   },
   "site_files": [
-    ".nojekyll",
+    "PUBLIC_MANIFEST.json",
     "app.js",
-    "assets/favicon.svg",
+    "assets/favicon.png",
     "assets/social-card.png",
-    "assets/social-card.svg",
     "data/versions.js",
     "docs/docs.css",
     "docs/docs.js",
@@ -49,5 +48,83 @@
     "https://github.com/cordiverse/cordis"
   ],
   "rights": "Original code and commentary are MIT licensed; upstream names, source code, paper, and trademarks retain their own licenses.",
-  "disclosure": "Independent, unofficial, AI-assisted, evidence-reviewed community interpretation."
+  "disclosure": "Independent, unofficial, AI-assisted, evidence-reviewed community interpretation.",
+  "files": {
+    "app.js": {
+      "sha256": "8f958bb1b15c02e1c13e66e85f9a77b1fb328b67fa115fb0a43e4c07adda5d29",
+      "bytes": 15818
+    },
+    "assets/favicon.png": {
+      "sha256": "0ca294d15bfc54bd7367c378d1f83d072ffecb98d217a581c27841d2132a263d",
+      "bytes": 1539
+    },
+    "assets/social-card.png": {
+      "sha256": "05908c8a6f3f35f19817d734cc89d0be1e6a5e91c878380fe39507c9ff30edc0",
+      "bytes": 67873
+    },
+    "data/versions.js": {
+      "sha256": "544840d388f299364d89067920d3968d8f10c4d76b7d067483aee4e4100228ff",
+      "bytes": 12622
+    },
+    "docs/docs.css": {
+      "sha256": "6257eea9da52b009367ebd6cbb5e3ee7884fec96c153a69df80126e7e0cce582",
+      "bytes": 20261
+    },
+    "docs/docs.js": {
+      "sha256": "6dbcb27ec693bf02676e0b2b6e73fd5f16a40a72d701baf3d6cdbdc9da6f06e2",
+      "bytes": 8200
+    },
+    "docs/dsh-0.1.0-rc.5/boundaries.html": {
+      "sha256": "f50994687b4e6ee12653304289e51257810fd2e7bb95e09eb260190e2b435183",
+      "bytes": 5396
+    },
+    "docs/dsh-0.1.0-rc.5/conversation.html": {
+      "sha256": "c3ae5b0337970de00e543eda22eac532a326a08657dbc081a3befd7928d786ef",
+      "bytes": 6088
+    },
+    "docs/dsh-0.1.0-rc.5/context.html": {
+      "sha256": "e3ce6084d001b2c75e4b5e6294667556cee315f3b0b383c547dc0ea49cb21c28",
+      "bytes": 9189
+    },
+    "docs/dsh-0.1.0-rc.5/fiber.html": {
+      "sha256": "8a4b0cb331ab2b88230aeded4af582d7640cfd140f5a870def2cdee69599011f",
+      "bytes": 12492
+    },
+    "docs/dsh-0.1.0-rc.5/introduction.html": {
+      "sha256": "42c3ac34e8e1bbfe84576cc793bac02ce01462051efa09bf405ccac097b77be4",
+      "bytes": 6180
+    },
+    "docs/dsh-0.1.0-rc.5/loader.html": {
+      "sha256": "30f2659fa747249dc68832f9f15bfa832245168c81fd4b8032576d1b4d0859db",
+      "bytes": 8696
+    },
+    "docs/dsh-0.1.0-rc.5/mental-model.html": {
+      "sha256": "5b3b3b31d2f7fd84198e7cd309158a60cd6fdb122dbf618f7d24419d3c218fd3",
+      "bytes": 6490
+    },
+    "docs/dsh-0.1.0-rc.5/plugins.html": {
+      "sha256": "8a340b7facb0edade517b09f33426be789dab45af229f8e4cb7aa0ac89922621",
+      "bytes": 11561
+    },
+    "docs/dsh-0.1.0-rc.5/profile.html": {
+      "sha256": "d337d261ef6f214e05fb75c3fdc84ba0acc64a79d369aa8a115cb060ae91ff42",
+      "bytes": 8760
+    },
+    "docs/dsh-0.1.0-rc.5/updates.html": {
+      "sha256": "82d47bac0fe7cff64470056217e4c8bb07ec81439fcd9428cc8bb3e57636ffbb",
+      "bytes": 5437
+    },
+    "docs/index.html": {
+      "sha256": "eb5a0da495faf2c32690363fbb71ac59328826908d101be8829c0cb67a612c74",
+      "bytes": 6276
+    },
+    "index.html": {
+      "sha256": "d73ce044477a6d58b287680b31a69b8d19e6c7a66bb4c8523508189d88e549ce",
+      "bytes": 20094
+    },
+    "styles.css": {
+      "sha256": "b4932d04a37493e7faa8536a703c258212fde794fe46b2fcb3748d70ec866f2c",
+      "bytes": 39039
+    }
+  }
 }

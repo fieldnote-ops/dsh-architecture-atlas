@@ -102,11 +102,11 @@
     const dialog = document.createElement("dialog");
     dialog.className = "docs-search-dialog";
     dialog.innerHTML = `
-      <form method="dialog" class="docs-search-box">
+      <div class="docs-search-box">
         <label for="docs-search-input">搜索文档</label>
-        <div class="docs-search-input-row"><span aria-hidden="true">⌕</span><input id="docs-search-input" type="search" autocomplete="off" placeholder="例如：Fiber、工具调用、热更新"><button value="close" aria-label="关闭搜索">Esc</button></div>
+        <div class="docs-search-input-row"><span aria-hidden="true">⌕</span><input id="docs-search-input" type="search" autocomplete="off" placeholder="例如：Fiber、工具调用、热更新"><button id="docs-search-close" type="button" aria-label="关闭搜索">Esc</button></div>
         <div class="docs-search-results" id="docs-search-results"></div>
-      </form>`;
+      </div>`;
     document.body.append(dialog);
 
     const input = dialog.querySelector("input");
@@ -129,6 +129,7 @@
       window.setTimeout(() => input.focus(), 0);
     };
     openButton.addEventListener("click", open);
+    dialog.querySelector("#docs-search-close").addEventListener("click", () => dialog.close());
     input.addEventListener("input", () => render(input.value));
     document.addEventListener("keydown", (event) => {
       if (event.key === "/" && !dialog.open && !/input|textarea|select/i.test(document.activeElement?.tagName || "")) {

@@ -3,6 +3,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
+import { createHash } from "node:crypto";
 import test from "node:test";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
@@ -96,6 +97,19 @@ test("documentation shell provides grouped navigation, local search, and page ou
   assert.match(script, /docs-search-dialog/);
   assert.match(script, /buildTableOfContents/);
   assert.match(read("docs/index.html"), /所有文档/);
+  assert.ok(!script.includes("<form"), "local documentation search must not create a submission surface");
+});
+
+test("public manifest pins every deployed byte", () => {
+  const manifest = JSON.parse(read("PUBLIC_MANIFEST.json"));
+  assert.equal(manifest.publication_target.repository, "fieldnote-ops/dsh-architecture-atlas");
+  assert.ok(manifest.site_files.includes("PUBLIC_MANIFEST.json"));
+  assert.deepEqual(Object.keys(manifest.files).sort(), manifest.site_files.filter((path) => path !== "PUBLIC_MANIFEST.json").sort());
+  for (const [path, evidence] of Object.entries(manifest.files)) {
+    const data = readFileSync(resolve(root, path));
+    assert.equal(evidence.bytes, data.length, `${path} byte count drifted`);
+    assert.equal(evidence.sha256, createHash("sha256").update(data).digest("hex"), `${path} hash drifted`);
+  }
 });
 
 test("the architecture map exposes one version-aware Docs link per layer", () => {

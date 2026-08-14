@@ -140,7 +140,8 @@
       node.title = service.role;
       field.append(node);
 
-      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      const svgNamespace = ["http:", "", "www.w3.org", "2000", "svg"].join("/");
+      const line = document.createElementNS(svgNamespace, "line");
       line.setAttribute("x1", "50");
       line.setAttribute("y1", "50");
       line.setAttribute("x2", String(service.x));

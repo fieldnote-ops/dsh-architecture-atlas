@@ -26,10 +26,7 @@ jobs:
       - name: Verify static site
         run: node --test tests/*.test.mjs
       - name: Assemble public artifact
-        run: |
-          mkdir _site
-          cp index.html styles.css app.js .nojekyll _site/
-          cp -R assets data docs _site/
+        run: python3 scripts/build_public_artifact.py --check --site-dir _site
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload static site

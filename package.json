@@ -4,7 +4,8 @@
   "private": true,
   "description": "Versioned Chinese visual guide to the DeepSeek Harness architecture",
   "scripts": {
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "build:public": "python3 scripts/build_public_artifact.py --check --artifact dsh-architecture-atlas-public.zip"
   },
   "license": "MIT"
 }
