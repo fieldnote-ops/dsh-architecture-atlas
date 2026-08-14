@@ -109,11 +109,12 @@ test("documentation shell provides grouped navigation, local search, and page ou
 test("community observations are version-scoped, timestamped, multi-community, and privacy-aware", () => {
   const page = read("docs/dsh-0.1.0-rc.5/community.html");
   for (const community of ["GitHub", "知乎", "X", "Reddit"]) assert.ok(page.includes(community));
-  assert.match(page, /主检索词为精确短语 “DeepSeek Harness”/);
+  assert.ok(!page.includes("用什么关键词观察"));
+  assert.ok(!page.includes("主检索词为"));
   assert.match(page, /本站不是 DeepSeek 或 DeepSeek Harness 官方/);
   assert.ok(!page.includes("社区反馈"));
   assert.match(page, /独立观察 · 非官方/);
-  assert.match(page, /按观察时间线归档/);
+  assert.match(page, /按本站当前文档版本的观察窗口累计/);
   assert.match(page, /当前观察窗口讨论已归档/);
   assert.equal((page.match(/class="community-record"/g) || []).length, 3);
   assert.match(page, /仅限 DSH v0\.1\.0-rc\.5/);
@@ -133,20 +134,23 @@ test("community observations are version-scoped, timestamped, multi-community, a
   assert.match(issueForm, /独立的社区观察与解读项目/);
   assert.ok(!issueForm.includes("社区反馈"));
   assert.match(issueForm, /并非官方支持渠道/);
-  assert.match(issueForm, /主检索词为精确短语 “DeepSeek Harness”/);
+  assert.ok(!issueForm.includes("主检索词为"));
   assert.match(issueForm, /来源社区/);
   assert.match(issueForm, /原帖时间/);
   assert.match(issueForm, /Token/);
 });
 
-test("motion controls are user-triggered, keyboard reachable, and reduced-motion aware", () => {
+test("motion is purposeful, keyboard reachable, and reduced-motion aware", () => {
   const html = read("index.html");
   const script = read("app.js");
-  assert.match(html, /id="journey-play"/);
-  assert.match(html, /id="journey-progress-bar"/);
+  assert.match(html, /id="journey-track"/);
+  assert.ok(!html.includes('id="journey-play"'));
+  assert.ok(!html.includes('id="journey-progress-bar"'));
   assert.match(html, /id="reading-progress-bar"/);
   assert.match(script, /prefers-reduced-motion: reduce/);
-  assert.match(script, /toggleJourneyPlayback/);
+  assert.ok(!script.includes("toggleJourneyPlayback"));
+  assert.ok(!script.includes("selectJourneyStep"));
+  assert.match(script, /article\.className = "journey-card"/);
   assert.match(script, /handleChoiceKeys/);
   assert.ok(!/<body[^>]+autoplay/i.test(html));
 });
@@ -193,7 +197,10 @@ test("reader-facing copy does not expose production language", () => {
     "AI 辅助",
     "人工式证据核对",
     "生成产物",
-    "源码阅读顺序"
+    "源码阅读顺序",
+    "用什么关键词观察",
+    "主检索词为",
+    "采集流程"
   ];
   for (const phrase of producerPhrases) {
     assert.ok(!publicCopy.includes(phrase), `producer-facing phrase leaked into public copy: ${phrase}`);

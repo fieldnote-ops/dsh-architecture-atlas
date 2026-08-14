@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "release": "0.2.1",
+  "release": "0.2.2",
   "release_date": "2026-08-14",
   "artifact_kind": "static_site",
   "publication_target": {
@@ -56,8 +56,8 @@
   "disclosure": "Independent, unofficial, AI-assisted, evidence-reviewed community interpretation.",
   "files": {
     "app.js": {
-      "sha256": "72b3a2884b7f7e48fe6ca154b7bb9de159c282cccf45c71a5944e50ee14d38bc",
-      "bytes": 21902
+      "sha256": "814caa58acaa0ea5f7b93c99196d5248e2b0b677faf175ce3bfd3f047910c599",
+      "bytes": 18374
     },
     "assets/favicon.png": {
       "sha256": "0ca294d15bfc54bd7367c378d1f83d072ffecb98d217a581c27841d2132a263d",
@@ -80,60 +80,60 @@
       "bytes": 11292
     },
     "docs/dsh-0.1.0-rc.5/boundaries.html": {
-      "sha256": "3b342eb2074033ca440b8154848a48e0093f4148332c85dfcfe969fb7dadf82c",
+      "sha256": "5138b6355eb3d8e8f51f337447fc53f0b326e0b1b96f2f06904ae8cd950c885c",
       "bytes": 5410
     },
     "docs/dsh-0.1.0-rc.5/conversation.html": {
-      "sha256": "d512a8b6aa960b0bc8d3ed578684a4ddfbde8b7d9ac1fc143e299e4b7deacc5e",
+      "sha256": "5ca85e4eaef433970356b268475a9e64b604473001b8639ccde044eb2c516a75",
       "bytes": 6088
     },
     "docs/dsh-0.1.0-rc.5/context.html": {
-      "sha256": "2200a35847641bc98c92576e4722c4076f864cd685d29f46fcae0800f4fe11cf",
+      "sha256": "b9f14bde4de8b3851dee0345c46a7f7f8c21ea5d2452ade92cb1e60e5dd73f5a",
       "bytes": 9189
     },
     "docs/dsh-0.1.0-rc.5/fiber.html": {
-      "sha256": "3a57ae30e1383330ce8a003d7e04d2a4eb99f6ed4560f05ca365a63fa22bc245",
+      "sha256": "8ac92d34814ac529294a7baf6fed287a29e2e39309d57297b1eea047f55b096d",
       "bytes": 12492
     },
     "docs/dsh-0.1.0-rc.5/community.html": {
-      "sha256": "2c656bdd5656b1f8c40a2f88b5ef1b944bd4044c8c6b7e03f8394fd0ccfcbff4",
-      "bytes": 13500
+      "sha256": "2aad407eb7e3924f2d6aa914b8981c47bc2734bb7e3de954e71e5cc934d41443",
+      "bytes": 11514
     },
     "docs/dsh-0.1.0-rc.5/introduction.html": {
-      "sha256": "012aa27d5386c77d7b6e742a47086f26cadddf07b7fce877be02fd0f3304e7cd",
+      "sha256": "45ed02a3248fb8446adb1e74389907ecbdf59fe63a4a47e747fc337457f3e136",
       "bytes": 6180
     },
     "docs/dsh-0.1.0-rc.5/loader.html": {
-      "sha256": "104d2f3d15d57ddb984d18e59e2c3e12f2504146fc9dd84197d03882aaeb9426",
+      "sha256": "7684616d48233a6f7425826d38c0b4901af1536a4684ce53e70db34d6a52feb3",
       "bytes": 8696
     },
     "docs/dsh-0.1.0-rc.5/mental-model.html": {
-      "sha256": "629872ae84ceccaa710b6e89b2c9194723fde16017232a01df26c6e8de67f83d",
+      "sha256": "439d5ee0efa791798df29820c301d2946387501631574499b17e54678c6ea3c2",
       "bytes": 6490
     },
     "docs/dsh-0.1.0-rc.5/plugins.html": {
-      "sha256": "1146124d51552b48111120a195e2ca663772f45f3a8104a07c52a3e42c8cfa61",
+      "sha256": "823819c50efcd1a38c29a9e8511d8e6009b48fe79042b10e8f1239fb92e6cc35",
       "bytes": 11561
     },
     "docs/dsh-0.1.0-rc.5/profile.html": {
-      "sha256": "fbc84d08046854b8787203efd8a0148b932125c2590cb6a18492e306dbaabbec",
+      "sha256": "877ce388ce9a87f8375ce9aff5f1abad954cb367aeb2a7769f3d65af8f414435",
       "bytes": 8760
     },
     "docs/dsh-0.1.0-rc.5/updates.html": {
-      "sha256": "d470e20b7859fdff5ff2f6a3f72d1089a0a3039c0df52896106f108257cf2a5f",
+      "sha256": "96336134b912c3dab9116190c2a1a1bbb658e0921337dfb87ef06f999e8d672b",
       "bytes": 5437
     },
     "docs/index.html": {
-      "sha256": "59d818610b44b7c8af6cf26f8d1674da2287393898b8527f03f2b89100f30129",
+      "sha256": "4f5002f85ffdd21617e299f37243ee40e7133cd20408fbbcea311c7eb083503b",
       "bytes": 6480
     },
     "index.html": {
-      "sha256": "ec3347359ef9fe2408ce45a53de08e8bcca9d1ce6f88db62903ca93fe13f3ac6",
-      "bytes": 23246
+      "sha256": "620b2cff51449d34ca459c8b453e1ea7bc8e7413b98162dbb59e991e5a186761",
+      "bytes": 22691
     },
     "styles.css": {
-      "sha256": "3032e670077a34a82b4ce5cfb8b5c1d036ab3cfb75c82d0fd33a237ea59ec709",
-      "bytes": 44436
+      "sha256": "6974e0f9473db878a87630da98bac3ae5086e6c7d3e2ad425325714128c68e18",
+      "bytes": 42562
     }
   }
 }

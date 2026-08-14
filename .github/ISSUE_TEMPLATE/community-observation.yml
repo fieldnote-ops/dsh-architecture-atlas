@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        本站是独立的社区观察与解读项目，不代表 DeepSeek 或 DeepSeek Harness 官方。主检索词为精确短语 “DeepSeek Harness”。本 Issue 只用于向本站提供公开讨论线索，并非官方支持渠道。请勿提交账号、Token、内部链接、个人信息、客户数据、未公开材料或安全漏洞细节。产品问题请优先前往 [DeepSeek Harness 官方仓库](https://github.com/deepseek-ai/deepseek-harness)。
+        本站是独立的社区观察与解读项目，不代表 DeepSeek 或 DeepSeek Harness 官方。本 Issue 只用于向本站提供公开讨论链接，并非官方支持渠道。请勿提交账号、Token、内部链接、个人信息、客户数据、未公开材料或安全漏洞细节。产品问题请优先前往 [DeepSeek Harness 官方仓库](https://github.com/deepseek-ai/deepseek-harness)。
   - type: dropdown
     id: dsh-version
     attributes:
