@@ -55,6 +55,7 @@
           <div class="hero-cta">
             <a class="button button-primary" href="#atlas">进入架构图 <span aria-hidden="true">↓</span></a>
             <a class="button button-quiet" href="#journey">跟一次对话走完全程</a>
+            <a class="button button-quiet" href="https://github.com/deepseek-ai/deepseek-harness" rel="noreferrer">DSH 官方仓库 <span aria-hidden="true">↗</span></a>
           </div>
         </div>
 
@@ -86,6 +87,33 @@
           <span>AVAILABILITY <i>↑</i></span>
           <span>RECOVERY <i>↺</i></span>
         </div>
+      </section>
+
+      <section class="dsh-intro" aria-labelledby="dsh-intro-title">
+        <div class="dsh-intro-copy reveal">
+          <p class="section-index">BEFORE THE MAP / DSH 是什么</p>
+          <h2 id="dsh-intro-title">DeepSeek Harness：<br>把模型接到真实环境的 Agent 运行壳</h2>
+          <p><strong>模型负责判断下一步；Harness 负责让这一步安全、可追踪地发生。</strong>DSH（DeepSeek Harness）是 DeepSeek AI 开源的 Agent Harness：它组织会话与上下文，把模型接到工具、权限、沙箱、文件系统和界面，并记录运行过程。它最特别的设计是——这些能力连同 Agent Loop 本身，全部由插件组成，由 Cordis 负责动态组合与生命周期。</p>
+          <div class="dsh-facts" aria-label="DSH 项目状态">
+            <span>OPEN SOURCE</span>
+            <span>MIT</span>
+            <span>DEVELOPER PREVIEW</span>
+          </div>
+        </div>
+        <aside class="dsh-quickstart reveal" aria-label="DSH 快速链接">
+          <div class="quickstart-command">
+            <span>快速体验</span>
+            <code>npx @deepseek-ai/dsh web</code>
+            <button id="copy-command" type="button" aria-label="复制 DSH 启动命令">复制</button>
+          </div>
+          <nav class="resource-links" aria-label="DSH 官方资料">
+            <a href="https://github.com/deepseek-ai/deepseek-harness" rel="noreferrer"><span><small>01</small>官方 GitHub 仓库</span><b>↗</b></a>
+            <a href="https://github.com/deepseek-ai/deepseek-harness/blob/master/README.zh.md" rel="noreferrer"><span><small>02</small>中文 README</span><b>↗</b></a>
+            <a href="https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/architecture.md" rel="noreferrer"><span><small>03</small>官方架构文档</span><b>↗</b></a>
+            <a href="https://github.com/cordiverse/paper" rel="noreferrer"><span><small>04</small>时空可组合性论文</span><b>↗</b></a>
+          </nav>
+          <p class="preview-warning">上游明确标注为 Developer Preview，兼容性可能发生破坏性变化；本站因此按源码版本保留历史解读。</p>
+        </aside>
       </section>
 
       <section class="section architecture-section" id="atlas" aria-labelledby="atlas-title">

@@ -388,6 +388,7 @@
     byId("share-button").addEventListener("click", () => copyText(canonicalVersionUrl(), "当前版本链接已复制"));
     byId("permalink-button").addEventListener("click", () => copyText(canonicalVersionUrl(), "永久链接已复制"));
     byId("fiber-play").addEventListener("click", playFiberLifecycle);
+    byId("copy-command").addEventListener("click", () => copyText("npx @deepseek-ai/dsh web", "启动命令已复制"));
     byId("copy-summary").addEventListener("click", () => {
       const text = `DSH 不是“一个 Agent 核心 + 一堆插件”，而是 Profile 描述目标、Loader 协调差异、Cordis Context 承载服务、Fiber 保证可逆生命周期，最后由一组可替换插件临时组成 agent。\n\n可视化解读（${versionLabel(state.version)}）：${canonicalVersionUrl()}`;
       copyText(text, "社区摘要已复制");

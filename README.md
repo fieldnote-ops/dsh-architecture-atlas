@@ -4,9 +4,12 @@
 
 它试图回答一个具体问题：`Everything is a plugin` 在运行时究竟意味着什么？站点从 Profile / Bundle / Patch 开始，穿过 Loader、Cordis Context、Fiber 生命周期与领域服务，最后还原一次对话如何由一组可替换插件临时组成。
 
+DSH（DeepSeek Harness）是 DeepSeek AI 开源的 Agent Harness。简单说，模型负责判断下一步，而 Harness 负责把模型接到会话、上下文、工具、权限、沙箱、文件系统和界面，让这一步可执行、可追踪。官方仓库：[deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)。
+
 ## 站点内容
 
 - 五层交互架构图：声明层、协调层、Context、Fiber、领域插件；
+- DSH 简介、官方资料链接和一行启动命令；
 - `ctx.*` 服务拓扑与一次对话的六个架构时刻；
 - 可逆效应、响应式依赖、事务协调三个机制实验台；
 - DSH 工程六态 Fiber 状态机；
